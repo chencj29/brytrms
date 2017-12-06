@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.DepartureHallOccupyingInfoDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="departureHallOccupyingInfoColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.flight_dynamic_code AS "flightDynamicCode",
+		a.flight_dynamic_nature AS "flightDynamicNature",
+		a.expected_departure_hall_num AS "expectedDepartureHallNum",
+		a.actual_departure_hall_num AS "actualDepartureHallNum",
+		a.inte_departure_hall_code AS "inteDepartureHallCode",
+		a.intl_departure_hall_code AS "intlDepartureHallCode",
+		a.expected_start_time AS "expectedStartTime",
+		a.expected_over_time AS "expectedOverTime",
+		a.inte_actual_start_time AS "inteActualStartTime",
+		a.inte_actual_over_time AS "inteActualOverTime",
+		a.intl_actual_start_time AS "intlActualStartTime",
+		a.intl_actual_over_time AS "intlActualOverTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="departureHallOccupyingInfoJoins">
+    </sql>
+
+    <select id="get" resultType="DepartureHallOccupyingInfo">
+        SELECT
+        <include refid="departureHallOccupyingInfoColumns"/>
+        FROM rms_departure_hall_oci a
+        <include refid="departureHallOccupyingInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DepartureHallOccupyingInfo">
+        SELECT
+        <include refid="departureHallOccupyingInfoColumns"/>
+        FROM rms_departure_hall_oci a
+        <include refid="departureHallOccupyingInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="DepartureHallOccupyingInfo">
+        SELECT
+        <include refid="departureHallOccupyingInfoColumns"/>
+        FROM rms_departure_hall_oci a
+        <include refid="departureHallOccupyingInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_departure_hall_oci(
+			id,
+			flight_dynamic_id,
+			flight_dynamic_code,
+			flight_dynamic_nature,
+			expected_departure_hall_num,
+			actual_departure_hall_num,
+			inte_departure_hall_code,
+			intl_departure_hall_code,
+			expected_start_time,
+			expected_over_time,
+			inte_actual_start_time,
+			inte_actual_over_time,
+			intl_actual_start_time,
+			intl_actual_over_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{flightDynamicCode},
+			#{flightDynamicNature},
+			#{expectedDepartureHallNum},
+			#{actualDepartureHallNum},
+			#{inteDepartureHallCode},
+			#{intlDepartureHallCode},
+			#{expectedStartTime},
+			#{expectedOverTime},
+			#{inteActualStartTime},
+			#{inteActualOverTime},
+			#{intlActualStartTime},
+			#{intlActualOverTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_departure_hall_oci SET 	
+			flight_dynamic_id = #{flightDynamicId},
+			flight_dynamic_code = #{flightDynamicCode},
+			flight_dynamic_nature = #{flightDynamicNature},
+			expected_departure_hall_num = #{expectedDepartureHallNum},
+			actual_departure_hall_num = #{actualDepartureHallNum},
+			inte_departure_hall_code = #{inteDepartureHallCode},
+			intl_departure_hall_code = #{intlDepartureHallCode},
+			expected_start_time = #{expectedStartTime},
+			expected_over_time = #{expectedOverTime},
+			inte_actual_start_time = #{inteActualStartTime},
+			inte_actual_over_time = #{inteActualOverTime},
+			intl_actual_start_time = #{intlActualStartTime},
+			intl_actual_over_time = #{intlActualOverTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+      DELETE FROM rms_departure_hall_oci WHERE id = #{id}
+	</delete>
+
+    <select id="getByFlightDynamicId" parameterType="string" resultType="DepartureHallOccupyingInfo">
+        SELECT
+        <include refid="departureHallOccupyingInfoColumns"/>
+        FROM rms_departure_hall_oci a where a.flight_dynamic_id = #{flightDynamicId}
+    </select>
+
+    <select id="findCompatibleCodes" parameterType="map" resultType="string">
+		select AVAILABLE_CODE  from (
+		select ROW_NUMBER() OVER( ORDER BY STAND_USE_COUNTER ASC) ROWNUMBER, t.* from (
+		SELECT t.AVAILABLE_CODE, COUNT(i.OCCUPIED_CODE) STAND_USE_COUNTER FROM (
+		SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+		SELECT * FROM (
+		<if test="mock_dist == false">
+			SELECT oci.EXPECTED_START_TIME START_TIME, oci.EXPECTED_OVER_TIME OVER_TIME, oci.FLIGHT_DYNAMIC_ID, dynamic.DEPARTURE_PLAN_TIME, CASE oci.FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_DEPARTURE_HALL_CODE WHEN '2' THEN INTL_DEPARTURE_HALL_CODE WHEN '3' THEN INTE_DEPARTURE_HALL_CODE || ',' || INTL_DEPARTURE_HALL_CODE END AS OCCUPIED_CODE FROM RMS_DEPARTURE_HALL_OCI oci
+			LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+		</if>
+		<if test="mock_dist == true">
+			<if test="omit_oci == false">
+				SELECT oci.EXPECTED_START_TIME START_TIME, oci.EXPECTED_OVER_TIME OVER_TIME, oci.FLIGHT_DYNAMIC_ID, dynamic.DEPARTURE_PLAN_TIME, CASE oci.FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_DEPARTURE_HALL_CODE WHEN '2' THEN INTL_DEPARTURE_HALL_CODE WHEN '3' THEN INTE_DEPARTURE_HALL_CODE || ',' || INTL_DEPARTURE_HALL_CODE END AS OCCUPIED_CODE FROM RMS_DEPARTURE_HALL_OCI oci
+				LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+				UNION ALL
+			</if>
+			SELECT oci.EXPECTED_START_TIME START_TIME, oci.EXPECTED_OVER_TIME OVER_TIME, detail.DATA_ID AS FLIGHT_DYNAMIC_ID, dynamic.DEPARTURE_PLAN_TIME, CASE oci.FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS OCCUPIED_CODE
+			FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail
+			LEFT JOIN RMS_DEPARTURE_HALL_OCI oci ON oci.FLIGHT_DYNAMIC_ID = detail.DATA_ID
+			LEFT JOIN RMS_RESOURCE_MOCK_DIST_INFO info ON info.ID = detail.INFO_ID
+			LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID WHERE detail.INFO_ID = #{mockInfoId}
+		</if>
+		) WHERE OCCUPIED_CODE IS NOT NULL AND DEPARTURE_PLAN_TIME BETWEEN #{start} AND #{over}
+		<![CDATA[
+                    ) temp, (SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000) WHERE L (+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1
+                ) i RIGHT JOIN (WITH temp AS
+                  (SELECT #{numbers, jdbcType=VARCHAR} AS AVAILABLE_CODE FROM DUAL)
+                  SELECT REGEXP_SUBSTR(AVAILABLE_CODE, '[^,]+', 1, rn) AVAILABLE_CODE FROM temp t1,
+                  (SELECT LEVEL rn FROM DUAL CONNECT BY ROWNUM <= (SELECT LENGTH(AVAILABLE_CODE) - LENGTH(REPLACE(AVAILABLE_CODE, ',', '')) + 1 FROM temp)) t2
+                ) t ON T.AVAILABLE_CODE = i.OCCUPIED_CODE GROUP BY i.OCCUPIED_CODE, t.AVAILABLE_CODE  ORDER BY STAND_USE_COUNTER ASC, AVAILABLE_CODE ASC
+            ) t
+        ) ot where ot.ROWNUMBER <= #{expectedNum, jdbcType=INTEGER}
+        ]]>
+    </select>
+
+	<select id="fetchOciDatas" parameterType="list" resultType="DepartureHallOccupyingInfo">
+		select
+		<include refid="departureHallOccupyingInfoColumns"/>
+		FROM rms_departure_hall_oci a where a.flight_dynamic_id in (
+		<foreach collection="list" item="pairId" separator=",">
+			#{pairId}
+		</foreach>
+		)
+	</select>
+
+	<select id="batchDelete">
+		DELETE FROM rms_departure_hall_oci
+		WHERE id in
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

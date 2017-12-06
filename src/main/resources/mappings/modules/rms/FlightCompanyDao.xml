@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightCompanyDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightCompanyColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_company_name AS "flightCompanyName",
+		a.contact_dept AS "contactDept",
+		a.contact_personal AS "contactPersonal",
+		a.duty AS "duty",
+		a.sex AS "sex",
+		a.tel AS "tel"
+	</sql>
+	
+	<sql id="flightCompanyJoins">
+	</sql>
+    
+	<select id="get" resultType="FlightCompany">
+		SELECT 
+			<include refid="flightCompanyColumns"/>
+		FROM rms_flight_company a
+		<include refid="flightCompanyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlightCompany">
+		SELECT 
+			<include refid="flightCompanyColumns"/>
+		FROM rms_flight_company a
+		<include refid="flightCompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlightCompany">
+		SELECT 
+			<include refid="flightCompanyColumns"/>
+		FROM rms_flight_company a
+		<include refid="flightCompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_flight_company(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			flight_company_name,
+			contact_dept,
+			contact_personal,
+			duty,
+			sex,
+			tel
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{flightCompanyName},
+			#{contactDept},
+			#{contactPersonal},
+			#{duty},
+			#{sex},
+			#{tel}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_flight_company SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			flight_company_name = #{flightCompanyName},
+			contact_dept = #{contactDept},
+			contact_personal = #{contactPersonal},
+			duty = #{duty},
+			sex = #{sex},
+			tel = #{tel}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_flight_company SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

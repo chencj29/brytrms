@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.DutyHistoryDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="dutyHistoryColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.duty_date AS "dutyDate",
+		a.duty_dept AS "dutyDept",
+		a.post_name AS "postName",
+		a.post_id AS "postId",
+		a.duty_personal AS "dutyPersonal",
+		a.duty_start_time AS "dutyStartTime",
+		a.duty_end_time AS "dutyEndTime"
+	</sql>
+	
+	<sql id="dutyHistoryJoins">
+	</sql>
+    
+	<select id="get" resultType="DutyHistory">
+		SELECT 
+			<include refid="dutyHistoryColumns"/>
+		FROM rms_duty_history a
+		<include refid="dutyHistoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DutyHistory">
+		SELECT 
+			<include refid="dutyHistoryColumns"/>
+		FROM rms_duty_history a
+		<include refid="dutyHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DutyHistory">
+		SELECT 
+			<include refid="dutyHistoryColumns"/>
+		FROM rms_duty_history a
+		<include refid="dutyHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_duty_history(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			duty_date,
+			duty_dept,
+			post_name,
+			post_id,
+			duty_personal,
+			duty_start_time,
+			duty_end_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{dutyDate},
+			#{dutyDept},
+			#{postName},
+			#{postId},
+			#{dutyPersonal},
+			#{dutyStartTime},
+			#{dutyEndTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_duty_history SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			duty_date = #{dutyDate},
+			duty_dept = #{dutyDept},
+			post_name = #{postName},
+			post_id = #{postId},
+			duty_personal = #{dutyPersonal},
+			duty_start_time = #{dutyStartTime},
+			duty_end_time = #{dutyEndTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_duty_history SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findListStatistics" resultType="DutyHistory">
+		SELECT
+		<include refid="dutyHistoryColumns"/>
+		FROM rms_duty_history a
+		<include refid="dutyHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.duty_start_time IS NOT NULL
+			AND a.duty_end_time IS NOT NULL
+			<if test="postId != null and postId != ''">
+				AND a.post_id = #{postId}
+			</if>
+			<if test="postName != null and postName != ''">
+				AND a.post_name = #{postName}
+			</if>
+			<if test="dutyDept != null and dutyDept != ''">
+				AND a.duty_dept = #{dutyDept}
+			</if>
+			<if test="dutyPersonal != null and dutyPersonal != ''">
+				AND a.duty_personal = #{dutyPersonal}
+			</if>
+			<if test="dutyStartTime != null and dutyStartTime != ''">
+				AND to_char(duty_start_time,'yyyy-mm-dd') &gt;= to_char(#{dutyStartTime},'yyyy-mm-dd')
+			</if>
+			<if test="dutyEndTime != null and dutyEndTime != ''">
+				AND to_char(duty_end_time,'yyyy-mm-dd') &lt;= to_char(#{dutyEndTime},'yyyy-mm-dd')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

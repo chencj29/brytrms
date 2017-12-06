@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.ShareFlightDynamicDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="shareFlightDynamicColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.share_flight_id AS "shareFlightId",
+		a.flight_dynamic_id AS "flightDynamicId"
+	</sql>
+	
+	<sql id="shareFlightDynamicJoins">
+	</sql>
+    
+	<select id="get" resultType="ShareFlightDynamic">
+		SELECT 
+			<include refid="shareFlightDynamicColumns"/>
+		FROM ams_share_flight_dynamic a
+		<include refid="shareFlightDynamicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShareFlightDynamic">
+		SELECT 
+			<include refid="shareFlightDynamicColumns"/>
+		FROM ams_share_flight_dynamic a
+		<include refid="shareFlightDynamicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShareFlightDynamic">
+		SELECT 
+			<include refid="shareFlightDynamicColumns"/>
+		FROM ams_share_flight_dynamic a
+		<include refid="shareFlightDynamicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_share_flight_dynamic(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			share_flight_id,
+			flight_dynamic_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{shareFlightId},
+			#{flightDynamicId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_share_flight_dynamic SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			share_flight_id = #{shareFlightId},
+			flight_dynamic_id = #{flightDynamicId}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ams_share_flight_dynamic WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteByShareFlightId">
+		delete from ams_share_flight_dynamic WHERE share_flight_id = #{shareFlightId}
+	</delete>
+
+	<delete id="deleteAll">
+		delete from ams_share_flight_dynamic
+	</delete>
+	
+</mapper>

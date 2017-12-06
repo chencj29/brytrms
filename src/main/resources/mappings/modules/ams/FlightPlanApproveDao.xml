@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightPlanApproveDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightPlanApproveColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.APPROVE_FLIGHT_PLAN_ID AS "flightPlanId",
+		a.approve_user_id AS "approveUserId",
+		a.approve_user_name AS "approveUserName",
+		a.approve_time AS "approveTime",
+		a.approve_desc AS "approveDesc"
+	</sql>
+	
+	<sql id="flightPlanApproveJoins">
+	</sql>
+    
+	<select id="get" resultType="FlightPlanApprove">
+		SELECT 
+			<include refid="flightPlanApproveColumns"/>
+		FROM ams_flight_plan_approve a
+		<include refid="flightPlanApproveJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlightPlanApprove">
+		SELECT 
+			<include refid="flightPlanApproveColumns"/>
+		FROM ams_flight_plan_approve a
+		<include refid="flightPlanApproveJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and APPROVE_FLIGHT_PLAN_ID = #{flightPlanId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlightPlanApprove">
+		SELECT 
+			<include refid="flightPlanApproveColumns"/>
+		FROM ams_flight_plan_approve a
+		<include refid="flightPlanApproveJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_flight_plan_approve(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			APPROVE_FLIGHT_PLAN_ID,
+			approve_user_id,
+			approve_user_name,
+			approve_time,
+			approve_desc
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightPlanId},
+			#{approveUserId},
+			#{approveUserName},
+			#{approveTime},
+			#{approveDesc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_flight_plan_approve SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			APPROVE_FLIGHT_PLAN_ID = #{flightPlanId},
+			approve_user_id = #{approveUserId},
+			approve_user_name = #{approveUserName},
+			approve_time = #{approveTime},
+			approve_desc = #{approveDesc}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM ams_flight_plan_approve WHERE id = #{id}
+	</delete>
+	
+</mapper>

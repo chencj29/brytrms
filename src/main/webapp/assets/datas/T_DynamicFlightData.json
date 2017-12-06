@@ -1,0 +1,130 @@
+[
+  {
+    "startDate": "2016-02-22",
+    "endDate": "2016-02-22",
+    "startTime": "1:30",
+    "status": "已达",
+    "endTime": "3:30",
+    "code": "ZH5555",
+    "expectedGate": "2",
+    "gate": [
+      5,
+      6
+    ]
+  },
+  {
+    "startDate": "2016-02-22",
+    "endDate": "2016-02-22",
+    "startTime": "4:30",
+    "status": "已达",
+    "endTime": "8:30",
+    "code": "transient001",
+    "expectedGate": "1",
+    "gate": [
+      5
+    ],
+    "transient": true
+  },
+  {
+    "startDate": "2016-02-24",
+    "endDate": "2016-02-24",
+    "startTime": "5:30",
+    "status": "已达",
+    "endTime": "6:30",
+    "expectedGate": "1",
+    "code": "ZH5554",
+    "gate": []
+  },
+  {
+    "startDate": "2016-02-23",
+    "endDate": "2016-02-23",
+    "startTime": "6:40",
+    "status": "已达",
+    "endTime": "7:30",
+    "code": "ZH5556",
+    "expectedGate": "2",
+    "gate": []
+  },
+  {
+    "startDate": "2016-02-23",
+    "endDate": "2016-02-23",
+    "startTime": "3:30",
+    "status": "已达",
+    "endTime": "6:05",
+    "code": "ZHLLLL",
+    "expectedGate": "1",
+    "gate": []
+  },
+  {
+    "startDate": "2016-02-22",
+    "endDate": "2016-02-23",
+    "startTime": "21:30",
+    "status": "预达",
+    "endTime": "3:45",
+    "code": "ZH2222",
+    "expectedGate": "1",
+    "gate": [
+      2
+    ]
+  },
+  {
+    "startDate": "2016-02-24",
+    "endDate": "2016-02-24",
+    "startTime": "4:30",
+    "status": "预达",
+    "endTime": "7:33",
+    "code": "ZH7777",
+    "expectedGate": "1",
+    "gate": [
+      1
+    ]
+  },
+  {
+    "startDate": "2016-02-24",
+    "endDate": "2016-02-24",
+    "startTime": "6:50",
+    "status": "已达",
+    "endTime": "18:45",
+    "code": "ZH6666",
+    "expectedGate": "1",
+    "gate": [
+      3
+    ]
+  },
+  {
+    "startDate": "2016-02-23",
+    "endDate": "2016-02-23",
+    "startTime": "15:30",
+    "status": "已达",
+    "endTime": "21:45",
+    "expectedGate": "1",
+    "code": "ZH9999",
+    "gate": [
+      8
+    ]
+  },
+  {
+    "startDate": "2016-02-22",
+    "endDate": "2016-02-22",
+    "startTime": "21:40",
+    "status": "已达",
+    "endTime": "24:00",
+    "expectedGate": "1",
+    "code": "ZH1000",
+    "gate": [
+      8
+    ]
+  },
+  {
+    "startDate": "2016-03-19",
+    "endDate": "2016-03-19",
+    "startTime": "21:40",
+    "status": "已达",
+    "endTime": "23:00",
+    "code": "ZHGTCX",
+    "expectedGate": "1",
+    "gate": [
+      6
+    ]
+  }
+]

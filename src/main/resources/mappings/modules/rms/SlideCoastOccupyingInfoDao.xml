@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SlideCoastOccupyingInfoDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="slideCoastOccupyingInfoColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.flight_dynamic_code AS "flightDynamicCode",
+		a.flight_dynamic_nature AS "flightDynamicNature",
+		a.expected_slide_coast_num AS "expectedSlideCoastNum",
+		a.actual_slide_coast_num AS "actualSlideCoastNum",
+		a.inte_slide_coast_code AS "inteSlideCoastCode",
+		a.intl_slide_coast_code AS "intlSlideCoastCode",
+		a.expected_start_time AS "expectedStartTime",
+		a.expected_over_time AS "expectedOverTime",
+		a.inte_actual_start_time AS "inteActualStartTime",
+		a.inte_actual_over_time AS "inteActualOverTime",
+		a.intl_actual_start_time AS "intlActualStartTime",
+		a.intl_actual_over_time AS "intlActualOverTime"
+	</sql>
+
+    <sql id="slideCoastOccupyingInfoJoins">
+    </sql>
+
+    <select id="get" resultType="SlideCoastOccupyingInfo">
+        SELECT
+        <include refid="slideCoastOccupyingInfoColumns"/>
+        FROM rms_slide_coast_oci a
+        <include refid="slideCoastOccupyingInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="SlideCoastOccupyingInfo">
+        SELECT
+        <include refid="slideCoastOccupyingInfoColumns"/>
+        FROM rms_slide_coast_oci a
+        <include refid="slideCoastOccupyingInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="SlideCoastOccupyingInfo">
+        SELECT
+        <include refid="slideCoastOccupyingInfoColumns"/>
+        FROM rms_slide_coast_oci a
+        <include refid="slideCoastOccupyingInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_slide_coast_oci(
+			id,
+			flight_dynamic_id,
+			flight_dynamic_code,
+			flight_dynamic_nature,
+			expected_slide_coast_num,
+			actual_slide_coast_num,
+			inte_slide_coast_code,
+			intl_slide_coast_code,
+			expected_start_time,
+			expected_over_time,
+			inte_actual_start_time,
+			inte_actual_over_time,
+			intl_actual_start_time,
+			intl_actual_over_time
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{flightDynamicCode},
+			#{flightDynamicNature},
+			#{expectedSlideCoastNum},
+			#{actualSlideCoastNum},
+			#{inteSlideCoastCode},
+			#{intlSlideCoastCode},
+			#{expectedStartTime},
+			#{expectedOverTime},
+			#{inteActualStartTime},
+			#{inteActualOverTime},
+			#{intlActualStartTime},
+			#{intlActualOverTime}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_slide_coast_oci SET 	
+			flight_dynamic_id = #{flightDynamicId},
+			flight_dynamic_code = #{flightDynamicCode},
+			flight_dynamic_nature = #{flightDynamicNature},
+			expected_slide_coast_num = #{expectedSlideCoastNum},
+			actual_slide_coast_num = #{actualSlideCoastNum},
+			inte_slide_coast_code = #{inteSlideCoastCode},
+			intl_slide_coast_code = #{intlSlideCoastCode},
+			expected_start_time = #{expectedStartTime},
+			expected_over_time = #{expectedOverTime},
+			inte_actual_start_time = #{inteActualStartTime},
+			inte_actual_over_time = #{inteActualOverTime},
+			intl_actual_start_time = #{intlActualStartTime},
+			intl_actual_over_time = #{intlActualOverTime}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM rms_slide_coast_oci
+		WHERE id = #{id}
+	</update>
+
+    <select id="getByFlightDynamicId" parameterType="string" resultType="SlideCoastOccupyingInfo">
+        SELECT
+        <include refid="slideCoastOccupyingInfoColumns"/>
+        FROM RMS_SLIDE_COAST_OCI a where a.flight_dynamic_id = #{flightDynamicId}
+    </select>
+
+    <select id="findSlideCoastUsage" parameterType="map" resultType="map">
+		<![CDATA[
+        select t.carousel_code, count(i.OCCUPIED_CODE) stand_use_counter from (SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+        SELECT ID, FLIGHT_DYNAMIC_ID, FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+        CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN inte_slide_coast_code WHEN '2' THEN intl_slide_coast_code
+        WHEN '3' THEN inte_slide_coast_code || ',' || intl_slide_coast_code END AS OCCUPIED_CODE FROM RMS_SLIDE_COAST_OCI
+        ) temp, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 )
+        WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1
+        AND temp.EXPECTED_START_TIME BETWEEN #{start} AND #{over} ) i RIGHT JOIN (WITH temp AS
+        (SELECT #{numbers, jdbcType=VARCHAR} carousel_code FROM dual)
+        SELECT regexp_substr(carousel_code, '[^,]+', 1, rn) carousel_code
+        FROM temp t1, (SELECT level rn FROM dual CONNECT BY rownum <= (SELECT length(carousel_code) - length(replace(carousel_code, ',', '')) + 1 FROM temp)) t2) t
+        ON t.carousel_code = i.OCCUPIED_CODE GROUP BY i.OCCUPIED_CODE, t.carousel_code ORDER BY stand_use_counter ASC, carousel_code ASC
+        ]]>
+	</select>
+
+
+	<select id="fetchOciDatas" parameterType="list" resultType="SlideCoastOccupyingInfo">
+		select
+		<include refid="slideCoastOccupyingInfoColumns"/>
+		FROM RMS_SLIDE_COAST_OCI a where a.flight_dynamic_id in (
+		<foreach collection="list" item="pairId" separator=",">
+			#{pairId}
+		</foreach>
+		)
+	</select>
+
+	<select id="batchDelete">
+		DELETE FROM RMS_SLIDE_COAST_OCI
+		WHERE id in
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

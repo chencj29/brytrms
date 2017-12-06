@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightParametersDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightParametersColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.status_num AS "statusNum",
+		a.status_code AS "statusCode",
+		a.status_name AS "statusName",
+		a.property_description AS "propertyDescription",
+		a.status_short AS "statusShort"
+	</sql>
+
+	<sql id="flightParametersJoins">
+	</sql>
+
+	<select id="get" resultType="FlightParameters">
+		SELECT
+		<include refid="flightParametersColumns"/>
+		FROM ams_flight_parameters a
+		<include refid="flightParametersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="FlightParameters">
+		SELECT
+		<include refid="flightParametersColumns"/>
+		FROM ams_flight_parameters a
+		<include refid="flightParametersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightParameters">
+		SELECT
+		<include refid="flightParametersColumns"/>
+		FROM ams_flight_parameters a
+		<include refid="flightParametersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_parameters(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			status_num,
+			status_code,
+			status_name,
+			property_description,
+			status_short
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{statusNum},
+			#{statusCode},
+			#{statusName},
+			#{propertyDescription},
+			#{statusShort}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_parameters SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			status_num = #{statusNum},
+			status_code = #{statusCode},
+			status_name = #{statusName},
+			property_description = #{propertyDescription},
+			status_short = #{statusShort}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE ams_flight_parameters SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getFlightParametersByRegex" resultType="FlightParameters">
+		SELECT
+		<include refid="flightParametersColumns"/>
+		FROM ams_flight_parameters a
+		<include refid="flightParametersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND
+			substr(a.status_num,0,2) = #{statusNum}
+			AND
+			a.status_num != #{full}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="listJsons4Type" parameterType="String" resultType="FlightParameters">
+		SELECT STATUS_NUM, STATUS_SHORT FROM AMS_FLIGHT_PARAMETERS WHERE STATUS_NAME = #{type} AND DEL_FLAG = 0
+		AND STATUS_NUM not like 'CNL_%' AND STATUS_NUM not like 'DLY_%'
+	</select>
+
+</mapper>

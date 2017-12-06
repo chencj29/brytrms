@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlyTimeDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flyTimeColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.start_site AS "startSite",
+		a.start_site_code AS "startSiteCode",
+		a.end_site AS "endSite",
+		a.end_site_code AS "endSiteCode",
+		a.fly_time AS "flyTime"
+	</sql>
+	
+	<sql id="flyTimeJoins">
+	</sql>
+    
+	<select id="get" resultType="FlyTime">
+		SELECT 
+			<include refid="flyTimeColumns"/>
+		FROM ams_fly_time a
+		<include refid="flyTimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlyTime">
+		SELECT 
+			<include refid="flyTimeColumns"/>
+		FROM ams_fly_time a
+		<include refid="flyTimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="startSiteCode != null and startSiteCode != ''">
+				AND (a.start_site_code like UPPER('%'||#{startSiteCode}||'%') or a.start_site LIKE '%'||#{startSiteCode}||'%' )
+			</if>
+			<if test="endSiteCode != null and endSiteCode != ''">
+				AND (a.end_site_code like UPPER('%'||#{endSiteCode}||'%') or a.end_site LIKE '%'||#{endSiteCode}||'%' )
+			</if>
+			<if test="flyTime != null and flyTime != ''">
+				AND a.fly_time = #{flyTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlyTime">
+		SELECT 
+			<include refid="flyTimeColumns"/>
+		FROM ams_fly_time a
+		<include refid="flyTimeJoins"/>
+		<where>
+			a.del_flag = 0
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_fly_time(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			start_site,
+			start_site_code,
+			end_site,
+			end_site_code,
+			fly_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{startSite},
+			#{startSiteCode},
+			#{endSite},
+			#{endSiteCode},
+			#{flyTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_fly_time SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			start_site = #{startSite},
+			start_site_code = #{startSiteCode},
+			end_site = #{endSite},
+			end_site_code = #{endSiteCode},
+			fly_time = #{flyTime}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ams_fly_time WHERE id = #{id}
+	</delete>
+	
+</mapper>

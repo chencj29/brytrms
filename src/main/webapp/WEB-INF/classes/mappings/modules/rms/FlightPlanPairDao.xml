@@ -1,0 +1,1330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightPlanPairDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="flightPlanPairColumns">
+        a.id AS "id",
+        a.flight_dynimic_id AS "flightDynimicId",
+        a.flight_num AS "flightNum",
+        a.place_num AS "placeNum",
+        a.flight_company_id AS "flightCompanyId",
+        a.flight_company_code AS "flightCompanyCode",
+        a.flight_company_name AS "flightCompanyName",
+        a.share_flight_num AS "shareFlightNum",
+        a.flight_nature_code AS "flightNatureCode",
+        a.flight_nature_name AS "flightNatureName",
+        a.inout_type_code AS "inoutTypeCode",
+        a.inout_type_name AS "inoutTypeName",
+        a.inout_status_code AS "inoutStatusCode",
+        a.inout_status_name AS "inoutStatusName",
+        a.departure_airport_code AS "departureAirportCode",
+        a.departure_airport_three AS "departureAirportThree",
+        a.departure_airport_name AS "departureAirportName",
+        a.pass_airport_1_code AS "passAirport1Code",
+        a.pass_airport_1_name AS "passAirport1Name",
+        a.pass_airport_2_code AS "passAirport2Code",
+        a.pass_airport_2_name AS "passAirport2Name",
+        a.arrival_airport_code AS "arrivalAirportCode",
+        a.arrival_airport_three AS "arrivalAirportThree",
+        a.arrival_airport_name AS "arrivalAirportName",
+        a.departure_plan_time AS "departurePlanTime",
+        a.arrival_plan_time AS "arrivalPlanTime",
+        a.etd AS "etd",
+        a.eta AS "eta",
+        a.atd AS "atd",
+        a.ata AS "ata",
+        a.travel_time AS "travelTime",
+        a.carousel_num AS "carouselNum",
+        (SELECT wm_concat(v.id) as vip
+        FROM rms_vipplan v
+        WHERE v.inout = a.inout_type_Code AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code AND
+        v.FLTNO = a.flight_num) AS "vip",
+        a.delay_resons_code AS "delayResonsCode",
+        a.delay_resons_name AS "delayResonsName",
+        a.delay_resons_remark AS "delayResonsRemark",
+        a.gate_code AS "gateCode",
+        a.gate_name AS "gateName",
+        a.boarding_start_time AS "boardingStartTime",
+        a.boarding_end_time AS "boardingEndTime",
+        a.checkin_island_code AS "checkinIslandCode",
+        a.checkin_island_name AS "checkinIslandName",
+        a.checkin_counter_code AS "checkinCounterCode",
+        a.checkin_counter_name AS "checkinCounterName",
+        a.checkin_start_time AS "checkinStartTime",
+        a.checkin_end_time AS "checkinEndTime",
+        a.delay_time_pend AS "delayTimePend",
+        a.status AS "status",
+        a.status_name AS "statusName",
+        a.flight_properties_id AS "flightPropertiesId",
+        a.flight_attr_code AS "flightAttrCode",
+        a.flight_attr_name AS "flightAttrName",
+        a.plan_day_of_week AS "planDayOfWeek",
+        a.alternate_remarks AS "alterNateRemarks",
+        a.delay_resons_area_code AS "delayResonsAreaCode",
+        a.delay_resons_area_name AS "delayResonsAreaName",
+        a.alternate_area_code AS "alterNateAreaCode",
+        a.alternate_area_name AS "alterNateAreaName",
+        a.cancel_flight_resons AS "cancelFlightResons",
+        a.is_extra_flight AS "isExtraFlight",
+        a.extra_flight_time_pend AS "extraFlightTimePend",
+        a.urge_board_time AS "urgeBoardTime",
+        a.plan_boarding_starttime AS "planBoardingStarttime",
+        a.plan_boarding_endtime AS "planBoardingEndtime",
+        a.guest_time AS "guestTime",
+        a.terminal_id AS "terminalId",
+        a.terminal AS "terminal",
+        a.turn_back_time AS "turnBackTime",
+        a.flight_dynimic_id2 AS "flightDynimicId2",
+        a.flight_num2 AS "flightNum2",
+        a.place_num2 AS "placeNum2",
+        a.flight_company_id2 AS "flightCompanyId2",
+        a.flight_company_code2 AS "flightCompanyCode2",
+        a.flight_company_name2 AS "flightCompanyName2",
+        a.share_flight_num2 AS "shareFlightNum2",
+        a.flight_nature_code2 AS "flightNatureCode2",
+        a.flight_nature_name2 AS "flightNatureName2",
+        a.inout_type_code2 AS "inoutTypeCode2",
+        a.inout_type_name2 AS "inoutTypeName2",
+        a.inout_status_code2 AS "inoutStatusCode2",
+        a.inout_status_name2 AS "inoutStatusName2",
+        a.departure_airport_code2 AS "departureAirportCode2",
+        a.departure_airport_three2 AS "departureAirportThree2",
+        a.departure_airport_name2 AS "departureAirportName2",
+        a.pass_airport_1_code2 AS "passAirport1Code2",
+        a.pass_airport_1_name2 AS "passAirport1Name2",
+        a.pass_airport_2_code2 AS "passAirport2Code2",
+        a.pass_airport_2_name2 AS "passAirport2Name2",
+        a.arrival_airport_code2 AS "arrivalAirportCode2",
+        a.arrival_airport_three2 AS "arrivalAirportThree2",
+        a.arrival_airport_name2 AS "arrivalAirportName2",
+        a.departure_plan_time2 AS "departurePlanTime2",
+        a.arrival_plan_time2 AS "arrivalPlanTime2",
+        a.etd2 AS "etd2",
+        a.eta2 AS "eta2",
+        a.atd2 AS "atd2",
+        a.ata2 AS "ata2",
+        a.travel_time2 AS "travelTime2",
+        a.carousel_num2 AS "carouselNum2",
+        (SELECT wm_concat(v.id) as vip
+        FROM rms_vipplan v
+        WHERE v.inout = a.inout_type_Code2 AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code2 AND
+        v.FLTNO = a.flight_num2) AS "vip2",
+        a.delay_resons_code2 AS "delayResonsCode2",
+        a.delay_resons_name2 AS "delayResonsName2",
+        a.delay_resons_remark2 AS "delayResonsRemark2",
+        a.gate_code2 AS "gateCode2",
+        a.gate_name2 AS "gateName2",
+        a.boarding_start_time2 AS "boardingStartTime2",
+        a.boarding_end_time2 AS "boardingEndTime2",
+        a.checkin_island_code2 AS "checkinIslandCode2",
+        a.checkin_island_name2 AS "checkinIslandName2",
+        a.checkin_counter_code2 AS "checkinCounterCode2",
+        a.checkin_counter_name2 AS "checkinCounterName2",
+        a.checkin_start_time2 AS "checkinStartTime2",
+        a.checkin_end_time2 AS "checkinEndTime2",
+        a.delay_time_pend2 AS "delayTimePend2",
+        a.status2 AS "status2",
+        a.status_name2 AS "statusName2",
+        a.flight_properties_id2 AS "flightPropertiesId2",
+        a.flight_attr_code2 AS "flightAttrCode2",
+        a.flight_attr_name2 AS "flightAttrName2",
+        a.plan_day_of_week2 AS "planDayOfWeek2",
+        a.alternate_remarks2 AS "alterNateRemarks2",
+        a.delay_resons_area_code2 AS "delayResonsAreaCode2",
+        a.delay_resons_area_name2 AS "delayResonsAreaName2",
+        a.alternate_area_code2 AS "alterNateAreaCode2",
+        a.alternate_area_name2 AS "alterNateAreaName2",
+        a.cancel_flight_resons2 AS "cancelFlightResons2",
+        a.is_extra_flight2 AS "isExtraFlight2",
+        a.extra_flight_time_pend2 AS "extraFlightTimePend2",
+        a.urge_board_time2 AS "urgeBoardTime2",
+        a.plan_boarding_starttime2 AS "planBoardingStarttime2",
+        a.plan_boarding_endtime2 AS "planBoardingEndtime2",
+        a.guest_time2 AS "guestTime2",
+        a.terminal_id2 AS "terminalId2",
+        a.terminal2 AS "terminal2",
+        a.turn_back_time2 AS "turnBackTime2",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag",
+        a.plan_date AS "planDate",
+        a.agent_code AS "agentCode",
+        a.agent_name AS "agentName",
+        a.aircraft_num AS "aircraftNum",
+        a.aircraft_type_code AS "aircraftTypeCode",
+        <!-- nvl((SELECT p.remarks from ams_aircraft_parameters p where p.aircraft_model = a.aircraft_type_code and ROWNUM &lt;= 1),a.aircraft_type_code) AS "aircraftTypeCode", -->
+        a.aircraft_type_name AS "aircraftTypeName",
+        a.safecuard_type_code AS "safecuardTypeCode",
+        a.safecuard_type_name AS "safecuardTypeName",
+        a.travel_line AS "travelLine",
+
+        a.delay_status as "delayStatus",
+        a.cancel_flight_status as "cancelFlightStatus",
+        a.ext1 as "ext1",
+        a.ext2 as "ext2",
+        a.ext3 as "ext3",
+        a.ext4 as "ext4",
+        a.ext5 as "ext5",
+        a.ext6 as "ext6",
+        a.ext7 as "ext7",
+        a.ext8 as "ext8",
+        a.ext9 as "ext9",
+        a.ext10 as "ext10",
+        a.ext11 AS "ext11",
+        a.ext12 AS "ext12",
+        a.ext13 AS "ext13",
+        a.ext14 AS "ext14",
+        a.ext15 AS "ext15",
+        a.ext16 AS "ext16",
+        a.ext17 AS "ext17",
+        a.ext18 AS "ext18",
+        a.ext19 AS "ext19",
+        a.ext20 AS "ext20",
+        a.ext21 AS "ext21",
+        a.ext22 AS "ext22",
+        a.ext23 AS "ext23",
+        a.ext24 AS "ext24",
+        a.ext25 AS "ext25",
+        a.delay_status2 as "delayStatus2",
+        a.cancel_flight_status2 as "cancelFlightStatus2"
+    </sql>
+
+    <sql id="flightPlanPairColumnsOci">
+		a.id AS "id",
+		a.flight_dynimic_id AS "flightDynimicId",
+		a.flight_num AS "flightNum",
+		a.place_num AS "placeNum",
+		a.flight_company_id AS "flightCompanyId",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.share_flight_num AS "shareFlightNum",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.inout_status_code AS "inoutStatusCode",
+		a.inout_status_name AS "inoutStatusName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_three AS "departureAirportThree",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_three AS "arrivalAirportThree",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.etd AS "etd",
+		a.eta AS "eta",
+		a.atd AS "atd",
+		a.ata AS "ata",
+		a.travel_time AS "travelTime",
+		a.carousel_num AS "carouselNum",
+		(SELECT wm_concat(v.id) as vip
+		FROM rms_vipplan v
+		WHERE v.inout = a.inout_type_Code AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code AND
+		v.FLTNO = a.flight_num) AS "vip",
+		a.delay_resons_code AS "delayResonsCode",
+		a.delay_resons_name AS "delayResonsName",
+		a.delay_resons_remark AS "delayResonsRemark",
+		a.gate_code AS "gateCode",
+		a.gate_name AS "gateName",
+		a.boarding_start_time AS "boardingStartTime",
+		a.boarding_end_time AS "boardingEndTime",
+		a.checkin_island_code AS "checkinIslandCode",
+		a.checkin_island_name AS "checkinIslandName",
+		a.checkin_counter_code AS "checkinCounterCode",
+		a.checkin_counter_name AS "checkinCounterName",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.delay_time_pend AS "delayTimePend",
+		a.status AS "status",
+		a.status_name AS "statusName",
+		a.flight_properties_id AS "flightPropertiesId",
+		a.flight_attr_code AS "flightAttrCode",
+		a.flight_attr_name AS "flightAttrName",
+		a.plan_day_of_week AS "planDayOfWeek",
+		a.alternate_remarks AS "alterNateRemarks",
+		a.delay_resons_area_code AS "delayResonsAreaCode",
+		a.delay_resons_area_name AS "delayResonsAreaName",
+		a.alternate_area_code AS "alterNateAreaCode",
+		a.alternate_area_name AS "alterNateAreaName",
+		a.cancel_flight_resons AS "cancelFlightResons",
+		a.is_extra_flight AS "isExtraFlight",
+		a.extra_flight_time_pend AS "extraFlightTimePend",
+		a.urge_board_time AS "urgeBoardTime",
+		a.plan_boarding_starttime AS "planBoardingStarttime",
+		a.plan_boarding_endtime AS "planBoardingEndtime",
+		a.guest_time AS "guestTime",
+		a.terminal_id AS "terminalId",
+		a.terminal AS "terminal",
+		a.turn_back_time AS "turnBackTime",
+		a.flight_dynimic_id2 AS "flightDynimicId2",
+		a.flight_num2 AS "flightNum2",
+		a.place_num2 AS "placeNum2",
+		a.flight_company_id2 AS "flightCompanyId2",
+		a.flight_company_code2 AS "flightCompanyCode2",
+		a.flight_company_name2 AS "flightCompanyName2",
+		a.share_flight_num2 AS "shareFlightNum2",
+		a.flight_nature_code2 AS "flightNatureCode2",
+		a.flight_nature_name2 AS "flightNatureName2",
+		a.inout_type_code2 AS "inoutTypeCode2",
+		a.inout_type_name2 AS "inoutTypeName2",
+		a.inout_status_code2 AS "inoutStatusCode2",
+		a.inout_status_name2 AS "inoutStatusName2",
+		a.departure_airport_code2 AS "departureAirportCode2",
+		a.departure_airport_three2 AS "departureAirportThree2",
+		a.departure_airport_name2 AS "departureAirportName2",
+		a.pass_airport_1_code2 AS "passAirport1Code2",
+		a.pass_airport_1_name2 AS "passAirport1Name2",
+		a.pass_airport_2_code2 AS "passAirport2Code2",
+		a.pass_airport_2_name2 AS "passAirport2Name2",
+		a.arrival_airport_code2 AS "arrivalAirportCode2",
+		a.arrival_airport_three2 AS "arrivalAirportThree2",
+		a.arrival_airport_name2 AS "arrivalAirportName2",
+		a.departure_plan_time2 AS "departurePlanTime2",
+		a.arrival_plan_time2 AS "arrivalPlanTime2",
+		a.etd2 AS "etd2",
+		a.eta2 AS "eta2",
+		a.atd2 AS "atd2",
+		a.ata2 AS "ata2",
+		a.travel_time2 AS "travelTime2",
+		a.carousel_num2 AS "carouselNum2",
+		(SELECT wm_concat(v.id) as vip
+		FROM rms_vipplan v
+		WHERE v.inout = a.inout_type_Code2 AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code2 AND
+		v.FLTNO = a.flight_num2) AS "vip2",
+		a.delay_resons_code2 AS "delayResonsCode2",
+		a.delay_resons_name2 AS "delayResonsName2",
+		a.delay_resons_remark2 AS "delayResonsRemark2",
+		a.gate_code2 AS "gateCode2",
+		a.gate_name2 AS "gateName2",
+		a.boarding_start_time2 AS "boardingStartTime2",
+		a.boarding_end_time2 AS "boardingEndTime2",
+		a.checkin_island_code2 AS "checkinIslandCode2",
+		a.checkin_island_name2 AS "checkinIslandName2",
+		a.checkin_counter_code2 AS "checkinCounterCode2",
+		a.checkin_counter_name2 AS "checkinCounterName2",
+		a.checkin_start_time2 AS "checkinStartTime2",
+		a.checkin_end_time2 AS "checkinEndTime2",
+		a.delay_time_pend2 AS "delayTimePend2",
+		a.status2 AS "status2",
+		a.status_name2 AS "statusName2",
+		a.flight_properties_id2 AS "flightPropertiesId2",
+		a.flight_attr_code2 AS "flightAttrCode2",
+		a.flight_attr_name2 AS "flightAttrName2",
+		a.plan_day_of_week2 AS "planDayOfWeek2",
+		a.alternate_remarks2 AS "alterNateRemarks2",
+		a.delay_resons_area_code2 AS "delayResonsAreaCode2",
+		a.delay_resons_area_name2 AS "delayResonsAreaName2",
+		a.alternate_area_code2 AS "alterNateAreaCode2",
+		a.alternate_area_name2 AS "alterNateAreaName2",
+		a.cancel_flight_resons2 AS "cancelFlightResons2",
+		a.is_extra_flight2 AS "isExtraFlight2",
+		a.extra_flight_time_pend2 AS "extraFlightTimePend2",
+		a.urge_board_time2 AS "urgeBoardTime2",
+		a.plan_boarding_starttime2 AS "planBoardingStarttime2",
+		a.plan_boarding_endtime2 AS "planBoardingEndtime2",
+		a.guest_time2 AS "guestTime2",
+		a.terminal_id2 AS "terminalId2",
+		a.terminal2 AS "terminal2",
+		a.turn_back_time2 AS "turnBackTime2",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.plan_date AS "planDate",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.aircraft_num AS "aircraftNum",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.safecuard_type_code AS "safecuardTypeCode",
+		a.safecuard_type_name AS "safecuardTypeName",
+		a.travel_line AS "travelLine",
+
+		a.delay_status as "delayStatus",
+		a.cancel_flight_status as "cancelFlightStatus",
+		a.ext1 as "ext1",
+		a.ext2 as "ext2",
+		a.ext3 as "ext3",
+		a.ext4 as "ext4",
+		a.ext5 as "ext5",
+		a.ext6 as "ext6",
+		a.ext7 as "ext7",
+		a.ext8 as "ext8",
+		a.ext9 as "ext9",
+		a.ext10 as "ext10",
+		a.ext11 AS "ext11",
+		a.ext12 AS "ext12",
+		a.ext13 AS "ext13",
+		a.ext14 AS "ext14",
+		a.ext15 AS "ext15",
+		a.ext16 AS "ext16",
+		a.ext17 AS "ext17",
+		a.ext18 AS "ext18",
+		a.ext19 AS "ext19",
+		a.ext20 AS "ext20",
+		a.ext21 AS "ext21",
+		a.ext22 AS "ext22",
+		a.ext23 AS "ext23",
+		a.ext24 AS "ext24",
+		a.ext25 AS "ext25",
+		a.delay_status2 as "delayStatus2",
+		a.cancel_flight_status2 as "cancelFlightStatus2"
+	</sql>
+
+    <sql id="PairOciColumns">
+		,arrival.inte_arrival_gate_code AS "inteArrivalGateCode",
+		arrival.intl_arrival_gate_code AS "intlArrivalGateCode",
+		carousel.inte_carousel_code AS "inteCarouselCode",
+		carousel.intl_carousel_code AS "intlCarouselCode",
+
+		boarding2.inte_boarding_gate_code AS "inteBoardingGateCode",
+		boarding2.intl_boarding_gate_code AS "intlBoardingGateCode",
+		NVL(boarding2.inte_actual_start_time,boarding2.expected_start_time) AS "inteBoardingActualStartTime",
+		NVL(boarding2.inte_actual_over_time,boarding2.expected_over_time) AS "inteBoardingActualEndTime",
+		checking2.inte_checking_counter_code AS "inteCheckingCounterCode",
+		checking2.intl_checking_counter_code AS "intlCheckingCounterCode",
+		NVL(checking2.inte_actual_start_time,checking2.expected_start_time) AS "inteActualStartTime",
+		NVL(checking2.inte_actual_over_time,checking2.expected_over_time) AS "inteActualEndTime",
+		departure2.inte_departure_hall_code AS "inteDepartureHallCode",
+		departure2.intl_departure_hall_code AS "intlDepartureHallCode",
+		security2.inte_security_checkin_code AS "inteSecurityCheckinCode",
+		security2.intl_security_checkin_code AS "intlSecurityCheckinCode",
+		slide2.inte_slide_coast_code AS "inteSlideCoastCode",
+		slide2.intl_slide_coast_code AS "intlSlideCoastCode"
+	</sql>
+
+    <sql id="flightPlanPairJoins">
+    </sql>
+
+    <sql id="PairOciJoins">
+		LEFT JOIN rms_arrival_gate_oci arrival ON arrival.flight_dynamic_id = a.flight_dynimic_id
+		LEFT JOIN rms_carousel_oci carousel ON carousel.flight_dynamic_id = a.flight_dynimic_id
+
+		LEFT JOIN rms_boarding_gate_oci boarding2 ON boarding2.flight_dynamic_id = a.flight_dynimic_id2
+		LEFT JOIN rms_checking_counter_oci checking2 ON checking2.flight_dynamic_id = a.flight_dynimic_id2
+		LEFT JOIN rms_departure_hall_oci departure2 ON departure2.flight_dynamic_id = a.flight_dynimic_id2
+		LEFT JOIN rms_security_checkin_oci security2 ON security2.flight_dynamic_id = a.flight_dynimic_id2
+		LEFT JOIN rms_slide_coast_oci slide2 ON slide2.flight_dynamic_id = a.flight_dynimic_id2
+	</sql>
+
+    <select id="get" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        FROM ams_flight_dynamic_pair a
+        <include refid="flightPlanPairJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        , i.leave, i.LEAVE_TIME as leaveDate, i.start_time as occupiedStart, i.over_time as occupiedEnd,
+        i.expected_gate_num as expectedGateNum
+        FROM ams_flight_dynamic_pair a
+        <include refid="flightPlanPairJoins"/>
+        left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        WHERE 1=1
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        <if test="planDate != null and planDate != ''">
+            AND TO_CHAR(a.plan_date,'YYYYMMDD') = TO_CHAR(#{planDate},'YYYYMMDD')
+        </if>
+    </select>
+
+    <select id="findList4Mock" resultType="FlightPlanPair">
+        SELECT d.inte as "placeNum", d.info, d.id as "detailId",
+        <include refid="flightPlanPairColumns"/>
+        , i.leave, i.LEAVE_TIME as leaveDate, i.start_time as occupiedStart, i.over_time as occupiedEnd,
+        i.expected_gate_num as expectedGateNum
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN RMS_GATE_OCCUPYING_INFO i on d.data_id = i.flight_dynamic_id
+        left join ams_flight_dynamic_pair a on d.DATA_ID = a.ID
+        where d.info_id = #{infoId}
+    </select>
+
+    <select id="findOciList" parameterType="map" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        <include refid="PairOciColumns"/>
+        FROM ams_flight_dynamic_pair a
+        <include refid="PairOciJoins"/>
+        WHERE 1=1
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        <if test="inoutTypeCode != null and inoutTypeCode != ''">
+            AND (a.inout_type_code = #{inoutTypeCode} or a.inout_type_code2 = #{inoutTypeCode})
+        </if>
+        <if test="flightCompanyCode != null and flightCompanyCode != ''">
+            AND a.flight_company_code = #{flightCompanyCode}
+        </if>
+        <if test="flightNum != null and flightNum != ''">
+            AND (a.flight_num = #{flightNum} or a.flight_num2 = #{flightNum})
+        </if>
+        <if test="aircraftNum != null and aircraftNum != ''">
+            AND a.aircraft_num = #{aircraftNum}
+        </if>
+        <if test="planDate_begin != null and planDate_begin != ''">
+            <![CDATA[AND a.plan_date >= to_date(#{planDate_begin} ||' 00:00:00','yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="planDate_end != null and planDate_end != ''">
+            <![CDATA[AND a.plan_date <= to_date(#{planDate_end} ||' 23:59:59','yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+
+    </select>
+
+    <select id="findListPage" parameterType="map" resultType="FlightPlanPair">
+        SELECT * FROM ( SELECT tt.*, ROWNUM AS rowno FROM (
+        SELECT<include refid="flightPlanPairColumns"/>, i.leave, i.LEAVE_TIME as leaveDate, i.start_time as
+        occupiedStart, i.over_time as occupiedEnd, i.expected_gate_num as expectedGateNum
+        FROM ams_flight_dynamic_pair a left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        WHERE 1=1
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.id desc
+        ) tt WHERE ROWNUM <![CDATA[<=]]> #{over} ) alias WHERE alias.rowno <![CDATA[>]]> #{start}
+    </select>
+
+    <select id="getTotal" resultType="int">
+		SELECT COUNT(1) FROM ams_flight_dynamic_pair
+	</select>
+
+    <select id="findAllList" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        ,i.leave, i.LEAVE_TIME as leaveDate, i.start_time as occupiedStart, i.over_time as occupiedEnd,
+        i.expected_gate_num as expectedGateNum
+        FROM ams_flight_dynamic_pair a
+        <include refid="flightPlanPairJoins"/>
+        left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="gateGanttWrapper" type="cn.net.metadata.gantt.wrapper.GateGanttWrapper">
+        <id property="id" column="id"/>
+        <result property="flightDynamicId" column="flightDynamicId"/>
+        <result property="typeCode" column="typeCode"/>
+        <result property="status" column="status"/>
+        <result property="startDate" column="startDate"/>
+        <result property="startTime" column="startTime"/>
+        <result property="endDate" column="endDate"/>
+        <result property="endTime" column="endTime"/>
+        <result property="leave" column="leave"/>
+        <result property="leaveTime" column="leaveTime"/>
+        <result property="expectedGate" column="expectedGate"/>
+        <result property="aircraftStartDate" column="aircraftStartDate"/>
+        <result property="aircraftOverDate" column="aircraftOverDate"/>
+        <result property="inCode" column="inCode"/>
+        <result property="outCode" column="outCode"/>
+        <result property="text" column="text"/>
+        <result property="gate" column="gate" typeHandler="org.apache.ibatis.handlers.StringSplit2ListHandler"/>
+    </resultMap>
+
+    <select id="findPlanPair4Mock" resultMap="gateGanttWrapper">
+        SELECT
+          P.ID AS                                                                         FLIGHTDYNAMICID,
+          P.FLIGHT_COMPANY_CODE || ',' || P.FLIGHT_COMPANY_CODE2                          FLIGHT_COMPANY_CODE,
+          TO_CHAR(P.PLAN_DATE, 'YYYY-MM-DD')                                              PLANDATE,
+          d.INTE                                                                          GATE,
+          P.AIRCRAFT_TYPE_CODE                                                            TYPECODE,
+          CASE WHEN P.STATUS2 IS NOT NULL
+            THEN P.STATUS2
+          ELSE P.STATUS END                                                               STATUS,
+          TO_CHAR(I.START_TIME, 'YYYY-MM-DD')                                             STARTDATE,
+          TO_CHAR(I.START_TIME, 'HH24:MI')                                                STARTTIME,
+          TO_CHAR(I.OVER_TIME, 'YYYY-MM-DD')                                              ENDDATE,
+          TO_CHAR(I.OVER_TIME, 'HH24:MI')                                                 ENDTIME,
+          I.LEAVE                                                                         LEAVE,
+          I.LEAVE_TIME                                                                    LEAVETIME,
+          I.EXPECTED_GATE_NUM                                                             EXPECTEDGATE,
+          I.ID                                                                            ID,
+          TO_CHAR(I.START_TIME, 'YYYY-MM-DD') || ' ' || TO_CHAR(I.START_TIME, 'HH24:MI')  AIRCRAFTSTARTDATE,
+          TO_CHAR(I.OVER_TIME, 'YYYY-MM-DD') || ' ' || TO_CHAR(I.OVER_TIME, 'HH24:MI')    AIRCRAFTOVERDATE,
+          P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM                                           INCODE,
+          P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2                                         OUTCODE,
+          CASE WHEN P.FLIGHT_DYNIMIC_ID IS NOT NULL AND P.FLIGHT_DYNIMIC_ID2 IS NOT NULL
+            THEN
+              P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM || '/' || P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2 || ' ' ||
+              P.AIRCRAFT_TYPE_CODE
+          WHEN P.FLIGHT_DYNIMIC_ID IS NOT NULL
+            THEN
+              P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM || ' ' || P.AIRCRAFT_TYPE_CODE
+          ELSE P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2 || ' ' || P.AIRCRAFT_TYPE_CODE END "TEXT"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN AMS_FLIGHT_DYNAMIC_PAIR p
+            ON p.ID = d.DATA_ID
+          LEFT JOIN RMS_GATE_OCCUPYING_INFO i ON i.FLIGHT_DYNAMIC_ID = d.DATA_ID
+        WHERE INFO_ID = #{infoId}
+    </select>
+
+    <select id="findPairByPlanDate" resultMap="gateGanttWrapper">
+        SELECT
+        P.ID AS FLIGHTDYNAMICID, P.FLIGHT_COMPANY_CODE || ',' || P.FLIGHT_COMPANY_CODE2 FLIGHT_COMPANY_CODE,
+        TO_CHAR(P.PLAN_DATE, 'YYYY-MM-DD') PLANDATE,
+        P.PLACE_NUM GATE,
+        P.AIRCRAFT_TYPE_CODE TYPECODE,
+        CASE WHEN (P.STATUS2 !='DEP' AND P.STATUS IS NOT NULL) THEN P.STATUS
+        WHEN P.STATUS2 IS NOT NULL THEN P.STATUS2
+        ELSE P.STATUS END STATUS,
+        TO_CHAR(I.START_TIME, 'YYYY-MM-DD') STARTDATE,
+        TO_CHAR(I.START_TIME, 'HH24:MI') STARTTIME,
+        TO_CHAR(I.OVER_TIME, 'YYYY-MM-DD') ENDDATE,
+        TO_CHAR(I.OVER_TIME, 'HH24:MI') ENDTIME,
+        I.LEAVE LEAVE,
+        I.LEAVE_TIME LEAVETIME,
+        I.EXPECTED_GATE_NUM EXPECTEDGATE,
+        I.ID ID,
+        TO_CHAR(I.START_TIME, 'YYYY-MM-DD') || ' ' || TO_CHAR(I.START_TIME, 'HH24:MI') AIRCRAFTSTARTDATE,
+        TO_CHAR(I.OVER_TIME, 'YYYY-MM-DD') || ' ' || TO_CHAR(I.OVER_TIME, 'HH24:MI') AIRCRAFTOVERDATE,
+        P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM INCODE,
+        P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2 OUTCODE,
+        CASE WHEN P.FLIGHT_DYNIMIC_ID IS NOT NULL AND P.FLIGHT_DYNIMIC_ID2 IS NOT NULL
+        THEN
+        P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM || '/' || P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2 || ' ' ||
+        P.AIRCRAFT_TYPE_CODE
+        WHEN P.FLIGHT_DYNIMIC_ID IS NOT NULL
+        THEN
+        P.FLIGHT_COMPANY_CODE || P.FLIGHT_NUM || ' ' || P.AIRCRAFT_TYPE_CODE
+        ELSE P.FLIGHT_COMPANY_CODE2 || P.FLIGHT_NUM2 || ' ' || P.AIRCRAFT_TYPE_CODE END "TEXT",P.AGENT_CODE as
+        "agentCode"
+        FROM AMS_FLIGHT_DYNAMIC_PAIR P LEFT JOIN RMS_GATE_OCCUPYING_INFO I
+        ON P.ID = I.FLIGHT_DYNAMIC_ID
+        <where>
+            p.plan_DATE BETWEEN #{startDate} AND #{overDate}
+        </where>
+    </select>
+
+    <insert id="insertExt">
+		INSERT INTO ams_flight_dynamic_pair(
+		id,
+		flight_dynimic_id,
+		flight_num,
+		place_num,
+		flight_company_id,
+		flight_company_code,
+		flight_company_name,
+		share_flight_num,
+		flight_nature_code,
+		flight_nature_name,
+		inout_type_code,
+		inout_type_name,
+		inout_status_code,
+		inout_status_name,
+		departure_airport_code,
+		departure_airport_three,
+		departure_airport_name,
+		pass_airport_1_code,
+		pass_airport_1_name,
+		pass_airport_2_code,
+		pass_airport_2_name,
+		arrival_airport_code,
+		arrival_airport_three,
+		arrival_airport_name,
+		departure_plan_time,
+		arrival_plan_time,
+		etd,
+		eta,
+		atd,
+		ata,
+		travel_time,
+		carousel_num,
+		delay_resons_code,
+		delay_resons_name,
+		delay_resons_remark,
+		gate_code,
+		gate_name,
+		boarding_start_time,
+		boarding_end_time,
+		checkin_island_code,
+		checkin_island_name,
+		checkin_counter_code,
+		checkin_counter_name,
+		checkin_start_time,
+		checkin_end_time,
+		delay_time_pend,
+		status,
+		status_name,
+		flight_properties_id,
+		flight_attr_code,
+		flight_attr_name,
+		plan_day_of_week,
+		alternate_remarks,
+		delay_resons_area_code,
+		delay_resons_area_name,
+		alternate_area_code,
+		alternate_area_name,
+		cancel_flight_resons,
+		is_extra_flight,
+		extra_flight_time_pend,
+		urge_board_time,
+		plan_boarding_starttime,
+		plan_boarding_endtime,
+		guest_time,
+		terminal_id,
+		terminal,
+		turn_back_time,
+		flight_dynimic_id2,
+		flight_num2,
+		place_num2,
+		flight_company_id2,
+		flight_company_code2,
+		flight_company_name2,
+		share_flight_num2,
+		flight_nature_code2,
+		flight_nature_name2,
+		inout_type_code2,
+		inout_type_name2,
+		inout_status_code2,
+		inout_status_name2,
+		departure_airport_code2,
+		departure_airport_three2,
+		departure_airport_name2,
+		pass_airport_1_code2,
+		pass_airport_1_name2,
+		pass_airport_2_code2,
+		pass_airport_2_name2,
+		arrival_airport_code2,
+		arrival_airport_three2,
+		arrival_airport_name2,
+		departure_plan_time2,
+		arrival_plan_time2,
+		etd2,
+		eta2,
+		atd2,
+		ata2,
+		travel_time2,
+		carousel_num2,
+		delay_resons_code2,
+		delay_resons_name2,
+		delay_resons_remark2,
+		gate_code2,
+		gate_name2,
+		boarding_start_time2,
+		boarding_end_time2,
+		checkin_island_code2,
+		checkin_island_name2,
+		checkin_counter_code2,
+		checkin_counter_name2,
+		checkin_start_time2,
+		checkin_end_time2,
+		delay_time_pend2,
+		status2,
+		status_name2,
+		flight_properties_id2,
+		flight_attr_code2,
+		flight_attr_name2,
+		plan_day_of_week2,
+		alternate_remarks2,
+		delay_resons_area_code2,
+		delay_resons_area_name2,
+		alternate_area_code2,
+		alternate_area_name2,
+		cancel_flight_resons2,
+		is_extra_flight2,
+		extra_flight_time_pend2,
+		urge_board_time2,
+		plan_boarding_starttime2,
+		plan_boarding_endtime2,
+		guest_time2,
+		terminal_id2,
+		terminal2,
+		turn_back_time2,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		plan_date,
+		agent_code,
+		agent_name,
+		aircraft_num,
+		aircraft_type_code,
+		aircraft_type_name,
+		safecuard_type_code,
+		safecuard_type_name,
+		travel_line,
+
+		delay_status,
+		cancel_flight_status,
+		ext1,
+		ext2,
+		ext3,
+		ext4,
+		ext5,
+		ext6,
+		ext7,
+		ext8,
+		ext9,
+		ext10,
+		ext11,
+		ext12,
+		ext13,
+		ext14,
+		ext15,
+		ext16,
+		ext17,
+		ext18,
+		ext19,
+		ext20,
+		ext21,
+		ext22,
+		ext23,
+		ext24,
+		ext25,
+		delay_status2,
+		cancel_flight_status2
+		) VALUES (
+		#{id},
+		#{flightDynimicId},
+		#{flightNum},
+		#{placeNum},
+		#{flightCompanyId},
+		#{flightCompanyCode},
+		#{flightCompanyName},
+		#{shareFlightNum},
+		#{flightNatureCode},
+		#{flightNatureName},
+		#{inoutTypeCode},
+		#{inoutTypeName},
+		#{inoutStatusCode},
+		#{inoutStatusName},
+		#{departureAirportCode},
+		#{departureAirportThree},
+		#{departureAirportName},
+		#{passAirport1Code},
+		#{passAirport1Name},
+		#{passAirport2Code},
+		#{passAirport2Name},
+		#{arrivalAirportCode},
+		#{arrivalAirportThree},
+		#{arrivalAirportName},
+		#{departurePlanTime},
+		#{arrivalPlanTime},
+		#{etd},
+		#{eta},
+		#{atd},
+		#{ata},
+		#{travelTime},
+		#{carouselNum},
+		#{delayResonsCode},
+		#{delayResonsName},
+		#{delayResonsRemark},
+		#{gateCode},
+		#{gateName},
+		#{boardingStartTime},
+		#{boardingEndTime},
+		#{checkinIslandCode},
+		#{checkinIslandName},
+		#{checkinCounterCode},
+		#{checkinCounterName},
+		#{checkinStartTime},
+		#{checkinEndTime},
+		#{delayTimePend},
+		#{status},
+		#{statusName},
+		#{flightPropertiesId},
+		#{flightAttrCode},
+		#{flightAttrName},
+		#{planDayOfWeek},
+		#{alterNateRemarks},
+		#{delayResonsAreaCode},
+		#{delayResonsAreaName},
+		#{alterNateAreaCode},
+		#{alterNateAreaName},
+		#{cancelFlightResons},
+		#{isExtraFlight},
+		#{extraFlightTimePend},
+		#{urgeBoardTime},
+		#{planBoardingStarttime},
+		#{planBoardingEndtime},
+		#{guestTime},
+		#{terminalId},
+		#{terminal},
+		#{turnBackTime},
+		#{flightDynimicId2},
+		#{flightNum2},
+		#{placeNum2},
+		#{flightCompanyId2},
+		#{flightCompanyCode2},
+		#{flightCompanyName2},
+		#{shareFlightNum2},
+		#{flightNatureCode2},
+		#{flightNatureName2},
+		#{inoutTypeCode2},
+		#{inoutTypeName2},
+		#{inoutStatusCode2},
+		#{inoutStatusName2},
+		#{departureAirportCode2},
+		#{departureAirportThree2},
+		#{departureAirportName2},
+		#{passAirport1Code2},
+		#{passAirport1Name2},
+		#{passAirport2Code2},
+		#{passAirport2Name2},
+		#{arrivalAirportCode2},
+		#{arrivalAirportThree2},
+		#{arrivalAirportName2},
+		#{departurePlanTime2},
+		#{arrivalPlanTime2},
+		#{etd2},
+		#{eta2},
+		#{atd2},
+		#{ata2},
+		#{travelTime2},
+		#{carouselNum2},
+		#{delayResonsCode2},
+		#{delayResonsName2},
+		#{delayResonsRemark2},
+		#{gateCode2},
+		#{gateName2},
+		#{boardingStartTime2},
+		#{boardingEndTime2},
+		#{checkinIslandCode2},
+		#{checkinIslandName2},
+		#{checkinCounterCode2},
+		#{checkinCounterName2},
+		#{checkinStartTime2},
+		#{checkinEndTime2},
+		#{delayTimePend2},
+		#{status2},
+		#{statusName2},
+		#{flightPropertiesId2},
+		#{flightAttrCode2},
+		#{flightAttrName2},
+		#{planDayOfWeek2},
+		#{alterNateRemarks2},
+		#{delayResonsAreaCode2},
+		#{delayResonsAreaName2},
+		#{alterNateAreaCode2},
+		#{alterNateAreaName2},
+		#{cancelFlightResons2},
+		#{isExtraFlight2},
+		#{extraFlightTimePend2},
+		#{urgeBoardTime2},
+		#{planBoardingStarttime2},
+		#{planBoardingEndtime2},
+		#{guestTime2},
+		#{terminalId2},
+		#{terminal2},
+		#{turnBackTime2},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag},
+		#{planDate},
+		#{agentCode},
+		#{agentName},
+		#{aircraftNum},
+		#{aircraftTypeCode},
+		#{aircraftTypeName},
+		#{safecuardTypeCode},
+		#{safecuardTypeName},
+		#{travel_line},
+
+		#{delay_status},
+		#{cancel_flight_status},
+		#{ext1},
+		#{ext2},
+		#{ext3},
+		#{ext4},
+		#{ext5},
+		#{ext6},
+		#{ext7},
+		#{ext8},
+		#{ext9},
+		#{ext10},
+		#{ext11},
+		#{ext12},
+		#{ext13},
+		#{ext14},
+		#{ext15},
+		#{ext16},
+		#{ext17},
+		#{ext18},
+		#{ext19},
+		#{ext20},
+		#{ext21},
+		#{ext22},
+		#{ext23},
+		#{ext24},
+		#{ext25},
+		#{delay_status2},
+		#{cancel_flight_status2}
+		)
+	</insert>
+
+    <insert id="insert">
+		INSERT INTO AMS_FLIGHT_DYNAMIC_PAIR
+		(
+		ID,FLIGHT_DYNIMIC_ID, FLIGHT_NUM, PLACE_NUM, FLIGHT_COMPANY_ID, FLIGHT_COMPANY_CODE, FLIGHT_COMPANY_NAME, SHARE_FLIGHT_NUM, FLIGHT_NATURE_CODE,
+		FLIGHT_NATURE_NAME, INOUT_TYPE_CODE, INOUT_TYPE_NAME, INOUT_STATUS_CODE, INOUT_STATUS_NAME, DEPARTURE_AIRPORT_CODE, DEPARTURE_AIRPORT_THREE,
+		DEPARTURE_AIRPORT_NAME, PASS_AIRPORT_1_CODE, PASS_AIRPORT_1_NAME, PASS_AIRPORT_2_CODE, PASS_AIRPORT_2_NAME, ARRIVAL_AIRPORT_CODE,ARRIVAL_AIRPORT_THREE,
+		ARRIVAL_AIRPORT_NAME, DEPARTURE_PLAN_TIME, ARRIVAL_PLAN_TIME, ETD, ETA, ATD, ATA, TRAVEL_TIME, CAROUSEL_NUM,  DELAY_RESONS_CODE, DELAY_RESONS_NAME,
+		DELAY_RESONS_REMARK, GATE_CODE, GATE_NAME, BOARDING_START_TIME, BOARDING_END_TIME, CHECKIN_ISLAND_CODE, CHECKIN_ISLAND_NAME, CHECKIN_COUNTER_CODE,
+		CHECKIN_COUNTER_NAME, CHECKIN_START_TIME, CHECKIN_END_TIME, DELAY_TIME_PEND, STATUS, STATUS_NAME, FLIGHT_PROPERTIES_ID, FLIGHT_ATTR_CODE, FLIGHT_ATTR_NAME,
+		PLAN_DAY_OF_WEEK, ALTERNATE_REMARKS, DELAY_RESONS_AREA_CODE, DELAY_RESONS_AREA_NAME, ALTERNATE_AREA_CODE, ALTERNATE_AREA_NAME, CANCEL_FLIGHT_RESONS, IS_EXTRA_FLIGHT,
+		EXTRA_FLIGHT_TIME_PEND, URGE_BOARD_TIME, PLAN_BOARDING_STARTTIME, PLAN_BOARDING_ENDTIME, GUEST_TIME, TERMINAL_ID, TERMINAL, TURN_BACK_TIME, FLIGHT_DYNIMIC_ID2,
+		FLIGHT_NUM2, PLACE_NUM2, FLIGHT_COMPANY_ID2, FLIGHT_COMPANY_CODE2, FLIGHT_COMPANY_NAME2, SHARE_FLIGHT_NUM2, FLIGHT_NATURE_CODE2, FLIGHT_NATURE_NAME2, INOUT_TYPE_CODE2,
+		INOUT_TYPE_NAME2, INOUT_STATUS_CODE2, INOUT_STATUS_NAME2, DEPARTURE_AIRPORT_CODE2, DEPARTURE_AIRPORT_THREE2, DEPARTURE_AIRPORT_NAME2, PASS_AIRPORT_1_CODE2, PASS_AIRPORT_1_NAME2,
+		PASS_AIRPORT_2_CODE2, PASS_AIRPORT_2_NAME2, ARRIVAL_AIRPORT_CODE2, ARRIVAL_AIRPORT_THREE2, ARRIVAL_AIRPORT_NAME2, DEPARTURE_PLAN_TIME2, ARRIVAL_PLAN_TIME2, ETD2, ETA2, ATD2, ATA2,
+		TRAVEL_TIME2, CAROUSEL_NUM2,  DELAY_RESONS_CODE2, DELAY_RESONS_NAME2, DELAY_RESONS_REMARK2, GATE_CODE2, GATE_NAME2, BOARDING_START_TIME2, BOARDING_END_TIME2, CHECKIN_ISLAND_CODE2,
+		CHECKIN_ISLAND_NAME2, CHECKIN_COUNTER_CODE2, CHECKIN_COUNTER_NAME2, CHECKIN_START_TIME2, CHECKIN_END_TIME2, DELAY_TIME_PEND2, STATUS2, STATUS_NAME2, FLIGHT_PROPERTIES_ID2, FLIGHT_ATTR_CODE2,
+		FLIGHT_ATTR_NAME2, PLAN_DAY_OF_WEEK2, ALTERNATE_REMARKS2, DELAY_RESONS_AREA_CODE2, DELAY_RESONS_AREA_NAME2, ALTERNATE_AREA_CODE2, ALTERNATE_AREA_NAME2, CANCEL_FLIGHT_RESONS2, IS_EXTRA_FLIGHT2,
+		EXTRA_FLIGHT_TIME_PEND2, URGE_BOARD_TIME2, PLAN_BOARDING_STARTTIME2, PLAN_BOARDING_ENDTIME2, GUEST_TIME2, TERMINAL_ID2, TERMINAL2, TURN_BACK_TIME2, PLAN_DATE, AGENT_CODE, AGENT_NAME, AIRCRAFT_NUM,
+		AIRCRAFT_TYPE_CODE, AIRCRAFT_TYPE_NAME, SAFECUARD_TYPE_CODE, SAFECUARD_TYPE_NAME, TRAVEL_LINE, delay_status, cancel_flight_status, ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10,
+		ext11, ext12, ext13, ext14, ext15, ext16, ext17, ext18, ext19, ext20, ext21, ext22, ext23, ext24, ext25, delay_status2, cancel_flight_status2
+		) VALUES (
+		#{id}, #{flightDynimicId}, #{flightNum}, #{placeNum}, #{flightCompanyId}, #{flightCompanyCode}, #{flightCompanyName}, #{shareFlightNum},
+		#{flightNatureCode}, #{flightNatureName}, #{inoutTypeCode}, #{inoutTypeName}, #{inoutStatusCode}, #{inoutStatusName}, #{departureAirportCode},
+		#{departureAirportThree}, #{departureAirportName} , #{passAirport1Code}, #{passAirport1Name}, #{passAirport2Code}, #{passAirport2Name},
+		#{arrivalAirportCode}, #{arrivalAirportThree}, #{arrivalAirportName}, #{departurePlanTime}, #{arrivalPlanTime}, #{etd}, #{eta}, #{atd}, #{ata},
+		#{travelTime}, #{carouselNum},  #{delayResonsCode}, #{delayResonsName}, #{delayResonsRemark}, #{gateCode}, #{gateName}, #{boardingStartTime},
+		#{boardingEndTime}, #{checkinIslandCode}, #{checkinIslandName}, #{checkinCounterCode}, #{checkinCounterName}, #{checkinStartTime}, #{checkinEndTime},
+		#{delayTimePend}, #{status}, #{statusName}, #{flightPropertiesId}, #{flightAttrCode}, #{flightAttrName}, #{planDayOfWeek}, #{alterNateRemarks},
+		#{delayResonsAreaCode}, #{delayResonsAreaName}, #{alterNateAreaCode}, #{alterNateAreaName}, #{cancelFlightResons}, #{isExtraFlight}, #{extraFlightTimePend},
+		#{urgeBoardTime}, #{planBoardingStarttime}, #{planBoardingEndtime}, #{guestTime}, #{terminalId}, #{terminal}, #{turnBackTime}, #{flightDynimicId2}, #{flightNum2},
+		#{placeNum2}, #{flightCompanyId2}, #{flightCompanyCode2}, #{flightCompanyName2}, #{shareFlightNum2}, #{flightNatureCode2}, #{flightNatureName2}, #{inoutTypeCode2},
+		#{inoutTypeName2}, #{inoutStatusCode2}, #{inoutStatusName2}, #{departureAirportCode2}, #{departureAirportThree2}, #{departureAirportName2}, #{passAirport1Code2},
+		#{passAirport1Name2}, #{passAirport2Code2}, #{passAirport2Name2}, #{arrivalAirportCode2}, #{arrivalAirportThree2}, #{arrivalAirportName2}, #{departurePlanTime2},
+		#{arrivalPlanTime2}, #{etd2}, #{eta2}, #{atd2}, #{ata2}, #{travelTime2}, #{carouselNum2}, #{delayResonsCode2}, #{delayResonsName2}, #{delayResonsRemark2},
+		#{gateCode2}, #{gateName2}, #{boardingStartTime2}, #{boardingEndTime2}, #{checkinIslandCode2}, #{checkinIslandName2}, #{checkinCounterCode2}, #{checkinCounterName2},
+		#{checkinStartTime2}, #{checkinEndTime2}, #{delayTimePend2}, #{status2}, #{statusName2}, #{flightPropertiesId2}, #{flightAttrCode2}, #{flightAttrName2}, #{planDayOfWeek2},
+		#{alterNateRemarks2}, #{delayResonsAreaCode2}, #{delayResonsAreaName2}, #{alterNateAreaCode2}, #{alterNateAreaName2}, #{cancelFlightResons2}, #{isExtraFlight2},
+		#{extraFlightTimePend2}, #{urgeBoardTime2}, #{planBoardingStarttime2}, #{planBoardingEndtime2}, #{guestTime2}, #{terminalId2}, #{terminal2}, #{turnBackTime2},
+		#{planDate}, #{agentCode}, #{agentName}, #{aircraftNum}, #{aircraftTypeCode}, #{aircraftTypeName}, #{safecuardTypeCode}, #{safecuardTypeName}, #{travelLine},
+		#{delayStatus}, #{cancelFlightStatus}, #{ext1}, #{ext2}, #{ext3}, #{ext4}, #{ext5}, #{ext6}, #{ext7}, #{ext8}, #{ext9}, #{ext10},
+		#{ext11}, #{ext12}, #{ext13}, #{ext14}, #{ext15}, #{ext16}, #{ext17}, #{ext18}, #{ext19}, #{ext20}, #{ext21}, #{ext22}, #{ext23}, #{ext24}, #{ext25}, #{delayStatus2}, #{cancelFlightStatus2}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE ams_flight_dynamic_pair SET
+		flight_dynimic_id = #{flightDynimicId},
+		flight_num = #{flightNum},
+		place_num = #{placeNum},
+		flight_company_id = #{flightCompanyId},
+		flight_company_code = #{flightCompanyCode},
+		flight_company_name = #{flightCompanyName},
+		share_flight_num = #{shareFlightNum},
+		flight_nature_code = #{flightNatureCode},
+		flight_nature_name = #{flightNatureName},
+		inout_type_code = #{inoutTypeCode},
+		inout_type_name = #{inoutTypeName},
+		inout_status_code = #{inoutStatusCode},
+		inout_status_name = #{inoutStatusName},
+		departure_airport_code = #{departureAirportCode},
+		departure_airport_three = #{departureAirportThree},
+		departure_airport_name = #{departureAirportName},
+		pass_airport_1_code = #{passAirport1Code},
+		pass_airport_1_name = #{passAirport1Name},
+		pass_airport_2_code = #{passAirport2Code},
+		pass_airport_2_name = #{passAirport2Name},
+		arrival_airport_code = #{arrivalAirportCode},
+		arrival_airport_three = #{arrivalAirportThree},
+		arrival_airport_name = #{arrivalAirportName},
+		departure_plan_time = #{departurePlanTime},
+		arrival_plan_time = #{arrivalPlanTime},
+		etd = #{etd},
+		eta = #{eta},
+		atd = #{atd},
+		ata = #{ata},
+		travel_time = #{travelTime},
+		carousel_num = #{carouselNum},
+		delay_resons_code = #{delayResonsCode},
+		delay_resons_name = #{delayResonsName},
+		delay_resons_remark = #{delayResonsRemark},
+		gate_code = #{gateCode},
+		gate_name = #{gateName},
+		boarding_start_time = #{boardingStartTime},
+		boarding_end_time = #{boardingEndTime},
+		checkin_island_code = #{checkinIslandCode},
+		checkin_island_name = #{checkinIslandName},
+		checkin_counter_code = #{checkinCounterCode},
+		checkin_counter_name = #{checkinCounterName},
+		checkin_start_time = #{checkinStartTime},
+		checkin_end_time = #{checkinEndTime},
+		delay_time_pend = #{delayTimePend},
+		status = #{status},
+		status_name = #{statusName},
+		flight_properties_id = #{flightPropertiesId},
+		flight_attr_code = #{flightAttrCode},
+		flight_attr_name = #{flightAttrName},
+		plan_day_of_week = #{planDayOfWeek},
+		alternate_remarks = #{alterNateRemarks},
+		delay_resons_area_code = #{delayResonsAreaCode},
+		delay_resons_area_name = #{delayResonsAreaName},
+		alternate_area_code = #{alterNateAreaCode},
+		alternate_area_name = #{alterNateAreaName},
+		cancel_flight_resons = #{cancelFlightResons},
+		is_extra_flight = #{isExtraFlight},
+		extra_flight_time_pend = #{extraFlightTimePend},
+		urge_board_time = #{urgeBoardTime},
+		plan_boarding_starttime = #{planBoardingStarttime},
+		plan_boarding_endtime = #{planBoardingEndtime},
+		guest_time = #{guestTime},
+		terminal_id = #{terminalId},
+		terminal = #{terminal},
+		turn_back_time = #{turnBackTime},
+		flight_dynimic_id2 = #{flightDynimicId2},
+		flight_num2 = #{flightNum2},
+		place_num2 = #{placeNum2},
+		flight_company_id2 = #{flightCompanyId2},
+		flight_company_code2 = #{flightCompanyCode2},
+		flight_company_name2 = #{flightCompanyName2},
+		share_flight_num2 = #{shareFlightNum2},
+		flight_nature_code2 = #{flightNatureCode2},
+		flight_nature_name2 = #{flightNatureName2},
+		inout_type_code2 = #{inoutTypeCode2},
+		inout_type_name2 = #{inoutTypeName2},
+		inout_status_code2 = #{inoutStatusCode2},
+		inout_status_name2 = #{inoutStatusName2},
+		departure_airport_code2 = #{departureAirportCode2},
+		departure_airport_three2 = #{departureAirportThree2},
+		departure_airport_name2 = #{departureAirportName2},
+		pass_airport_1_code2 = #{passAirport1Code2},
+		pass_airport_1_name2 = #{passAirport1Name2},
+		pass_airport_2_code2 = #{passAirport2Code2},
+		pass_airport_2_name2 = #{passAirport2Name2},
+		arrival_airport_code2 = #{arrivalAirportCode2},
+		arrival_airport_three2 = #{arrivalAirportThree2},
+		arrival_airport_name2 = #{arrivalAirportName2},
+		departure_plan_time2 = #{departurePlanTime2},
+		arrival_plan_time2 = #{arrivalPlanTime2},
+		etd2 = #{etd2},
+		eta2 = #{eta2},
+		atd2 = #{atd2},
+		ata2 = #{ata2},
+		travel_time2 = #{travelTime2},
+		carousel_num2 = #{carouselNum2},
+		delay_resons_code2 = #{delayResonsCode2},
+		delay_resons_name2 = #{delayResonsName2},
+		delay_resons_remark2 = #{delayResonsRemark2},
+		gate_code2 = #{gateCode2},
+		gate_name2 = #{gateName2},
+		boarding_start_time2 = #{boardingStartTime2},
+		boarding_end_time2 = #{boardingEndTime2},
+		checkin_island_code2 = #{checkinIslandCode2},
+		checkin_island_name2 = #{checkinIslandName2},
+		checkin_counter_code2 = #{checkinCounterCode2},
+		checkin_counter_name2 = #{checkinCounterName2},
+		checkin_start_time2 = #{checkinStartTime2},
+		checkin_end_time2 = #{checkinEndTime2},
+		delay_time_pend2 = #{delayTimePend2},
+		status2 = #{status2},
+		status_name2 = #{statusName2},
+		flight_properties_id2 = #{flightPropertiesId2},
+		flight_attr_code2 = #{flightAttrCode2},
+		flight_attr_name2 = #{flightAttrName2},
+		plan_day_of_week2 = #{planDayOfWeek2},
+		alternate_remarks2 = #{alterNateRemarks2},
+		delay_resons_area_code2 = #{delayResonsAreaCode2},
+		delay_resons_area_name2 = #{delayResonsAreaName2},
+		alternate_area_code2 = #{alterNateAreaCode2},
+		alternate_area_name2 = #{alterNateAreaName2},
+		cancel_flight_resons2 = #{cancelFlightResons2},
+		is_extra_flight2 = #{isExtraFlight2},
+		extra_flight_time_pend2 = #{extraFlightTimePend2},
+		urge_board_time2 = #{urgeBoardTime2},
+		plan_boarding_starttime2 = #{planBoardingStarttime2},
+		plan_boarding_endtime2 = #{planBoardingEndtime2},
+		guest_time2 = #{guestTime2},
+		terminal_id2 = #{terminalId2},
+		terminal2 = #{terminal2},
+		turn_back_time2 = #{turnBackTime2},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks},
+		plan_date = #{planDate},
+		agent_code = #{agentCode},
+		agent_name = #{agentName},
+		aircraft_num = #{aircraftNum},
+		aircraft_type_code = #{aircraftTypeCode},
+		aircraft_type_name = #{aircraftTypeName},
+		safecuard_type_code = #{safecuardTypeCode},
+		safecuard_type_name = #{safecuardTypeName},
+		travel_line = #{travelLine},
+
+		delay_status = #{delayStatus},
+		cancel_flight_status = #{cancelFlightStatus},
+		ext1 = #{ext1},
+		ext2 = #{ext2},
+		ext3 = #{ext3},
+		ext4 = #{ext4},
+		ext5 = #{ext5},
+		ext6 = #{ext6},
+		ext7 = #{ext7},
+		ext8 = #{ext8},
+		ext9 = #{ext9},
+		ext10 = #{ext10},
+		ext11 = #{ext11},
+		ext12 = #{ext12},
+		ext13 = #{ext13},
+		ext14 = #{ext14},
+		ext15 = #{ext15},
+		ext16 = #{ext16},
+		ext17 = #{ext17},
+		ext18 = #{ext18},
+		ext19 = #{ext19},
+		ext20 = #{ext20},
+		ext21 = #{ext21},
+		ext22 = #{ext22},
+		ext23 = #{ext23},
+		ext24 = #{ext24},
+		ext25 = #{ext25},
+		delay_status2 = #{delayStatus2},
+		cancel_flight_status2 = #{cancelFlightStatus2}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM ams_flight_dynamic_pair
+		WHERE id = #{id}
+	</update>
+
+    <update id="deleteByPlanDate">
+		DELETE FROM ams_flight_dynamic_pair
+		WHERE plan_date = #{plandate}
+	</update>
+
+    <select id="querySeatNumByAircraftNum" resultType="java.lang.Long">
+		SELECT a.MAXNUM_SEAT
+		FROM AMS_COMPANY_AIRCRAFT_NUM a
+		WHERE a.del_flag = 0 AND a.AIRCRAFT_NUM = #{aircraftNum}
+	</select>
+
+    <select id="getMinimalSeatNumByAircraftNum" resultType="java.lang.Long">
+		SELECT
+		MIN( seat_num )
+		FROM
+		(
+		SELECT
+		DISTINCT safeguard_type_code,
+		seat_num
+		FROM
+		RMS_SAFEGUARD_SEAT_TIMELONG
+		WHERE
+		safeguard_type_code = #{safeguardTypeCode}
+		) t
+	</select>
+
+
+    <select id="queryByInDynamicId" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        FROM ams_flight_dynamic_pair a
+        <include refid="flightPlanPairJoins"/>
+        <where>
+            a.flight_dynimic_id=#{id}
+        </where>
+    </select>
+
+    <select id="queryByOutDynamicId" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        FROM ams_flight_dynamic_pair a
+        <include refid="flightPlanPairJoins"/>
+        <where>
+            a.flight_dynimic_id2=#{id}
+        </where>
+    </select>
+
+    <select id="findUnDistPairs" resultType="FlightPlanPair" parameterType="map">
+        select
+        <include refid="flightPlanPairColumnsOci"/>
+        from ams_flight_dynamic_pair a left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        WHERE (a.place_num is null or a.place_num = '') and i.id is not null ${dsfn}
+        <choose>
+            <when test='allotType == "out_pair"'>
+                AND (a.departure_Plan_Time2 BETWEEN #{startTime} AND #{endTime})
+            </when>
+            <when test='allotType == "in"'>
+                AND (a.arrival_Plan_Time BETWEEN #{startTime} AND #{endTime}) AND a.flight_dynimic_id2 is NULL
+            </when>
+            <otherwise>
+                AND (a.departure_Plan_Time2 BETWEEN #{startTime} AND #{endTime} OR a.arrival_Plan_Time BETWEEN
+                #{startTime} AND #{endTime})
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findMockPairs" resultType="FlightPlanPair" parameterType="Map">
+        select
+        <include refid="flightPlanPairColumns"/>
+        from ams_flight_dynamic_pair a left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        where (a.departure_Plan_Time2 BETWEEN #{startTime} AND #{endTime} OR a.arrival_Plan_Time BETWEEN #{startTime}
+        AND #{endTime})
+        AND i.id is not null
+        <if test="filterDistedRes == true">
+            AND (a.place_num is null or a.place_num = '')
+        </if>
+        ${dsfn}
+    </select>
+
+    <update id="updateSafeguardTypeCode">
+		UPDATE
+		ams_flight_dynamic_pair
+		SET
+		safecuard_type_code = #{safecuardTypeCode},safecuard_type_name=#{safecuardTypeName}
+		WHERE id = #{id}
+	</update>
+
+    <select id="getPlaceNumList" resultType="FlightPlanPair">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC_PAIR a left join RMS_GATE_OCCUPYING_INFO oci on a.id = oci.flight_dynamic_id
+        WHERE a.PLACE_NUM = #{placeNum} AND a.PLACE_NUM in
+        (SELECT aircraft_stand_num from rms_aircraft_stand where DEL_flag = 0 AND has_salon = 1)
+        ORDER BY a.plan_date,oci.start_time,a.departure_plan_time
+    </select>
+
+    <select id="safeguardTypeToBak" statementType="CALLABLE">
+		{call P_OLD_PROCESS_TO_BAK(#{pairId, jdbcType=VARCHAR,mode=IN})}
+	</select>
+
+
+    <resultMap id="conflictPlaceNumWrapper" type="cn.net.metadata.wrapper.ConflictPlaceNumWrapper">
+        <result property="planDate" column="planDate"/>
+        <result property="placeNum" column="placeNum"/>
+        <result property="flightNum" column="flightNum"/>
+        <result property="flightNum2" column="flightNum2"/>
+        <result property="startTime" column="startTime"/>
+        <result property="overTime" column="overTime"/>
+        <result property="atd" column="atd"/>
+        <result property="fd" column="fd"/>
+        <result property="fd2" column="fd2"/>
+    </resultMap>
+    <select id="findListByConflictPlaceNum" resultMap="conflictPlaceNumWrapper">
+        SELECT
+            p.plan_date "planDate",
+            p.place_num "placeNum",
+            p.flight_company_code||p.flight_num "flightNum",
+            p.flight_company_code2||p.flight_num2 "flightNum2",
+            i.start_time "startTime",
+            i.over_time "overTime",
+            p.atd "atd",
+            p.flight_dynimic_id "fd",
+            p.flight_dynimic_id2 "fd2",
+            p.status "status",
+            p.status2 "status2"
+        FROM AMS_FLIGHT_DYNAMIC_PAIR P LEFT JOIN RMS_GATE_OCCUPYING_INFO I  ON P.ID = I.FLIGHT_DYNAMIC_ID
+        WHERE p.place_num is NOT NULL AND p.atd2 is NULL
+        ORDER BY p.place_num,i.start_time
+	</select>
+</mapper>

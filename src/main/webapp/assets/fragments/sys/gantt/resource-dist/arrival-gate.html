@@ -1,0 +1,30 @@
+<form id="mixingCarouselDistForm" style="padding:15px;">
+    <input type="hidden" name="flightDynamicId" value="{{flightDynamicId}}">
+    <input type="hidden" name="flightDynamicNature" value="{{nature}}">
+    <table cellpadding="5" width="100%">
+        {{ if nature === '3' || nature === '1' }}
+        <tr>
+            <td width="40%">国内航段：</td>
+            <td>
+                <select id="cbInteCarouselCode" style="width:200px;" name="inteCarouselCode">
+                    {{each availableInte as vInte}}
+                    <option value="{{vInte}}" {{if vInte === inte}} selected {{/if}}>{{vInte}}</option>
+                    {{/each}}
+                </select>
+            </td>
+        </tr>
+        {{ /if }}
+        {{ if nature === '3' || nature === '2' }}
+        <tr>
+            <td width="40%">国际航段：</td>
+            <td>
+                <select id="cbIntlCarouselCode" style="width:200px;" name="intlCarouselCode">
+                    {{each availableIntl as vIntl}}
+                    <option value="{{vIntl}}" {{if vIntl === intl}} selected {{/if}}>{{vIntl}}</option>
+                    {{/each}}
+                </select>
+            </td>
+        </tr>
+        {{ /if }}
+    </table>
+</form>

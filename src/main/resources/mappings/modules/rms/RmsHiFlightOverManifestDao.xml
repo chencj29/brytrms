@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsHiFlightOverManifestDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsFlightOverManifestColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.luggage_count AS "luggageCount",
+		a.luggage_weight AS "luggageWeight",
+		a.goods_count AS "goodsCount",
+		a.goods_weight AS "goodsWeight",
+		a.mail_count AS "mailCount",
+		a.mail_weight AS "mailWeight",
+		a.vip_count AS "vipCount",
+		a.person_count AS "personCount",
+		a.child_count AS "childCount",
+		a.baby_count AS "babyCount",
+		a.person_plan_count AS "personPlanCount",
+		a.person_true_count AS "personTrueCount"
+	</sql>
+	
+	<sql id="rmsFlightOverManifestJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsFlightOverManifest">
+		SELECT 
+			<include refid="rmsFlightOverManifestColumns"/>
+		FROM rms_flight_over_manifest_h a
+		<include refid="rmsFlightOverManifestJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsFlightOverManifest">
+		SELECT 
+			<include refid="rmsFlightOverManifestColumns"/>
+		FROM rms_flight_over_manifest_h a
+		<include refid="rmsFlightOverManifestJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsFlightOverManifest">
+		SELECT 
+			<include refid="rmsFlightOverManifestColumns"/>
+		FROM rms_flight_over_manifest_h a
+		<include refid="rmsFlightOverManifestJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_flight_over_manifest_h(
+			id,
+			flight_dynamic_id,
+			luggage_count,
+			luggage_weight,
+			goods_count,
+			goods_weight,
+			mail_count,
+			mail_weight,
+			vip_count,
+			person_count,
+			child_count,
+			baby_count,
+			person_plan_count,
+			person_true_count
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{luggageCount},
+			#{luggageWeight},
+			#{goodsCount},
+			#{goodsWeight},
+			#{mailCount},
+			#{mailWeight},
+			#{vipCount},
+			#{personCount},
+			#{childCount},
+			#{babyCount},
+			#{personPlanCount},
+			#{personTrueCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_flight_over_manifest_h SET
+			flight_dynamic_id = #{flightDynamicId},
+			luggage_count = #{luggageCount},
+			luggage_weight = #{luggageWeight},
+			goods_count = #{goodsCount},
+			goods_weight = #{goodsWeight},
+			mail_count = #{mailCount},
+			mail_weight = #{mailWeight},
+			vip_count = #{vipCount},
+			person_count = #{personCount},
+			child_count = #{childCount},
+			baby_count = #{babyCount},
+			person_plan_count = #{personPlanCount},
+			person_true_count = #{personTrueCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rms_flight_over_manifest_h
+		WHERE id = #{id}
+	</update>
+
+
+
+	<select id="getOverManifest" resultType="RmsFlightOverManifest">
+		SELECT
+		<include refid="rmsFlightOverManifestColumns"/>
+		FROM rms_flight_over_manifest_h a
+		<include refid="rmsFlightOverManifestJoins"/>
+		WHERE a.flight_Dynamic_Id = #{flightDynamicId}
+	</select>
+</mapper>

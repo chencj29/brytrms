@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.AircraftParametersDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="aircraftParametersColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.aircraft_model AS "aircraftModel",
+		a.aircraft_main_model AS "aircraftMainModel",
+		a.aircraft_sub_model AS "aircraftSubModel",
+		a.use_lift AS "useLift",
+		a.use_bridge AS "useBridge",
+		a.power_type_code AS "powerTypeCode",
+		a.power_type_name AS "powerTypeName",
+		a.fuel_type_code AS "fuelTypeCode",
+		a.fuel_type_name AS "fuelTypeName",
+		a.maxnum_seat AS "maxnumSeat",
+		a.maxnum_cargoes AS "maxnumCargoes",
+		a.maxnum_amount AS "maxnumAmount",
+		a.wingspan AS "wingspan",
+		a.fuselage_length AS "fuselageLength",
+		a.front_wheel_length AS "frontWheelLength",
+		a.fuselage_height AS "fuselageHeight",
+		a.aircraft_weight AS "aircraftWeight",
+		a.zero_fuel_weight AS "zeroFuelWeight",
+		a.wheels_weight AS "wheelsWeight",
+		a.maxnum_playload AS "maxnumPlayload",
+		a.maxnum_takeoff_weight AS "maxnumTakeoffWeight",
+		a.cruising_altitude AS "cruisingAltitude",
+		a.maxnum_range AS "maxnumRange",
+		a.runway_length AS "runwayLength",
+		a.acn_rigid AS "acnRigid",
+		a.acn_flexible AS "acnFlexible",
+		a.engine_num AS "engineNum",
+		a.engine_type AS "engineType",
+		a.engine_manufacturer AS "engineManufacturer",
+		a.lostof_stop_time AS "lostofStopTime",
+		a.articraft_type_code AS "articraftTypeCode",
+		a.articraft_type_name AS "articraftTypeName",
+		a.isbigtype AS "isbigtype",
+		a.arration_type AS "arrationType"
+	</sql>
+	
+	<sql id="aircraftParametersJoins">
+	</sql>
+    
+	<select id="get" resultType="AircraftParameters">
+		SELECT 
+			<include refid="aircraftParametersColumns"/>
+		FROM ams_aircraft_parameters a
+		<include refid="aircraftParametersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AircraftParameters">
+		SELECT 
+			<include refid="aircraftParametersColumns"/>
+		FROM ams_aircraft_parameters a
+		<include refid="aircraftParametersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AircraftParameters">
+		SELECT 
+			<include refid="aircraftParametersColumns"/>
+		FROM ams_aircraft_parameters a
+		<include refid="aircraftParametersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_aircraft_parameters(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			aircraft_model,
+			aircraft_main_model,
+			aircraft_sub_model,
+			use_lift,
+			use_bridge,
+			power_type_code,
+			power_type_name,
+			fuel_type_code,
+			fuel_type_name,
+			maxnum_seat,
+			maxnum_cargoes,
+			maxnum_amount,
+			wingspan,
+			fuselage_length,
+			front_wheel_length,
+			fuselage_height,
+			aircraft_weight,
+			zero_fuel_weight,
+			wheels_weight,
+			maxnum_playload,
+			maxnum_takeoff_weight,
+			cruising_altitude,
+			maxnum_range,
+			runway_length,
+			acn_rigid,
+			acn_flexible,
+			engine_num,
+			engine_type,
+			engine_manufacturer,
+			lostof_stop_time,
+			articraft_type_code,
+			articraft_type_name,
+			isbigtype,
+			arration_type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{aircraftModel},
+			#{aircraftMainModel},
+			#{aircraftSubModel},
+			#{useLift},
+			#{useBridge},
+			#{powerTypeCode},
+			#{powerTypeName},
+			#{fuelTypeCode},
+			#{fuelTypeName},
+			#{maxnumSeat},
+			#{maxnumCargoes},
+			#{maxnumAmount},
+			#{wingspan},
+			#{fuselageLength},
+			#{frontWheelLength},
+			#{fuselageHeight},
+			#{aircraftWeight},
+			#{zeroFuelWeight},
+			#{wheelsWeight},
+			#{maxnumPlayload},
+			#{maxnumTakeoffWeight},
+			#{cruisingAltitude},
+			#{maxnumRange},
+			#{runwayLength},
+			#{acnRigid},
+			#{acnFlexible},
+			#{engineNum},
+			#{engineType},
+			#{engineManufacturer},
+			#{lostofStopTime},
+			#{articraftTypeCode},
+			#{articraftTypeName},
+			#{isbigtype},
+			#{arrationType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_aircraft_parameters SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			aircraft_model = #{aircraftModel},
+			aircraft_main_model = #{aircraftMainModel},
+			aircraft_sub_model = #{aircraftSubModel},
+			use_lift = #{useLift},
+			use_bridge = #{useBridge},
+			power_type_code = #{powerTypeCode},
+			power_type_name = #{powerTypeName},
+			fuel_type_code = #{fuelTypeCode},
+			fuel_type_name = #{fuelTypeName},
+			maxnum_seat = #{maxnumSeat},
+			maxnum_cargoes = #{maxnumCargoes},
+			maxnum_amount = #{maxnumAmount},
+			wingspan = #{wingspan},
+			fuselage_length = #{fuselageLength},
+			front_wheel_length = #{frontWheelLength},
+			fuselage_height = #{fuselageHeight},
+			aircraft_weight = #{aircraftWeight},
+			zero_fuel_weight = #{zeroFuelWeight},
+			wheels_weight = #{wheelsWeight},
+			maxnum_playload = #{maxnumPlayload},
+			maxnum_takeoff_weight = #{maxnumTakeoffWeight},
+			cruising_altitude = #{cruisingAltitude},
+			maxnum_range = #{maxnumRange},
+			runway_length = #{runwayLength},
+			acn_rigid = #{acnRigid},
+			acn_flexible = #{acnFlexible},
+			engine_num = #{engineNum},
+			engine_type = #{engineType},
+			engine_manufacturer = #{engineManufacturer},
+			lostof_stop_time = #{lostofStopTime},
+			articraft_type_code = #{articraftTypeCode},
+			articraft_type_name = #{articraftTypeName},
+			isbigtype = #{isbigtype},
+			arration_type = #{arrationType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_aircraft_parameters SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

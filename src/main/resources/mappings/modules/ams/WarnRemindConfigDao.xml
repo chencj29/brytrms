@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.WarnRemindConfigDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="warnRemindConfigColumns">
+		a.id AS "id",
+		a.config_name AS "configName",
+		a.config_type AS "configType",
+		a.action_service AS "actionService",
+		a.config_available AS "configAvailable",
+		a.monitor_class AS "monitorClass",
+		a.message_tpl AS "messageTpl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="warnRemindConfigJoins">
+    </sql>
+
+    <select id="get" resultType="WarnRemindConfig">
+        SELECT
+        <include refid="warnRemindConfigColumns"/>
+        FROM warn_remind_config a
+        <include refid="warnRemindConfigJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getConfigsByVairables" parameterType="java.util.HashMap" resultType="WarnRemindConfig">
+        SELECT m.*
+        FROM WARN_REMIND_CONFIG m
+        LEFT JOIN (
+        SELECT c.id, concatenate_list(CURSOR(
+        SELECT i.field_code FROM WARN_REMIND_CONFIG_ITEM i
+        WHERE i.config_id = c.id AND i.ITEM_AVAILABLE = 1 AND i.DEL_FLAG = 0 ORDER BY I.FIELD_CODE
+        )) AS rules
+        FROM WARN_REMIND_CONFIG c WHERE c.MONITOR_CLASS = #{entityClass} GROUP BY c.id
+        ) b ON m.id = b.id WHERE m.CONFIG_AVAILABLE = 1
+        <if test="rules != null and rules != ''">
+            AND rules = #{rules}
+        </if>
+        AND m.CONFIG_TYPE = #{configType} AND m.DEL_FLAG = 0 AND m.ACTION_SERVICE IS NOT NULL
+    </select>
+
+    <select id="checkEventItemExist" parameterType="java.util.Map" resultType="int">
+        SELECT count(1)
+        FROM warn_remind_config m
+            LEFT JOIN (
+                SELECT c.id, concatenate_list(CURSOR(
+                        SELECT i.field_code
+                        FROM WARN_REMIND_CONFIG_ITEM i
+                        WHERE i.config_id = c.id AND i.ITEM_AVAILABLE = 1 AND i.DEL_FLAG = 0
+                        ORDER BY I.FIELD_CODE
+                    )) AS rules
+                FROM WARN_REMIND_CONFIG c
+                WHERE c.MONITOR_CLASS = #{monitorClass}
+                GROUP BY c.id
+            ) b ON m.id = b.id
+        WHERE m.config_available = 1
+            AND m.del_flag = 0
+            AND rules = #{rules}
+    </select>
+
+    <select id="getWarnConfigs" parameterType="java.util.HashMap" resultType="WarnRemindConfig">
+        SELECT
+            config.ID,
+            config.CONFIG_NAME,
+            config.CONFIG_TYPE,
+            config.ACTION_SERVICE,
+            config.CONFIG_AVAILABLE,
+            config.MONITOR_CLASS,
+            config.MESSAGE_TPL,
+            config.CREATE_BY,
+            config.CREATE_DATE,
+            config.UPDATE_BY,
+            config.UPDATE_DATE,
+            config.REMARKS,
+            config.DEL_FLAG
+        FROM
+            WARN_REMIND_CONFIG config
+        WHERE
+            config.DEL_FLAG = 0
+            AND config.CONFIG_AVAILABLE = 1
+            AND config.CONFIG_TYPE = 'TIMER'
+    </select>
+
+
+    <select id="findList" resultType="WarnRemindConfig">
+        SELECT
+        <include refid="warnRemindConfigColumns"/>
+        FROM warn_remind_config a
+        <include refid="warnRemindConfigJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="WarnRemindConfig">
+        SELECT
+        <include refid="warnRemindConfigColumns"/>
+        FROM warn_remind_config a
+        <include refid="warnRemindConfigJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO warn_remind_config(
+			id, config_name, config_type, action_service, monitor_class,
+			message_tpl, create_by, create_date, update_by, update_date, remarks
+		) VALUES (
+			#{id}, #{configName}, #{configType}, #{actionService},
+			#{monitorClass}, #{messageTpl}, #{createBy.id}, #{createDate},
+			#{updateBy.id}, #{updateDate}, #{remarks}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE warn_remind_config SET 	
+			config_name = #{configName},
+			config_type = #{configType},
+			action_service = #{actionService},
+			monitor_class = #{monitorClass},
+			message_tpl = #{messageTpl},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE WARN_REMIND_CONFIG SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
+	</update>
+
+    <delete id="deletePhysical" parameterType="String">
+      DELETE FROM WARN_REMIND_CONFIG where ID = #{id}
+    </delete>
+
+</mapper>

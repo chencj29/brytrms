@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.EmergencyPrepareDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="emergencyPrepareColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.em_event_name AS "emEventName",
+		a.em_p_code AS "emPCode",
+		a.em_p_name AS "emPName",
+		a.em_level AS "emLevel"
+	</sql>
+	
+	<sql id="emergencyPrepareJoins">
+	</sql>
+    
+	<select id="get" resultType="EmergencyPrepare">
+		SELECT 
+			<include refid="emergencyPrepareColumns"/>
+		FROM rms_emergency_prepare a
+		<include refid="emergencyPrepareJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EmergencyPrepare">
+		SELECT 
+			<include refid="emergencyPrepareColumns"/>
+		FROM rms_emergency_prepare a
+		<include refid="emergencyPrepareJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EmergencyPrepare">
+		SELECT 
+			<include refid="emergencyPrepareColumns"/>
+		FROM rms_emergency_prepare a
+		<include refid="emergencyPrepareJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_emergency_prepare(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			em_event_name,
+			em_p_code,
+			em_p_name,
+			em_level
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{emEventName},
+			#{emPCode},
+			#{emPName},
+			#{emLevel}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_emergency_prepare SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			em_event_name = #{emEventName},
+			em_p_code = #{emPCode},
+			em_p_name = #{emPName},
+			em_level = #{emLevel}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_emergency_prepare SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.AircraftStandDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="aircraftStandColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.aircraft_stand_num AS "aircraftStandNum",
+		a.aircraft_park_num AS "aircraftParkNum",
+		a.aircraft_park_dispatcher AS "aircraftParkDispatcher",
+		a.has_salon AS "hasSalon",
+		a.salon_status AS "salonStatus",
+		a.has_oilpipeline AS "hasOilpipeline",
+		a.oilpipeline_status AS "oilpipelineStatus",
+		a.left_as_num AS "leftAsNum",
+		a.right_as_num AS "rightAsNum",
+		a.front_coast AS "frontCoast",
+		a.back_coast AS "backCoast",
+		a.left_wheel_line AS "leftWheelLine",
+		a.right_wheel_line AS "rightWheelLine",
+		a.wing_length AS "wingLength",
+		a.available AS "available",
+		a.airport_terminal_code AS "airportTerminalCode",
+		a.order_index as "orderIndex"
+	</sql>
+
+    <sql id="aircraftStandJoins">
+    </sql>
+
+    <select id="get" resultType="AircraftStand">
+        SELECT
+        <include refid="aircraftStandColumns"/>
+        FROM rms_aircraft_stand a
+        <include refid="aircraftStandJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="AircraftStand">
+        SELECT
+        <include refid="aircraftStandColumns"/>
+        FROM rms_aircraft_stand a
+        <include refid="aircraftStandJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findByIds" resultType="AircraftStand" parameterType="java.util.List">
+        SELECT
+        <include refid="aircraftStandColumns"/>
+        FROM rms_aircraft_stand a
+        WHERE aircraft_stand_num IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND del_flag = 0 ORDER BY a.ORDER_INDEX
+    </select>
+
+    <select id="findStandUsage" parameterType="map" resultType="map">
+        <!--
+        SELECT t.actual_gate_num, count(i.actual_gate_num) AS stand_use_counter
+        FROM rms_gate_occupying_info i right JOIN (WITH temp AS
+        (SELECT #{numbers, jdbcType=VARCHAR} actual_gate_num FROM dual)
+        SELECT regexp_substr(actual_gate_num, '[0-9a-zA-Z]+', 1, rn) actual_gate_num FROM temp t1,
+        (SELECT level rn FROM dual CONNECT BY rownum <![CDATA[ <= ]]> (SELECT length(actual_gate_num) - length(replace(actual_gate_num, ',', '')) + 1 FROM temp)) t2) t
+        on t.actual_gate_num = i.ACTUAL_GATE_NUM
+        where start_time BETWEEN  #{start} and #{over}
+        GROUP BY i.actual_gate_num, t.actual_gate_num
+        order by stand_use_counter asc, to_number(regexp_substr(actual_gate_num,'[0-9]*[0-9]',1)) asc
+        -->
+        <!--
+         SELECT actual_gate_num,count(actual_gate_num) AS stand_use_counter FROM
+        (
+            SELECT actual_gate_num FROM(
+                WITH temp AS
+                (SELECT #{numbers, jdbcType=VARCHAR} actual_gate_num FROM dual)
+                SELECT regexp_substr(actual_gate_num, '[0-9a-zA-Z]+', 1, rn) actual_gate_num FROM temp t1,
+                (SELECT level rn FROM dual CONNECT BY rownum <![CDATA[ <= ]]> (SELECT length(actual_gate_num) - length(replace(actual_gate_num, ',', '')) + 1 FROM temp)) t2
+            )
+          UNION ALL
+            (
+                SELECT actual_gate_num FROM rms_gate_occupying_info
+                where start_time BETWEEN  #{start} and #{over}
+                AND actual_gate_num is NOT NULL
+            )
+        )
+        WHERE actual_gate_num in(
+            WITH temp AS
+            (SELECT #{numbers, jdbcType=VARCHAR} actual_gate_num FROM dual)
+            SELECT regexp_substr(actual_gate_num, '[0-9a-zA-Z]+', 1, rn) actual_gate_num FROM temp t1,
+            (SELECT level rn FROM dual CONNECT BY rownum <![CDATA[ <= ]]> (SELECT length(actual_gate_num) - length(replace(actual_gate_num, ',', '')) + 1 FROM temp)) t2
+        )
+        GROUP BY actual_gate_num
+        order by stand_use_counter asc, to_number(regexp_substr(actual_gate_num,'[0-9]*[0-9]',1)) asc -->
+        SELECT actual_gate_num,actual_gate_num AS stand_use_counter FROM (
+        WITH temp AS
+        (SELECT #{numbers, jdbcType=VARCHAR} actual_gate_num FROM dual)
+        SELECT regexp_substr(actual_gate_num, '[0-9a-zA-Z]+', 1, rn) actual_gate_num FROM temp t1,
+        (SELECT level rn FROM dual CONNECT BY rownum <![CDATA[ <= ]]> (SELECT length(actual_gate_num) - length(replace(actual_gate_num, ',', '')) + 1 FROM temp)) t2
+        )
+     </select>
+
+     <select id="findAllList" resultType="AircraftStand">
+         SELECT
+         <include refid="aircraftStandColumns"/>
+         FROM rms_aircraft_stand a
+         <include refid="aircraftStandJoins"/>
+         <where>
+             a.del_flag = #{DEL_FLAG_NORMAL}
+         </where>
+         <choose>
+             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                 ORDER BY ${page.orderBy}
+             </when>
+             <otherwise>
+                 ORDER BY a.update_date DESC
+             </otherwise>
+         </choose>
+     </select>
+
+     <insert id="insert">
+         INSERT INTO rms_aircraft_stand(
+             id, create_by, create_date, update_by,
+             update_date, remarks, del_flag, aircraft_stand_num,
+             aircraft_park_num, aircraft_park_dispatcher, has_salon,
+             salon_status, has_oilpipeline, oilpipeline_status,
+             left_as_num, right_as_num, front_coast,
+             back_coast, left_wheel_line, right_wheel_line, wing_length, available, airport_terminal_code, order_index
+         ) VALUES (
+             #{id}, #{createBy.id}, #{createDate}, #{updateBy.id},
+             #{updateDate}, #{remarks}, #{delFlag}, #{aircraftStandNum},
+             #{aircraftParkNum}, #{aircraftParkDispatcher}, #{hasSalon}, #{salonStatus}, #{hasOilpipeline},
+             #{oilpipelineStatus}, #{leftAsNum}, #{rightAsNum}, #{frontCoast}, #{backCoast},
+             #{leftWheelLine}, #{rightWheelLine}, #{wingLength}, #{available}, #{airportTerminalCode}, #{orderIndex}
+         )
+     </insert>
+
+     <update id="update">
+         UPDATE rms_aircraft_stand SET
+             update_by = #{updateBy.id},
+             update_date = #{updateDate},
+             remarks = #{remarks},
+             aircraft_stand_num = #{aircraftStandNum},
+             aircraft_park_num = #{aircraftParkNum},
+             aircraft_park_dispatcher = #{aircraftParkDispatcher},
+             has_salon = #{hasSalon},
+             salon_status = #{salonStatus},
+             has_oilpipeline = #{hasOilpipeline},
+             oilpipeline_status = #{oilpipelineStatus},
+             left_as_num = #{leftAsNum},
+             right_as_num = #{rightAsNum},
+             front_coast = #{frontCoast},
+             back_coast = #{backCoast},
+             left_wheel_line = #{leftWheelLine},
+             right_wheel_line = #{rightWheelLine},
+             wing_length = #{wingLength},
+             available = #{available},
+             airport_terminal_code = #{airportTerminalCode},
+             order_index = #{orderIndex}
+         WHERE id = #{id}
+     </update>
+
+     <update id="delete">
+         UPDATE rms_aircraft_stand SET
+             del_flag = #{DEL_FLAG_DELETE}
+         WHERE id = #{id}
+     </update>
+
+     <select id="groupByAircraftStand" resultType="String">
+         SELECT AIRCRAFT_STAND_NUM
+         FROM RMS_AIRCRAFT_STAND
+         WHERE DEL_FLAG = 0
+         GROUP BY AIRCRAFT_STAND_NUM
+         ORDER BY AIRCRAFT_STAND_NUM
+     </select>
+
+     <select id="findByAircraftNum" parameterType="String" resultType="AircraftStand">
+         select
+         <include refid="aircraftStandColumns"/>
+         FROM rms_aircraft_stand a where a.aircraft_stand_num = #{aircraftNum} AND a.available = '1' AND del_flag = 0
+     </select>
+
+ </mapper>

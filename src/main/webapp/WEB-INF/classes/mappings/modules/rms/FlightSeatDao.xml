@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightSeatDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightSeatColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_num AS "flightNum",
+		a.flight_date AS "flightDate",
+		a.adult_count AS "adultCount",
+		a.children_count AS "childrenCount",
+		a.baby_count AS "babyCount",
+		a.first_class_count AS "firstClassCount",
+		a.business_class_count AS "businessClassCount",
+		a.tourist_class_count AS "touristClassCount"
+	</sql>
+	
+	<sql id="flightSeatJoins">
+	</sql>
+    
+	<select id="get" resultType="FlightSeat">
+		SELECT 
+			<include refid="flightSeatColumns"/>
+		FROM rms_flight_seat a
+		<include refid="flightSeatJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlightSeat">
+		SELECT 
+			<include refid="flightSeatColumns"/>
+		FROM rms_flight_seat a
+		<include refid="flightSeatJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlightSeat">
+		SELECT 
+			<include refid="flightSeatColumns"/>
+		FROM rms_flight_seat a
+		<include refid="flightSeatJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_flight_seat(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			flight_num,
+			flight_date,
+			adult_count,
+			children_count,
+			baby_count,
+			first_class_count,
+			business_class_count,
+			tourist_class_count
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{flightNum},
+			#{flightDate},
+			#{adultCount},
+			#{childrenCount},
+			#{babyCount},
+			#{firstClassCount},
+			#{businessClassCount},
+			#{touristClassCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_flight_seat SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			flight_num = #{flightNum},
+			flight_date = #{flightDate},
+			adult_count = #{adultCount},
+			children_count = #{childrenCount},
+			baby_count = #{babyCount},
+			first_class_count = #{firstClassCount},
+			business_class_count = #{businessClassCount},
+			tourist_class_count = #{touristClassCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_flight_seat SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

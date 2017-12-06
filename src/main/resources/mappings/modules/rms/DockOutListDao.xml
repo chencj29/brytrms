@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.DockOutListDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="dockOutListColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.hopper_num AS "hopperNum",
+		a.cargo_name AS "cargoName",
+		a.cargo_num AS "cargoNum",
+		a.weight AS "weight",
+		a.specification AS "specification",
+		a.flight_num AS "flightNum",
+		a.flight_date AS "flightDate"
+	</sql>
+	
+	<sql id="dockOutListJoins">
+	</sql>
+    
+	<select id="get" resultType="DockOutList">
+		SELECT 
+			<include refid="dockOutListColumns"/>
+		FROM rms_dock_out_list a
+		<include refid="dockOutListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DockOutList">
+		SELECT 
+			<include refid="dockOutListColumns"/>
+		FROM rms_dock_out_list a
+		<include refid="dockOutListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DockOutList">
+		SELECT 
+			<include refid="dockOutListColumns"/>
+		FROM rms_dock_out_list a
+		<include refid="dockOutListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_dock_out_list(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			hopper_num,
+			cargo_name,
+			cargo_num,
+			weight,
+			specification,
+			flight_num,
+			flight_date
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{hopperNum},
+			#{cargoName},
+			#{cargoNum},
+			#{weight},
+			#{specification},
+			#{flightNum},
+			#{flightDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_dock_out_list SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			hopper_num = #{hopperNum},
+			cargo_name = #{cargoName},
+			cargo_num = #{cargoNum},
+			weight = #{weight},
+			specification = #{specification},
+			flight_num = #{flightNum},
+			flight_date = #{flightDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_dock_out_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

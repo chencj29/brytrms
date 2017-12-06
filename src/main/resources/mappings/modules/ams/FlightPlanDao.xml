@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightPlanDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightPlanColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.plan_time AS "planTime",
+		a.status AS "status",
+		a.init_time AS "initTime",
+		a.publish_time AS "publishTime",
+		a.ischanged AS "ischanged",
+		a.audit_opinion AS "auditOpinion",
+		a.AUDIT_TIME AS "auditTime"
+	</sql>
+
+	<sql id="flightPlanJoins">
+	</sql>
+
+	<select id="get" resultType="FlightPlan">
+		SELECT
+		<include refid="flightPlanColumns"/>
+		FROM ams_flight_plan a
+		<include refid="flightPlanJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				a.id = #{id}
+			</if>
+			<if test="planTime != null and planTime != ''">
+				a.plan_time = #{planTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="FlightPlan">
+		SELECT
+		<include refid="flightPlanColumns"/>
+		FROM ams_flight_plan a
+		<include refid="flightPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.plan_time DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightPlan">
+		SELECT
+		<include refid="flightPlanColumns"/>
+		FROM ams_flight_plan a
+		<include refid="flightPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findPlanDateByFlightPlan" resultType="FlightPlan">
+		SELECT
+		<include refid="flightPlanColumns"/>
+		FROM ams_flight_plan a
+		<include refid="flightPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.plan_time = #{ planTime }
+		</where>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_plan(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			plan_time,
+			status,
+			init_time,
+			publish_time,
+			ischanged,
+			audit_opinion,
+			AUDIT_TIME
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{planTime},
+			#{status},
+			#{initTime},
+			#{publishTime},
+			#{ischanged},
+			#{auditOpinion},
+			#{auditTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_plan SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			plan_time = #{planTime},
+			status = #{status},
+			init_time = #{initTime},
+			publish_time = #{publishTime},
+			ischanged = #{ischanged},
+			AUDIT_OPTIONION = #{auditOpinion},
+			AUDIT_TIME = #{auditTime}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete ams_flight_plan WHERE id = #{id}
+	</delete>
+
+	<update id="audit">
+		UPDATE
+			ams_flight_plan
+	  	SET
+			status = #{status},
+			audit_opinion = #{auditOpinion},
+			AUDIT_TIME = #{auditTime}
+		WHERE
+			id = #{id}
+	</update>
+
+	<update id="updateStatus">
+		UPDATE
+			ams_flight_plan
+		SET
+			status = #{status}
+		WHERE
+			id = #{id}
+	</update>
+
+	<update id="planPublish">
+		UPDATE
+			ams_flight_plan
+		SET
+			status = #{status},
+			publish_time = #{publishTime}
+		WHERE
+			id = #{id}
+	</update>
+
+
+	<!-- 根据机号获取机型 -->
+	<select id="getAircraftTypeCodeByNum" resultType="map" parameterType="java.lang.String">
+		SELECT
+		  aircraft_model
+		FROM
+		  ams_company_aircraft_num
+		WHERE
+		  AIRCRAFT_NUM =  #{aircraftNum,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

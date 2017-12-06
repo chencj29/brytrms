@@ -1,0 +1,18 @@
+<form id="mixingCarouselDistForm" style="padding:15px;">
+<input type="hidden" name="flightDynamicId" value="{{fightDynamicId}}">
+    <input type="hidden" name="flightDynamicNature" value="{{nature}}">
+    <table cellpadding="5" width="100%">
+        {{ if nature === '3' || nature === '1' }}
+        <tr>
+            <td width="40%">国内值机柜台：</td>
+            <td width="100%"><input type='text' id="inteCode" style="width: 100%;" value="{{inte}}"/></td>
+        </tr>
+        {{ /if }}
+        {{ if nature === '3' || nature === '2' }}
+        <tr>
+            <td width="40%">国际值机柜台：</td>
+            <td width="100%"><input type='text' id="intlCode" style="width: 100%;" value="{{intl}}"/></td>
+        </tr>
+        {{ /if }}
+    </table>
+</form>

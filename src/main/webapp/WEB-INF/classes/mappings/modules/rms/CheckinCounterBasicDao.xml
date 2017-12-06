@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.CheckinCounterBasicDao">
+    
+	<sql id="checkinCounterBasicColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.airport_terminal_code AS "airportTerminalCode",
+		a.airport_terminal_name AS "airportTerminalName",
+		a.checkin_counter_num AS "checkinCounterNum",
+		a.checkin_counter_nature AS "checkinCounterNature",
+		a.checkin_counter_type_code AS "checkinCounterTypeCode",
+		a.checkin_counter_type_name AS "checkinCounterTypeName",
+		a.order_index AS "orderIndex"
+	</sql>
+	
+	<sql id="checkinCounterBasicJoins">
+	</sql>
+    
+	<select id="get" resultType="CheckinCounterBasic">
+		SELECT 
+			<include refid="checkinCounterBasicColumns"/>
+		FROM rms_checkin_counter_basic a
+		<include refid="checkinCounterBasicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CheckinCounterBasic">
+		SELECT 
+			<include refid="checkinCounterBasicColumns"/>
+		FROM rms_checkin_counter_basic a
+		<include refid="checkinCounterBasicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="airportTerminalCode != null and airportTerminalCode != ''">
+				AND a.airport_terminal_code = #{airportTerminalCode}
+			</if>
+			<if test="airportTerminalName != null and airportTerminalName != ''">
+				AND a.airport_terminal_name = #{airportTerminalName}
+			</if>
+			<if test="checkinCounterNum != null and checkinCounterNum != ''">
+				AND a.checkin_counter_num = #{checkinCounterNum}
+			</if>
+			<if test="checkinCounterNature != null and checkinCounterNature != ''">
+				AND a.checkin_counter_nature = #{checkinCounterNature}
+			</if>
+			<if test="checkinCounterTypeCode != null and checkinCounterTypeCode != ''">
+				AND a.checkin_counter_type_code = #{checkinCounterTypeCode}
+			</if>
+			<if test="checkinCounterTypeName != null and checkinCounterTypeName != ''">
+				AND a.checkin_counter_type_name = #{checkinCounterTypeName}
+			</if>
+			<if test="orderIndex != null and orderIndex != ''">
+				AND a.order_index = #{orderIndex}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CheckinCounterBasic">
+		SELECT 
+			<include refid="checkinCounterBasicColumns"/>
+		FROM rms_checkin_counter_basic a
+		<include refid="checkinCounterBasicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_checkin_counter_basic(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			airport_terminal_code,
+			airport_terminal_name,
+			checkin_counter_num,
+			checkin_counter_nature,
+			checkin_counter_type_code,
+			checkin_counter_type_name,
+			order_index
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{airportTerminalCode},
+			#{airportTerminalName},
+			#{checkinCounterNum},
+			#{checkinCounterNature},
+			#{checkinCounterTypeCode},
+			#{checkinCounterTypeName},
+			#{orderIndex}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_checkin_counter_basic SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			airport_terminal_code = #{airportTerminalCode},
+			airport_terminal_name = #{airportTerminalName},
+			checkin_counter_num = #{checkinCounterNum},
+			checkin_counter_nature = #{checkinCounterNature},
+			checkin_counter_type_code = #{checkinCounterTypeCode},
+			checkin_counter_type_name = #{checkinCounterTypeName},
+			order_index = #{orderIndex}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_checkin_counter_basic SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

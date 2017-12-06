@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.SysDictDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="sysDictColumns">
+		a.id AS "id",
+		a.value AS "value",
+		a.label AS "label",
+		a.type AS "type",
+		a.description AS "description",
+		a.sort AS "sort",
+		a.parent_id AS "parent.id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.table_name AS "tableName"
+	</sql>
+	
+	<sql id="sysDictJoins">
+	</sql>
+    
+	<select id="get" resultType="SysDict">
+		SELECT 
+			<include refid="sysDictColumns"/>
+		FROM sys_dict a
+		<include refid="sysDictJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByTableNameAndType" resultType="SysDict">
+		SELECT 
+			<include refid="sysDictColumns"/>
+		FROM sys_dict a
+		<include refid="sysDictJoins"/>
+		WHERE 
+			a.table_name = #{tableName}
+			and a.type = #{type}
+	</select>
+	
+	<select id="getSysDict" resultType="SysDict">
+		SELECT 
+			<include refid="sysDictColumns"/>
+		FROM sys_dict a
+		<include refid="sysDictJoins"/>
+		WHERE 
+			a.table_name = #{tableName}
+			and a.type = #{type}
+			and a.value = #{value}
+	</select>
+	
+	<select id="findList" resultType="SysDict">
+		SELECT 
+			<include refid="sysDictColumns"/>
+		FROM sys_dict a
+		<include refid="sysDictJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="tableName != null and tableName != ''">
+				AND a.table_name like '%'||#{tableName}||'%'
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type like '%'||#{type}||'%'
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description like '%'||#{description}||'%'
+			</if>
+			<if test="value != null and value != ''">
+				AND a.value like '%'||#{value}||'%'
+			</if>
+			<if test="label != null and label != ''">
+				AND a.label like '%'||#{label}||'%'
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort like '%'||#{sort}||'%'
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysDict">
+		SELECT 
+			<include refid="sysDictColumns"/>
+		FROM sys_dict a
+		<include refid="sysDictJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_dict(
+			id,
+			value,
+			label,
+			type,
+			description,
+			sort,
+			parent_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			table_name
+		) VALUES (
+			#{id},
+			#{value},
+			#{label},
+			#{type},
+			#{description},
+			#{sort},
+			#{parent.id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{tableName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_dict SET 	
+			value = #{value},
+			label = #{label},
+			type = #{type},
+			description = #{description},
+			sort = #{sort},
+			parent_id = #{parent.id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			table_name = #{tableName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_dict SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

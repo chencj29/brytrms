@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightDynamicCheckinDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightDynamicCheckinColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.dynamic_id AS "flightDynamic.id",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.emp_id AS "rmsEmp.id",
+		a.emp_name AS "empName"
+	</sql>
+
+	<sql id="flightDynamicCheckinJoins">
+	</sql>
+
+	<select id="get" resultType="FlightDynamicCheckin">
+		SELECT
+		<include refid="flightDynamicCheckinColumns"/>
+		FROM ams_flight_dynamic_checkin a
+		<include refid="flightDynamicCheckinJoins"/>
+		<where>
+			a.del_flag = 0
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="flightDynamic != null and flightDynamic.id != null and flightDynamic.id != ''">
+				AND a.dynamic_id = #{flightDynamic.id}
+			</if>
+			<if test="rmsEmp != null and rmsEmp.id != null and rmsEmp.id != ''">
+				AND emp_id = #{rmsEmp.id}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="FlightDynamicCheckin">
+		SELECT
+		<include refid="flightDynamicCheckinColumns"/>
+		FROM ams_flight_dynamic_checkin a
+		<include refid="flightDynamicCheckinJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="flightDynamic.id != null and flightDynamic.id != ''">
+				AND a.dynamic_id = #{flightDynamic.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightDynamicCheckin">
+		SELECT
+		<include refid="flightDynamicCheckinColumns"/>
+		FROM ams_flight_dynamic_checkin a
+		<include refid="flightDynamicCheckinJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_dynamic_checkin(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			remarks,
+			dynamic_id,
+			checkin_start_time,
+			checkin_end_time,
+			emp_id,
+			emp_name
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{remarks},
+			#{flightDynamic.id},
+			#{checkinStartTime},
+			#{checkinEndTime},
+			#{rmsEmp.id},
+			#{empName}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_dynamic_checkin SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			dynamic_id = #{flightDynamic.id},
+			checkin_start_time = #{checkinStartTime},
+			checkin_end_time = #{checkinEndTime},
+			emp_id = #{rmsEmp.id},
+			emp_name = #{empName}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE ams_flight_dynamic_checkin SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateByDynamicIdAndEmpId">
+		UPDATE ams_flight_dynamic_checkin SET
+			checkin_start_time = #{checkinStartTime},
+			checkin_end_time = #{checkinEndTime}
+		WHERE dynamic_id = #{flightDynamic.id}
+		 AND emp_id = #{rmsEmp.id}
+	</update>
+
+</mapper>

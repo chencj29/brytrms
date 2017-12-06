@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsFlightHomeManifestDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="rmsFlightHomeManifestColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.person_count AS "personCount",
+		a.child_count AS "childCount",
+		a.baby_count AS "babyCount",
+		a.traveller_all_count AS "travellerAllCount",
+		a.flight_crew_count AS "flightCrewCount",
+		a.oil_weight AS "oilWeight",
+		a.mail_count AS "mailCount",
+		a.mail_weight AS "mailWeight",
+		a.goods_count AS "goodsCount",
+		a.goods_weight AS "goodsWeight",
+		a.luggage_count AS "luggageCount",
+		a.luggage_weight AS "luggageWeight",
+		a.vip_count AS "vipCount",
+		a.first_cabin_count AS "firstCabinCount",
+		a.business_cabin_count AS "businessCabinCount",
+		a.tourist_cabin_count AS "touristCabinCount",
+		a.person_actual_count_p AS "personActualCountP",
+		a.person_count_p AS "personCountP",
+		a.child_cout_p AS "childCoutP",
+		a.baby_count_p AS "babyCountP"
+	</sql>
+
+    <sql id="rmsFlightHomeManifestJoins">
+    </sql>
+
+    <select id="get" resultType="RmsFlightHomeManifest">
+        SELECT
+        <include refid="rmsFlightHomeManifestColumns"/>
+        FROM rms_flight_home_manifest a
+        <include refid="rmsFlightHomeManifestJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="RmsFlightHomeManifest">
+        SELECT
+        <include refid="rmsFlightHomeManifestColumns"/>
+        FROM rms_flight_home_manifest a
+        <include refid="rmsFlightHomeManifestJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="RmsFlightHomeManifest">
+        SELECT
+        <include refid="rmsFlightHomeManifestColumns"/>
+        FROM rms_flight_home_manifest a
+        <include refid="rmsFlightHomeManifestJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_flight_home_manifest(
+			id,
+			flight_dynamic_id,
+			person_count,
+			child_count,
+			baby_count,
+			traveller_all_count,
+			flight_crew_count,
+			oil_weight,
+			mail_count,
+			mail_weight,
+			goods_count,
+			goods_weight,
+			luggage_count,
+			luggage_weight,
+			vip_count,
+			first_cabin_count,
+			business_cabin_count,
+			tourist_cabin_count,
+			person_actual_count_p,
+			person_count_p,
+			child_cout_p,
+			baby_count_p
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{personCount},
+			#{childCount},
+			#{babyCount},
+			#{travellerAllCount},
+			#{flightCrewCount},
+			#{oilWeight},
+			#{mailCount},
+			#{mailWeight},
+			#{goodsCount},
+			#{goodsWeight},
+			#{luggageCount},
+			#{luggageWeight},
+			#{vipCount},
+			#{firstCabinCount},
+			#{businessCabinCount},
+			#{touristCabinCount},
+			#{personActualCountP},
+			#{personCountP},
+			#{childCoutP},
+			#{babyCountP}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_flight_home_manifest SET 	
+			flight_dynamic_id = #{flightDynamicId},
+			person_count = #{personCount},
+			child_count = #{childCount},
+			baby_count = #{babyCount},
+			traveller_all_count = #{travellerAllCount},
+			flight_crew_count = #{flightCrewCount},
+			oil_weight = #{oilWeight},
+			mail_count = #{mailCount},
+			mail_weight = #{mailWeight},
+			goods_count = #{goodsCount},
+			goods_weight = #{goodsWeight},
+			luggage_count = #{luggageCount},
+			luggage_weight = #{luggageWeight},
+			vip_count = #{vipCount},
+			first_cabin_count = #{firstCabinCount},
+			business_cabin_count = #{businessCabinCount},
+			tourist_cabin_count = #{touristCabinCount},
+			person_actual_count_p = #{personActualCountP},
+			person_count_p = #{personCountP},
+			child_cout_p = #{childCoutP},
+			baby_count_p = #{babyCountP}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM rms_flight_home_manifest
+		WHERE id = #{id}
+	</update>
+
+    <select id="getHomeManifest" parameterType="java.lang.String" resultType="RmsFlightHomeManifest">
+        SELECT
+        <include refid="rmsFlightHomeManifestColumns"/>
+        FROM RMS_FLIGHT_HOME_MANIFEST a
+        WHERE a.FLIGHT_DYNAMIC_ID=#{dynamicId}
+    </select>
+
+    <select id="getManifestSecs" parameterType="RmsFlightHomeManifestSec" resultType="RmsFlightHomeManifestSec">
+		SELECT ID AS id,
+		  FLIGHT_DYNAMIC_ID AS flightDynamicId,
+		  ADDR  AS addr,
+		  ADDR_CODE  AS addrCode,
+		  ADDR_NATURE  AS addrNature,
+		  PERSON_COUNT  AS personCount,
+		  CHILD_COUNT  AS childCount,
+		  BABY_COUNT  AS babyCount,
+		  BABY_ALONE_COUNT  AS babyAloneCount,
+		  BUSINESS_CABIN_PERSON_COUNT  AS businessCabinPersonCount,
+		  TOURIST_CABIN_PERSON_COUNT  AS touristCabinPersonCount,
+		  FIRST_CABIN_PERSON_COUNT  AS firstCabinPersonCount,
+		  VIP_COUNT  AS vipCount,
+		  LUGGAGE_COUNT  AS luggageCount,
+		  LUGGAGE_WEIGHT  AS luggageWeight,
+		  GOODS_COUNT  AS goodsCount,
+		  GOODS_WEIGHT  AS goodsWeight,
+		  MAIL_COUNT  AS mailCount,
+		  MAIL_WEIGHT AS mailWeight
+		FROM RMS_FLIGHT_HOME_MANIFEST_SEC
+		WHERE FLIGHT_DYNAMIC_ID=#{flightDynamicId}
+		<if test="addrNature != null and addrNature != ''">
+			AND ADDR_NATURE = #{addrNature}
+		</if>
+	</select>
+
+
+    <insert id="saveManifestSecs" parameterType="RmsFlightHomeManifestSec">
+		INSERT
+		INTO RMS_FLIGHT_HOME_MANIFEST_SEC
+		  (
+			ID,
+			FLIGHT_DYNAMIC_ID,
+			ADDR,
+			ADDR_CODE,
+			ADDR_NATURE,
+			PERSON_COUNT,
+			CHILD_COUNT,
+			BABY_COUNT,
+			BABY_ALONE_COUNT,
+			BUSINESS_CABIN_PERSON_COUNT,
+			TOURIST_CABIN_PERSON_COUNT,
+			FIRST_CABIN_PERSON_COUNT,
+			VIP_COUNT,
+			LUGGAGE_COUNT,
+			LUGGAGE_WEIGHT,
+			GOODS_COUNT,
+			GOODS_WEIGHT,
+			MAIL_COUNT,
+			MAIL_WEIGHT
+		  )
+		  VALUES
+		  (
+			#{id},
+		    #{flightDynamicId},
+		    #{addr},
+			#{addrCode},
+		    #{addrNature},
+			#{personCount},
+			#{childCount},
+			#{babyCount},
+			#{babyAloneCount},
+			#{businessCabinPersonCount},
+			#{touristCabinPersonCount},
+			#{firstCabinPersonCount},
+			#{vipCount},
+			#{luggageCount},
+			#{luggageWeight},
+			#{goodsCount},
+			#{goodsWeight},
+			#{mailCount},
+			#{mailWeight}
+		  )
+	</insert>
+
+
+    <update id="updateManifestSecs" parameterType="RmsFlightHomeManifestSec">
+        UPDATE RMS_FLIGHT_HOME_MANIFEST_SEC
+            SET FLIGHT_DYNAMIC_ID           = #{flightDynamicId},
+             ADDR                           = #{addr},
+             ADDR_CODE                      = #{addrCode},
+             ADDR_NATURE                    = #{addrNature},
+             PERSON_COUNT                   = #{personCount},
+             CHILD_COUNT                    = #{childCount},
+             BABY_COUNT                     = #{babyCount},
+             BABY_ALONE_COUNT               = #{babyAloneCount},
+             BUSINESS_CABIN_PERSON_COUNT   = #{businessCabinPersonCount},
+             TOURIST_CABIN_PERSON_COUNT     = #{touristCabinPersonCount},
+             FIRST_CABIN_PERSON_COUNT       = #{firstCabinPersonCount},
+             VIP_COUNT                      = #{vipCount},
+             LUGGAGE_COUNT                  = #{luggageCount},
+             LUGGAGE_WEIGHT                 = #{luggageWeight},
+             GOODS_COUNT                    = #{goodsCount},
+             GOODS_WEIGHT                   = #{goodsWeight},
+             MAIL_COUNT                     = #{mailCount},
+             MAIL_WEIGHT                    = #{mailWeight}
+            WHERE ID                        = #{id}
+    </update>
+
+</mapper>

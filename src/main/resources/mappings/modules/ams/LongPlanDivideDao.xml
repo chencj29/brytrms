@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.LongPlanDivideDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="longPlanDivideColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_plan_id AS "flightPlanId",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_num AS "flightNum",
+		a.aircraft_num AS "aircraftNum",
+		a.aircraft_parameters_id AS "aircraftParametersId",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.flight_nature_id AS "flightNatureId",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.flight_properties_id AS "flightPropertiesId",
+		a.flight_attr_code AS "flightAttrCode",
+		a.flight_attr_name AS "flightAttrName",
+		a.departure_airport_id AS "departureAirportId",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_id AS "passAirport1Id",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_id AS "passAirport2Id",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_id AS "arrivalAirportId",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.agent_id AS "agentId",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.terminal_id AS "terminalId",
+		a.terminal AS "terminal",
+		a.flight_company_id AS "flightCompanyId",
+		a.long_plan_id AS "longPlanId",
+		a.DEPARTURE_PLAN_TIME_STR AS "departurePlanTimeStr",
+		a.ARRIVAL_PLAN_TIME_STR AS "arrivalPlanTimeStr",
+		a.APPLY_DATE AS "applyDate"
+	</sql>
+	
+	<sql id="longPlanDivideJoins">
+	</sql>
+    
+	<select id="get" resultType="LongPlanDivide">
+		SELECT 
+			<include refid="longPlanDivideColumns"/>
+		FROM ams_long_plan_divide a
+		<include refid="longPlanDivideJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LongPlanDivide">
+		SELECT 
+			<include refid="longPlanDivideColumns"/>
+		FROM ams_long_plan_divide a
+		<include refid="longPlanDivideJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LongPlanDivide">
+		SELECT 
+			<include refid="longPlanDivideColumns"/>
+		FROM ams_long_plan_divide a
+		<include refid="longPlanDivideJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByPlanDateAndWeek" resultType="LongPlanDivide">
+		select 
+			b.* 
+		from 
+			AMS_LONG_PLAN a join AMS_LONG_PLAN_DIVIDE b on a.ID=b.LONG_PLAN_ID 
+		where 
+			a.PERIOD LIKE '%'||#{ weekChinese }||'%' and
+			#{ planTime } BETWEEN a.START_DATE and a.END_DATE
+	</select>
+
+	<select id="findByPlanDate" resultType="LongPlanDivide">
+		select
+			a.*
+		from
+			AMS_LONG_PLAN_DIVIDE a
+		where
+			a.APPLY_DATE = #{ planTime }
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_long_plan_divide(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_plan_id,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			aircraft_num,
+			aircraft_parameters_id,
+			aircraft_type_code,
+			aircraft_type_name,
+			flight_nature_id,
+			flight_nature_code,
+			flight_nature_name,
+			flight_properties_id,
+			flight_attr_code,
+			flight_attr_name,
+			departure_airport_id,
+			departure_airport_code,
+			departure_airport_name,
+			pass_airport_1_id,
+			pass_airport_1_code,
+			pass_airport_1_name,
+			pass_airport_2_id,
+			pass_airport_2_code,
+			pass_airport_2_name,
+			arrival_airport_id,
+			arrival_airport_code,
+			arrival_airport_name,
+			departure_plan_time,
+			arrival_plan_time,
+			inout_type_code,
+			inout_type_name,
+			agent_id,
+			agent_code,
+			agent_name,
+			terminal_id,
+			terminal,
+			flight_company_id,
+			long_plan_id,
+			departure_plan_time_str,
+			arrival_plan_time_str,
+			APPLY_DATE
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightPlanId},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{aircraftNum},
+			#{aircraftParametersId},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{flightNatureId},
+			#{flightNatureCode},
+			#{flightNatureName},
+			#{flightPropertiesId},
+			#{flightAttrCode},
+			#{flightAttrName},
+			#{departureAirportId},
+			#{departureAirportCode},
+			#{departureAirportName},
+			#{passAirport1Id},
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2Id},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirportId},
+			#{arrivalAirportCode},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{agentId},
+			#{agentCode},
+			#{agentName},
+			#{terminalId},
+			#{terminal},
+			#{flightCompanyId},
+			#{longPlanId},
+			#{departurePlanTimeStr},
+			#{arrivalPlanTimeStr},
+			#{applyDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_long_plan_divide SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_plan_id = #{flightPlanId},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			aircraft_num = #{aircraftNum},
+			aircraft_parameters_id = #{aircraftParametersId},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			flight_nature_id = #{flightNatureId},
+			flight_nature_code = #{flightNatureCode},
+			flight_nature_name = #{flightNatureName},
+			flight_properties_id = #{flightPropertiesId},
+			flight_attr_code = #{flightAttrCode},
+			flight_attr_name = #{flightAttrName},
+			departure_airport_id = #{departureAirportId},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_name = #{departureAirportName},
+			pass_airport_1_id = #{passAirport1Id},
+			pass_airport_1_code = #{passAirport1Code},
+			pass_airport_1_name = #{passAirport1Name},
+			pass_airport_2_id = #{passAirport2Id},
+			pass_airport_2_code = #{passAirport2Code},
+			pass_airport_2_name = #{passAirport2Name},
+			arrival_airport_id = #{arrivalAirportId},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_name = #{arrivalAirportName},
+			departure_plan_time = #{departurePlanTime},
+			arrival_plan_time = #{arrivalPlanTime},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			agent_id = #{agentId},
+			agent_code = #{agentCode},
+			agent_name = #{agentName},
+			terminal_id = #{terminalId},
+			terminal = #{terminal},
+			flight_company_id = #{flightCompanyId},
+			long_plan_id = #{longPlanId},
+			departure_plan_time_str = #{departurePlanTimeStr},
+			arrival_plan_time_str = #{arrivalPlanTimeStr},
+			APPLY_DATE = #{applyDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_long_plan_divide SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteByLongPlanId">
+		delete from ams_long_plan_divide where long_plan_id = #{ longPlanId }
+	</delete>
+
+
+	<delete id="deleteByApplyDate">
+		delete from ams_long_plan_divide where APPLY_DATE = #{ applyDate }
+	</delete>
+
+</mapper>

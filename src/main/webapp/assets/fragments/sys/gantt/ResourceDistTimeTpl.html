@@ -1,0 +1,40 @@
+<style type="text/css">
+    .input-datepicker {
+        width: 130px;
+        height: 25px;
+        line-height: 25px;
+    }
+</style>
+<table cellpadding="5" width="100%">
+    <tr>
+        <td align="right" width="150">请选择资源包：</td>
+        <td>
+            <select name="selPackage" id="selPackage" style="width: 284px">
+                {{ each list as entity }}
+                <option value="{{ entity.value }}">{{ entity.key }}</option>
+                {{ /each }}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td align="right">请选择日期：</td>
+        <td>
+            <input type="text" name="startTime" id="iptStartTime" class="Wdate input-datepicker"
+                   onClick="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm', maxDate: '#F{$dp.$D(\'iptOverTime\')}'})"/> ~
+            <input type="text" name="overTime" id="iptOverTime" class="Wdate input-datepicker"
+                   onClick="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm', minDate: '#F{$dp.$D(\'iptStartTime\')}'})"/>
+        </td>
+    </tr>
+    {{ if typeFlag }}
+    <tr>
+        <td align="right" width="150">分配类型：</td>
+        <td>
+            <select name="selPackage" id="selPackage2" style="width: 130px;height:28px;">
+                <option value="" >全部</option>
+                <option value="out_pair">出港</option>
+                <option value="in">单进</option>
+            </select>
+        </td>
+    </tr>
+    {{ /if }}
+</table>

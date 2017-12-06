@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.EmpSchedulingDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="empSchedulingColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_create AS "updateCreate",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.dept_id AS "deptId",
+		a.dept_name AS "deptName",
+		a.post_id AS "postId",
+		a.post_name AS "postName",
+		a.group_id AS "groupId",
+		a.group_name AS "groupName",
+		a.job_num AS "jobNum",
+		a.emp_name AS "empName",
+		a.nature_name AS "natureName",
+		a.duty_start_time AS "dutyStartTime",
+		a.duty_end_time AS "dutyEndTime",
+	  	a.working_type AS "workingType",
+	  	a.working_area AS "workingArea",
+	  	a.other_working_area AS "otherWorkingArea",
+	  	a.actual_start_time AS "actualStartTime",
+	  	a.actual_end_time AS "actualEndTime",
+	  	a.working_type_id AS "workingTypeId",
+	  	a.working_area_id AS "workingAreaId"
+	</sql>
+
+	<sql id="empSchedulingJoins">
+	</sql>
+
+	<select id="get" resultType="EmpScheduling">
+		SELECT
+		<include refid="empSchedulingColumns"/>
+		FROM rms_emp_scheduling a
+		<include refid="empSchedulingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="EmpScheduling">
+		SELECT
+		<include refid="empSchedulingColumns"/>
+		FROM rms_emp_scheduling a
+		<include refid="empSchedulingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				AND a.post_id = #{postId}
+			</if>
+			<if test="empName != null and empName != ''">
+				AND a.emp_name = #{empName}
+			</if>
+			<if test="dutyStartTime != null and dutyStartTime != ''">
+				AND to_char(duty_start_time,'yyyy-mm-dd') &gt;= to_char(#{dutyStartTime},'yyyy-mm-dd')
+			</if>
+			<if test="dutyEndTime != null and dutyEndTime != ''">
+				AND to_char(duty_end_time,'yyyy-mm-dd') &lt;= to_char(#{dutyEndTime},'yyyy-mm-dd')
+			</if>
+			<if test="actualStartTime != null and actualStartTime != ''">
+				AND to_char(actual_start_time,'yyyy-mm-dd') &gt;= to_char(#{actualStartTime},'yyyy-mm-dd')
+			</if>
+			<if test="actualEndTime != null and actualEndTime != ''">
+				AND to_char(actual_end_time,'yyyy-mm-dd') &lt;= to_char(#{actualEndTime},'yyyy-mm-dd')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="EmpScheduling">
+		SELECT
+		<include refid="empSchedulingColumns"/>
+		FROM rms_emp_scheduling a
+		<include refid="empSchedulingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_emp_scheduling(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_create,
+			del_flag,
+			remarks,
+			dept_id,
+			dept_name,
+			post_id,
+			post_name,
+			group_id,
+			group_name,
+			job_num,
+			emp_name,
+			nature_name,
+			duty_start_time,
+			duty_end_time,
+			working_type,
+			working_area,
+			other_working_area,
+			actual_start_time,
+			actual_end_time,
+			working_type_id,
+			working_area_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateCreate},
+			#{delFlag},
+			#{remarks},
+			#{deptId},
+			#{deptName},
+			#{postId},
+			#{postName},
+			#{groupId},
+			#{groupName},
+			#{jobNum},
+			#{empName},
+			#{natureName},
+			#{dutyStartTime},
+			#{dutyEndTime},
+			#{workingType},
+			#{workingArea},
+			#{otherWorkingArea},
+			#{actualStartTime},
+			#{actualEndTime},
+			#{workingTypeId},
+			#{workingAreaId}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE rms_emp_scheduling SET 	
+			update_by = #{updateBy.id},
+			update_create = #{updateCreate},
+			remarks = #{remarks},
+			dept_id = #{deptId},
+			dept_name = #{deptName},
+			post_id = #{postId},
+			post_name = #{postName},
+			group_id = #{groupId},
+			group_name = #{groupName},
+			job_num = #{jobNum},
+			emp_name = #{empName},
+			nature_name = #{natureName},
+			duty_start_time = #{dutyStartTime},
+			duty_end_time = #{dutyEndTime},
+			working_type = #{workingType},
+			working_area = #{workingArea},
+			other_working_area = #{otherWorkingArea},
+			actual_start_time = #{actualStartTime},
+			actual_end_time = #{actualEndTime},
+			working_type_id = #{workingTypeId},
+			working_area_id = #{workingAreaId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE rms_emp_scheduling SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteByDateAndPostId">
+		DELETE FROM  RMS_EMP_SCHEDULING
+		WHERE
+		to_char(DUTY_START_TIME,'yyyy-MM-dd') = #{nowDate}
+		AND
+ 		to_char(DUTY_END_TIME,'yyyy-MM-dd') = #{nowDate}
+		AND POST_ID = #{postId}
+	</delete>
+
+
+	<select id="findListStatistics" resultType="EmpScheduling">
+		SELECT
+		<include refid="empSchedulingColumns"/>
+		FROM rms_emp_scheduling a
+		<include refid="empSchedulingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.actual_start_time IS NOT NULL
+			AND a.actual_end_time IS NOT NULL
+			<if test="postId != null and postId != ''">
+				AND a.post_id = #{postId}
+			</if>
+			<if test="empName != null and empName != ''">
+				AND a.emp_name = #{empName}
+			</if>
+			<if test="dutyStartTime != null and dutyStartTime != ''">
+				AND to_char(duty_start_time,'yyyy-mm-dd') &gt;= to_char(#{dutyStartTime},'yyyy-mm-dd')
+			</if>
+			<if test="dutyEndTime != null and dutyEndTime != ''">
+				AND to_char(duty_end_time,'yyyy-mm-dd') &lt;= to_char(#{dutyEndTime},'yyyy-mm-dd')
+			</if>
+			<if test="actualStartTime != null and actualStartTime != ''">
+				AND to_char(actual_start_time,'yyyy-mm-dd') &gt;= to_char(#{actualStartTime},'yyyy-mm-dd')
+			</if>
+			<if test="actualEndTime != null and actualEndTime != ''">
+				AND to_char(actual_end_time,'yyyy-mm-dd') &lt;= to_char(#{actualEndTime},'yyyy-mm-dd')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

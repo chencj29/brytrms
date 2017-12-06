@@ -1,0 +1,2786 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightDynamicDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache">-->
+    <!--<property name="maxElementsInMemory" value="3000"/>-->
+    <!--<property name="maxElementsOnDisk" value="0"/>-->
+    <!--<property name="overflowToDisk" value="true"/>-->
+    <!--<property name="timeToLiveSeconds" value="5"/>-->
+    <!--<property name="memoryStoreEvictionPolicy" value="FIFO"/>-->
+    <!--</cache>-->
+    <sql id="flightDynamicColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_plan_id AS "flightPlan.id",
+		a.plan_date AS "planDate",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.flight_num AS "flightNum",
+		a.aircraft_num AS "aircraftNum",
+		a.flight_company_id AS "flightCompanyInfo.id",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.place_num AS "placeNum",
+		a.share_flight_num AS "shareFlightNum",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.inout_status_code AS "inoutStatusCode",
+		a.inout_status_name AS "inoutStatusName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_three AS "departureAirportThree",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_id AS "passAirport1.id",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_id AS "passAirport2.id",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_three AS "arrivalAirportThree",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.etd AS "etd",
+		a.eta AS "eta",
+		a.atd AS "atd",
+		a.ata AS "ata",
+		a.travel_time AS "travelTime",
+		a.carousel_num AS "carouselNum",
+		(SELECT wm_concat(v.id) as vip
+   FROM rms_vipplan v
+   WHERE v.inout = a.inout_type_Code AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code AND
+         v.FLTNO = a.flight_num) AS "vip",
+		a.delay_resons_code AS "delayResonsCode",
+		a.delay_resons_name AS "delayResonsName",
+		a.delay_resons_remark AS "delayResonsRemark",
+		a.gate_code AS "gateCode",
+		a.gate_name AS "gateName",
+		a.boarding_start_time AS "boardingStartTime",
+		a.boarding_end_time AS "boardingEndTime",
+		a.checkin_island_code AS "checkinIslandCode",
+		a.checkin_island_name AS "checkinIslandName",
+		a.checkin_counter_code AS "checkinCounterCode",
+		a.checkin_counter_name AS "checkinCounterName",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.delay_time_pend AS "delayTimePend",
+		a.status AS  "status",
+		a.status_name AS  "statusName",
+		a.alternate_remarks AS "alterNateRemarks",
+		a.flight_properties_id AS "flightProperties.id",
+	    a.flight_attr_code AS "flightAttrCode",
+	    a.flight_attr_name AS "flightAttrName",
+	    a.PLAN_DAY_OF_WEEK AS "planDayOfWeek",
+	    a.delay_resons_area_code AS "delayResonsAreaCode",
+	    a.delay_resons_area_name AS "delayResonsAreaName",
+	    a.alternate_area_code AS "alterNateAreaCode",
+	    a.alternate_area_name AS "alterNateAreaName",
+	    a.cancel_flight_resons AS "cancelFlightResons",
+	    a.is_extra_flight AS "isExtraFlight",
+	    a.EXTRA_FLIGHT_TIME_PEND AS "extraFlightTimePend",
+	    a.URGE_BOARD_TIME AS "urgeBoardTime",
+	    a.PLAN_BOARDING_STARTTIME AS "planBoardingStartTime",
+	    a.plan_boarding_endtime AS "planBoardingEndTime",
+	    a.guest_time AS "guestTime",
+
+		a.delay_status as "delayStatus",
+     	a.cancel_flight_status as "cancelFlightStatus",
+     	a.ext1 as "ext1",
+     	a.ext2 as "ext2",
+     	a.ext3 as "ext3",
+     	a.ext4 as "ext4",
+     	a.ext5 as "ext5",
+     	a.ext6 as "ext6",
+     	a.ext7 as "ext7",
+     	a.ext8 as "ext8",
+     	a.ext9 as "ext9",
+     	a.ext10 as "ext10",
+     	a.ext11 AS "ext11",
+		a.ext12 AS "ext12",
+		a.ext13 AS "ext13",
+		a.ext14 AS "ext14",
+		a.ext15 AS "ext15",
+		a.ext16 AS "ext16",
+		a.ext17 AS "ext17",
+		a.ext18 AS "ext18",
+		a.ext19 AS "ext19",
+		a.ext20 AS "ext20",
+		a.ext21 AS "ext21",
+		a.ext22 AS "ext22",
+		a.ext23 AS "ext23",
+		a.ext24 AS "ext24",
+		a.ext25 AS "ext25"
+	</sql>
+
+
+    <sql id="flightDynamicColumnsWithoutId">
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_plan_id AS "flightPlan.id",
+		a.plan_date AS "planDate",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.flight_num AS "flightNum",
+		a.aircraft_num AS "aircraftNum",
+		a.flight_company_id AS "flightCompanyInfo.id",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		<!-- nvl((SELECT p.remarks from ams_aircraft_parameters p where p.aircraft_model = a.aircraft_type_code and ROWNUM &lt;= 1),a.aircraft_type_code) AS "aircraftTypeCode", -->
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.place_num AS "placeNum",
+		a.share_flight_num AS "shareFlightNum",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.inout_status_code AS "inoutStatusCode",
+		a.inout_status_name AS "inoutStatusName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_three AS "departureAirportThree",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_id AS "passAirport1.id",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_id AS "passAirport2.id",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_three AS "arrivalAirportThree",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.etd AS "etd",
+		a.eta AS "eta",
+		a.atd AS "atd",
+		a.ata AS "ata",
+		a.travel_time AS "travelTime",
+		a.carousel_num AS "carouselNum",
+		(SELECT wm_concat(v.id) as vip
+   FROM rms_vipplan v
+   WHERE v.inout = a.inout_type_Code AND v.plandate = a.plan_date AND v.AIRCORP = a.flight_Company_Code AND
+         v.FLTNO = a.flight_num) AS "vip",
+		a.delay_resons_code AS "delayResonsCode",
+		a.delay_resons_name AS "delayResonsName",
+		a.delay_resons_remark AS "delayResonsRemark",
+		a.gate_code AS "gateCode",
+		a.gate_name AS "gateName",
+		a.boarding_start_time AS "boardingStartTime",
+		a.boarding_end_time AS "boardingEndTime",
+		a.checkin_island_code AS "checkinIslandCode",
+		a.checkin_island_name AS "checkinIslandName",
+		a.checkin_counter_code AS "checkinCounterCode",
+		a.checkin_counter_name AS "checkinCounterName",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.delay_time_pend AS "delayTimePend",
+		a.status AS  "status",
+		a.status_name AS  "statusName",
+		a.alternate_remarks AS "alterNateRemarks",
+		a.flight_properties_id AS "flightProperties.id",
+		a.flight_attr_code AS "flightAttrCode",
+		a.flight_attr_name AS "flightAttrName",
+		a.PLAN_DAY_OF_WEEK AS "planDayOfWeek",
+		a.delay_resons_area_code AS "delayResonsAreaCode",
+		a.delay_resons_area_name AS "delayResonsAreaName",
+		a.alternate_area_code AS "alterNateAreaCode",
+		a.alternate_area_name AS "alterNateAreaName",
+		a.cancel_flight_resons AS "cancelFlightResons",
+		a.is_extra_flight AS "isExtraFlight",
+		a.EXTRA_FLIGHT_TIME_PEND AS "extraFlightTimePend",
+		a.URGE_BOARD_TIME AS "urgeBoardTime",
+		a.PLAN_BOARDING_STARTTIME AS "planBoardingStartTime",
+		a.plan_boarding_endtime AS "planBoardingEndTime",
+		a.guest_time AS "guestTime",
+
+		a.delay_status as "delayStatus",
+     	a.cancel_flight_status as "cancelFlightStatus",
+     	a.ext1 as "ext1",
+     	a.ext2 as "ext2",
+     	a.ext3 as "ext3",
+     	a.ext4 as "ext4",
+     	a.ext5 as "ext5",
+     	a.ext6 as "ext6",
+     	a.ext7 as "ext7",
+     	a.ext8 as "ext8",
+     	a.ext9 as "ext9",
+     	a.ext10 as "ext10",
+     	a.ext11 AS "ext11",
+		a.ext12 AS "ext12",
+		a.ext13 AS "ext13",
+		a.ext14 AS "ext14",
+		a.ext15 AS "ext15",
+		a.ext16 AS "ext16",
+		a.ext17 AS "ext17",
+		a.ext18 AS "ext18",
+		a.ext19 AS "ext19",
+		a.ext20 AS "ext20",
+		a.ext21 AS "ext21",
+		a.ext22 AS "ext22",
+		a.ext23 AS "ext23",
+		a.ext24 AS "ext24",
+		a.ext25 AS "ext25"
+	</sql>
+
+    <sql id="flightDynamicColumns4Completed">
+		t.id AS "id",
+		t.create_by AS "createBy.id",
+		t.create_date AS "createDate",
+		t.update_by AS "updateBy.id",
+		t.update_date AS "updateDate",
+		t.remarks AS "remarks",
+		t.del_flag AS "delFlag",
+		t.flight_plan_id AS "flightPlan.id",
+		t.plan_date AS "planDate",
+		t.agent_code AS "agentCode",
+		t.agent_name AS "agentName",
+		t.flight_num AS "flightNum",
+		t.aircraft_num AS "aircraftNum",
+		t.flight_company_id AS "flightCompanyInfo.id",
+		t.flight_company_code AS "flightCompanyCode",
+		t.flight_company_name AS "flightCompanyName",
+		t.aircraft_type_code AS "aircraftTypeCode",
+		t.aircraft_type_name AS "aircraftTypeName",
+		t.place_num AS "placeNum",
+		t.share_flight_num AS "shareFlightNum",
+		t.flight_nature_code AS "flightNatureCode",
+		t.flight_nature_name AS "flightNatureName",
+		t.inout_type_code AS "inoutTypeCode",
+		t.inout_type_name AS "inoutTypeName",
+		t.inout_status_code AS "inoutStatusCode",
+		t.inout_status_name AS "inoutStatusName",
+		t.departure_airport_code AS "departureAirportCode",
+		t.departure_airport_three AS "departureAirportThree",
+		t.departure_airport_name AS "departureAirportName",
+		t.pass_airport_1_id AS "passAirport1.id",
+		t.pass_airport_1_code AS "passAirport1Code",
+		t.pass_airport_1_name AS "passAirport1Name",
+		t.pass_airport_2_id AS "passAirport2.id",
+		t.pass_airport_2_code AS "passAirport2Code",
+		t.pass_airport_2_name AS "passAirport2Name",
+		t.arrival_airport_code AS "arrivalAirportCode",
+		t.arrival_airport_three AS "arrivalAirportThree",
+		t.arrival_airport_name AS "arrivalAirportName",
+		t.departure_plan_time AS "departurePlanTime",
+		t.arrival_plan_time AS "arrivalPlanTime",
+		t.etd AS "etd",
+		t.eta AS "eta",
+		t.atd AS "atd",
+		t.ata AS "ata",
+		t.travel_time AS "travelTime",
+		t.carousel_num AS "carouselNum",
+		(SELECT wm_concat(v.id) as vip
+   FROM rms_vipplan v
+   WHERE v.inout = t.inout_type_Code AND v.plandate = t.plan_date AND v.AIRCORP = t.flight_Company_Code AND
+         v.FLTNO = t.flight_num) AS "vip",
+		t.delay_resons_code AS "delayResonsCode",
+		t.delay_resons_name AS "delayResonsName",
+		t.delay_resons_remark AS "delayResonsRemark",
+		t.gate_code AS "gateCode",
+		t.gate_name AS "gateName",
+		t.boarding_start_time AS "boardingStartTime",
+		t.boarding_end_time AS "boardingEndTime",
+		t.checkin_island_code AS "checkinIslandCode",
+		t.checkin_island_name AS "checkinIslandName",
+		t.checkin_counter_code AS "checkinCounterCode",
+		t.checkin_counter_name AS "checkinCounterName",
+		t.checkin_start_time AS "checkinStartTime",
+		t.checkin_end_time AS "checkinEndTime",
+		t.delay_time_pend AS "delayTimePend",
+		t.status AS  "status",
+		t.status_name AS  "statusName",
+		t.alternate_remarks AS "alterNateRemarks",
+		t.flight_properties_id AS "flightProperties.id",
+		t.flight_attr_code AS "flightAttrCode",
+		t.flight_attr_name AS "flightAttrName",
+		t.PLAN_DAY_OF_WEEK AS "planDayOfWeek",
+		t.delay_resons_area_code AS "delayResonsAreaCode",
+		t.delay_resons_area_name AS "delayResonsAreaName",
+		t.alternate_area_code AS "alterNateAreaCode",
+		t.alternate_area_name AS "alterNateAreaName",
+		t.cancel_flight_resons AS "cancelFlightResons",
+		t.is_extra_flight AS "isExtraFlight",
+		t.EXTRA_FLIGHT_TIME_PEND AS "extraFlightTimePend",
+		t.URGE_BOARD_TIME AS "urgeBoardTime",
+		t.PLAN_BOARDING_STARTTIME AS "planBoardingStartTime",
+		t.plan_boarding_endtime AS "planBoardingEndTime",
+
+		t.delay_status as "delayStatus",
+     	t.cancel_flight_status as "cancelFlightStatus",
+     	t.ext1 as "ext1",
+     	t.ext2 as "ext2",
+     	t.ext3 as "ext3",
+     	t.ext4 as "ext4",
+     	t.ext5 as "ext5",
+     	t.ext6 as "ext6",
+     	t.ext7 as "ext7",
+     	t.ext8 as "ext8",
+     	t.ext9 as "ext9",
+     	t.ext10 as "ext10",
+		t.ext11 AS "ext11",
+		t.ext12 AS "ext12",
+		t.ext13 AS "ext13",
+		t.ext14 AS "ext14",
+		t.ext15 AS "ext15",
+		t.ext16 AS "ext16",
+		t.ext17 AS "ext17",
+		t.ext18 AS "ext18",
+		t.ext19 AS "ext19",
+		t.ext20 AS "ext20",
+		t.ext21 AS "ext21",
+		t.ext22 AS "ext22",
+		t.ext23 AS "ext23",
+		t.ext24 AS "ext24",
+		t.ext25 AS "ext25"
+	</sql>
+
+    <sql id="flightDynamicJoins">
+    </sql>
+
+    <select id="get" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM ams_flight_dynamic a
+        <include refid="flightDynamicJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findListSimple" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM ams_flight_dynamic a
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="inoutTypeCode != null and inoutTypeCode != ''">
+                AND a.inout_type_code = #{inoutTypeCode}
+            </if>
+            <if test="planDate != null and planDate != ''">
+                AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+            </if>
+            <if test="aircraftNum != null and aircraftNum != ''">
+                AND UPPER(a.aircraft_num) = UPPER(#{aircraftNum})
+            </if>
+            <if test="flightNum != null and flightNum != ''">
+                AND UPPER(a.flight_num) = UPPER(#{flightNum})
+            </if>
+            <if test="flightCompanyCode != null and flightCompanyCode != ''">
+                AND UPPER(a.flight_company_code) like UPPER(#{flightCompanyCode})
+            </if>
+        </where>
+		ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="findList" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>, i.leave, i.LEAVE_TIME as leaveDate, i.start_time as occupiedStart,
+        i.over_time as occupiedEnd, i.expected_gate_num as expectedGateNum
+        FROM ams_flight_dynamic a
+        <include refid="flightDynamicJoins"/>
+        left join RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <!-- 数据权限 new -->
+            ${sqlMap.dsfn}
+            <if test="inoutTypeCode != null and inoutTypeCode != ''">
+                AND a.inout_type_code = #{inoutTypeCode}
+            </if>
+            <if test="planDate != null and planDate != ''">
+                AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+            </if>
+            <if test="agentCode != null and agentCode != ''">
+                AND UPPER(a.agent_code) like UPPER('%'||#{agentCode}||'%')
+            </if>
+            <if test="agentName != null and agentName != ''">
+                AND UPPER(a.agent_name) like UPPER('%'||#{agentName}||'%')
+            </if>
+            <if test="aircraftNum != null and aircraftNum != ''">
+                AND UPPER(a.aircraft_num) like UPPER('%'||#{aircraftNum}||'%')
+            </if>
+            <if test="placeNum != null and placeNum != ''">
+                AND UPPER(a.place_num) like UPPER('%'||#{placeNum}||'%')
+            </if>
+            <if test="flightNum != null and flightNum != ''">
+                AND UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%')
+            </if>
+            <if test="statusName != null and statusName != ''">
+                AND UPPER(a.status_name) like UPPER('%'||#{statusName}||'%')
+            </if>
+            <if test="flightNatureName != null and flightNatureName != ''">
+                AND UPPER(a.flight_Nature_Name) like UPPER('%'||#{flightNatureName}||'%')
+            </if>
+            <if test="inoutTypeName != null and inoutTypeName != ''">
+                AND UPPER(a.inout_Type_Name) like UPPER('%'||#{inoutTypeName}||'%')
+            </if>
+            <if test="departureAirportName != null and departureAirportName != ''">
+                AND UPPER(a.departure_Airport_Name) like UPPER('%'||#{departureAirportName}||'%')
+            </if>
+            <if test="passAirport1Name != null and passAirport1Name != ''">
+                AND UPPER(a.pass_airport_1_name) like UPPER('%'||#{passAirport1Name}||'%')
+            </if>
+            <if test="passAirport2Name != null and passAirport2Name != ''">
+                AND UPPER(a.pass_airport_2_name) like UPPER('%'||#{passAirport2Name}||'%')
+            </if>
+            <if test="departurePlanTime != null and departurePlanTime != ''">
+                AND TO_CHAR(a.departure_Plan_Time,'HHMIss') like '%'||TO_CHAR(#{departurePlanTime},'HHMIss')||'%'
+            </if>
+            <if test="arrivalPlanTime != null and arrivalPlanTime != ''">
+                AND TO_CHAR(a.arrival_Plan_Time,'HHMIss') like '%'||TO_CHAR(#{arrivalPlanTime},'HHMIss')||'%'
+            </if>
+            <if test="atd != null and atd != ''">
+                AND a.atd like '%'||#{atd}||'%'
+            </if>
+            <if test="ata != null and ata != ''">
+                AND a.ata like '%'||#{ata}||'%'
+            </if>
+            <if test="vip != null and vip != ''">
+                AND a.ata like '%'||#{ata}||'%'
+            </if>
+            <if test="delayResonsName != null and delayResonsName != ''">
+                AND UPPER(a.delay_Resons_Name) like UPPER('%'||#{delayResonsName}||'%')
+            </if>
+            <if test="delayStatus != null and delayStatus != ''">
+                AND UPPER(a.delay_status) like UPPER('%'||#{delayStatus}||'%')
+            </if>
+            <if test="cancelFlightStatus != null and cancelFlightStatus != ''">
+                AND UPPER(a.cancel_flight_status) like UPPER('%'||#{cancelFlightStatus}||'%')
+            </if>
+            <if test="ext1 != null and ext1 != ''">
+                AND UPPER(a.ext1) like UPPER('%'||#{ext1}||'%')
+            </if>
+            <if test="ext2 != null and ext2 != ''">
+                AND UPPER(a.ext2) like UPPER('%'||#{ext2}||'%')
+            </if>
+            <if test="ext3 != null and ext3 != ''">
+                AND UPPER(a.ext3) like UPPER('%'||#{ext3}||'%')
+            </if>
+            <if test="ext4 != null and ext4 != ''">
+                AND UPPER(a.ext4) like UPPER('%'||#{ext4}||'%')
+            </if>
+            <if test="ext5 != null and ext5 != ''">
+                AND UPPER(a.ext5) like UPPER('%'||#{ext5}||'%')
+            </if>
+            <if test="ext6 != null and ext6 != ''">
+                AND UPPER(a.ext6) like UPPER('%'||#{ext6}||'%')
+            </if>
+            <if test="ext7 != null and ext7 != ''">
+                AND UPPER(a.ext7) like UPPER('%'||#{ext7}||'%')
+            </if>
+            <if test="ext8 != null and ext8 != ''">
+                AND UPPER(a.ext8) like UPPER('%'||#{ext8}||'%')
+            </if>
+            <if test="ext9 != null and ext9 != ''">
+                AND UPPER(a.ext9) like UPPER('%'||#{ext9}||'%')
+            </if>
+            <if test="ext10 != null and ext10 != ''">
+                AND UPPER(a.ext10) like UPPER('%'||#{ext10}||'%')
+            </if>
+            <if test="ext11 != null and ext11 != ''">
+                AND UPPER(a.ext11) like UPPER('%'||#{ext11}||'%')
+            </if>
+            <if test="ext12 != null and ext12 != ''">
+                AND UPPER(a.ext12) like UPPER('%'||#{ext12}||'%')
+            </if>
+            <if test="ext13 != null and ext13 != ''">
+                AND UPPER(a.ext13) like UPPER('%'||#{ext13}||'%')
+            </if>
+            <if test="ext14 != null and ext14 != ''">
+                AND UPPER(a.ext14) like UPPER('%'||#{ext14}||'%')
+            </if>
+            <if test="ext15 != null and ext15 != ''">
+                AND UPPER(a.ext15) like UPPER('%'||#{ext15}||'%')
+            </if>
+            <if test="ext16 != null and ext16 != ''">
+                AND UPPER(a.ext16) like UPPER('%'||#{ext16}||'%')
+            </if>
+            <if test="ext17 != null and ext17 != ''">
+                AND UPPER(a.ext17) like UPPER('%'||#{ext17}||'%')
+            </if>
+            <if test="ext18 != null and ext18 != ''">
+                AND UPPER(a.ext18) like UPPER('%'||#{ext18}||'%')
+            </if>
+            <if test="ext19 != null and ext19 != ''">
+                AND UPPER(a.ext19) like UPPER('%'||#{ext19}||'%')
+            </if>
+            <if test="ext20 != null and ext20 != ''">
+                AND UPPER(a.ext20) like UPPER('%'||#{ext20}||'%')
+            </if>
+            <if test="ext21 != null and ext21 != ''">
+                AND UPPER(a.ext21) like UPPER('%'||#{ext21}||'%')
+            </if>
+            <if test="ext22 != null and ext22 != ''">
+                AND UPPER(a.ext22) like UPPER('%'||#{ext22}||'%')
+            </if>
+            <if test="ext23 != null and ext23 != ''">
+                AND UPPER(a.ext23) like UPPER('%'||#{ext23}||'%')
+            </if>
+            <if test="ext24 != null and ext24 != ''">
+                AND UPPER(a.ext24) like UPPER('%'||#{ext24}||'%')
+            </if>
+            <if test="ext25 != null and ext25 != ''">
+                AND UPPER(a.ext25) like UPPER('%'||#{ext25}||'%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>, i.leave, i.LEAVE_TIME as leaveDate, i.start_time as occupiedStart,
+        i.over_time as occupiedEnd, i.expected_gate_num expectedGateNum FROM ams_flight_dynamic a left join
+        RMS_GATE_OCCUPYING_INFO i on i.flight_dynamic_id = a.id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO ams_flight_dynamic(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_plan_id,
+			plan_date,
+			agent_code,
+			agent_name,
+			flight_num,
+			aircraft_num,
+			flight_company_id,
+			flight_company_code,
+			flight_company_name,
+			aircraft_type_code,
+			aircraft_type_name,
+			place_num,
+			share_flight_num,
+			flight_nature_code,
+			flight_nature_name,
+			inout_type_code,
+			inout_type_name,
+			inout_status_code,
+			inout_status_name,
+			departure_airport_code,
+			departure_airport_three,
+			departure_airport_name,
+			pass_airport_1_id,
+			pass_airport_1_code,
+			pass_airport_1_name,
+			pass_airport_2_id,
+			pass_airport_2_code,
+			pass_airport_2_name,
+			arrival_airport_code,
+			arrival_airport_three,
+			arrival_airport_name,
+			departure_plan_time,
+			arrival_plan_time,
+			etd,
+			eta,
+			atd,
+			ata,
+			travel_time,
+			carousel_num,
+			delay_resons_code,
+			delay_resons_name,
+			delay_resons_remark,
+			gate_code,
+			gate_name,
+			boarding_start_time,
+			boarding_end_time,
+			checkin_island_code,
+			checkin_island_name,
+			checkin_counter_code,
+			checkin_counter_name,
+			checkin_start_time,
+			checkin_end_time,
+			status,
+			status_name,
+			flight_properties_id,
+			flight_attr_code,
+			flight_attr_name,
+			PLAN_DAY_OF_WEEK,
+			delay_resons_area_code,
+			delay_resons_area_name,
+			alternate_area_code,
+			alternate_area_name,
+			cancel_flight_resons,
+			is_extra_flight,
+			extra_flight_time_pend,
+			urge_board_time,
+			PLAN_BOARDING_STARTTIME,
+			plan_boarding_endtime,
+			guest_time,
+			safeguard_type_code,
+			safeguard_type_name,
+
+			delay_status,
+     		cancel_flight_status,
+            ext1,
+			ext2,
+			ext3,
+			ext4,
+			ext5,
+			ext6,
+			ext7,
+			ext8,
+			ext9,
+			ext10,
+			ext11,
+			ext12,
+			ext13,
+			ext14,
+			ext15,
+			ext16,
+			ext17,
+			ext18,
+			ext19,
+			ext20,
+			ext21,
+			ext22,
+			ext23,
+			ext24,
+			ext25
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightPlan.id},
+			#{planDate},
+			#{agentCode},
+			#{agentName},
+			#{flightNum},
+			#{aircraftNum},
+			#{flightCompanyInfo.id},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{placeNum},
+			#{shareFlightNum},
+			#{flightNatureCode},
+			#{flightNatureName},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{inoutStatusCode},
+			#{inoutStatusName},
+			#{departureAirportCode},
+			#{departureAirportThree},
+			#{departureAirportName},
+			#{passAirport1.id},
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2.id},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirportCode},
+			#{arrivalAirportThree},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{etd},
+			#{eta},
+			#{atd},
+			#{ata},
+			#{travelTime},
+			#{carouselNum},
+			#{delayResonsCode},
+			#{delayResonsName},
+			#{delayResonsRemark},
+			#{gateCode},
+			#{gateName},
+			#{boardingStartTime},
+			#{boardingEndTime},
+			#{checkinIslandCode},
+			#{checkinIslandName},
+			#{checkinCounterCode},
+			#{checkinCounterName},
+			#{checkinStartTime},
+			#{checkinEndTime},
+			#{status},
+			#{statusName},
+			#{flightProperties.id},
+			#{flightAttrCode},
+			#{flightAttrName},
+			#{planDayOfWeek},
+			#{delayResonsAreaCode},
+			#{delayResonsAreaName},
+			#{alterNateAreaCode},
+			#{alterNateAreaName},
+			#{cancelFlightResons},
+			#{isExtraFlight},
+			#{extraFlightTimePend},
+			#{urgeBoardTime},
+			#{planBoardingStartTime},
+			#{planBoardingEndTime},
+			#{guestTime},
+			#{safeguardTypeCode},
+			#{safeguardTypeName},
+
+			#{delayStatus},
+     		#{cancelFlightStatus},
+           	#{ext1},
+			#{ext2},
+			#{ext3},
+			#{ext4},
+			#{ext5},
+			#{ext6},
+			#{ext7},
+			#{ext8},
+			#{ext9},
+			#{ext10},
+			#{ext11},
+			#{ext12},
+			#{ext13},
+			#{ext14},
+			#{ext15},
+			#{ext16},
+			#{ext17},
+			#{ext18},
+			#{ext19},
+			#{ext20},
+			#{ext21},
+			#{ext22},
+			#{ext23},
+			#{ext24},
+			#{ext25}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE ams_flight_dynamic SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_plan_id = #{flightPlan.id},
+			plan_date = #{planDate},
+			agent_code = #{agentCode},
+			agent_name = #{agentName},
+			flight_num = #{flightNum},
+			aircraft_num = #{aircraftNum},
+			flight_company_id = #{flightCompanyInfo.id},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			place_num = #{placeNum},
+			share_flight_num = #{shareFlightNum},
+			flight_nature_code = #{flightNatureCode},
+			flight_nature_name = #{flightNatureName},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			inout_status_code = #{inoutStatusCode},
+			inout_status_name = #{inoutStatusName},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_three = #{departureAirportThree},
+			departure_airport_name = #{departureAirportName},
+			pass_airport_1_id = #{passAirport1.id},
+			pass_airport_1_code = #{passAirport1Code},
+			pass_airport_1_name = #{passAirport1Name},
+			pass_airport_2_id = #{passAirport2.id},
+			pass_airport_2_code = #{passAirport2Code},
+			pass_airport_2_name = #{passAirport2Name},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_three = #{arrivalAirportThree},
+			arrival_airport_name = #{arrivalAirportName},
+			departure_plan_time = #{departurePlanTime},
+			arrival_plan_time = #{arrivalPlanTime},
+			etd = #{etd},
+			eta = #{eta},
+			atd = #{atd},
+			ata = #{ata},
+			travel_time = #{travelTime},
+			carousel_num = #{carouselNum},
+			delay_resons_code = #{delayResonsCode},
+			delay_resons_name = #{delayResonsName},
+			delay_resons_remark = #{delayResonsRemark},
+			gate_code = #{gateCode},
+			gate_name = #{gateName},
+			boarding_start_time = #{boardingStartTime},
+			boarding_end_time = #{boardingEndTime},
+			checkin_island_code = #{checkinIslandCode},
+			checkin_island_name = #{checkinIslandName},
+			checkin_counter_code = #{checkinCounterCode},
+			checkin_counter_name = #{checkinCounterName},
+			checkin_start_time = #{checkinStartTime},
+			checkin_end_time = #{checkinEndTime},
+			status = #{status},
+			status_name = #{statusName},
+			alternate_remarks = #{alterNateRemarks},
+			flight_properties_id = #{flightProperties.id},
+			flight_attr_code = #{flightAttrCode},
+			flight_attr_name = #{flightAttrName},
+			PLAN_DAY_OF_WEEK = #{planDayOfWeek},
+			delay_resons_area_code = #{delayResonsAreaCode},
+			delay_resons_area_name = #{delayResonsAreaName},
+			alternate_area_code = #{alterNateAreaCode},
+			alternate_area_name = #{alterNateAreaName},
+			cancel_flight_resons = #{cancelFlightResons},
+			is_extra_flight = #{isExtraFlight},
+			EXTRA_FLIGHT_TIME_PEND = #{extraFlightTimePend},
+			urge_board_time = #{urgeBoardTime},
+			plan_boarding_starttime = #{planBoardingStartTime},
+			plan_boarding_endtime = #{planBoardingEndTime},
+			guest_time = #{guestTime},
+
+			delay_status = #{delayStatus},
+			cancel_flight_status = #{cancelFlightStatus},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			ext3 = #{ext3},
+			ext4 = #{ext4},
+			ext5 = #{ext5},
+			ext6 = #{ext6},
+			ext7 = #{ext7},
+			ext8 = #{ext8},
+			ext9 = #{ext9},
+			ext10 = #{ext10},
+			ext11 = #{ext11},
+			ext12 = #{ext12},
+			ext13 = #{ext13},
+			ext14 = #{ext14},
+			ext15 = #{ext15},
+			ext16 = #{ext16},
+			ext17 = #{ext17},
+			ext18 = #{ext18},
+			ext19 = #{ext19},
+			ext20 = #{ext20},
+			ext21 = #{ext21},
+			ext22 = #{ext22},
+			ext23 = #{ext23},
+			ext24 = #{ext24},
+			ext25 = #{ext25}
+		WHERE id = #{id}
+	</update>
+
+    <update id="updateShareFlight2Null">
+		update
+			ams_flight_dynamic
+		set
+			share_flight_num = null
+		where
+			flight_company_code = #{flightCompanyCode}
+			and flight_num = #{flightNum}
+			and plan_date = #{planDate}
+	</update>
+
+    <delete id="delete">
+		delete ams_flight_dynamic WHERE id = #{id}
+	</delete>
+
+    <update id="delay">
+		UPDATE ams_flight_dynamic SET
+			delay_resons_remark = #{delayResonsRemark},
+			delay_resons_code = #{delayResonsCode},
+			delay_resons_name = #{delayResonsName},
+			delay_time_pend = #{delayTimePend},
+			ARRIVAL_PLAN_TIME = #{arrivalPlanTime},
+			status = #{status},
+			status_name = #{statusName},
+			alternate_remarks = #{alterNateRemarks},
+			delay_resons_area_code = #{delayResonsAreaCode},
+			delay_resons_area_name = #{delayResonsAreaName}
+			WHERE id = #{id}
+	</update>
+
+    <update id="cancel">
+		update ams_flight_dynamic set status=#{status},status_name = #{statusName}  where id=#{id}
+	</update>
+
+    <update id="alternate">
+		update ams_flight_dynamic set status=#{status},status_name = #{statusName},alternate_remarks = #{alterNateRemarks}  where id=#{id}
+	</update>
+
+    <update id="takeoff">
+		update ams_flight_dynamic set status=#{status},status_name = #{statusName},atd = #{atd}  where id=#{id}
+	</update>
+
+    <!-- 插入对比数据 -->
+    <insert id="insertFlightPair" parameterType="FlightPairWrapper">
+		INSERT INTO AMS_FLIGHT_DYNAMIC_PAIR
+		  (
+			ID,
+			FLIGHT_DYNIMIC_ID,
+			FLIGHT_NUM,
+			PLACE_NUM,
+			FLIGHT_COMPANY_ID,
+			FLIGHT_COMPANY_CODE,
+			FLIGHT_COMPANY_NAME,
+			SHARE_FLIGHT_NUM,
+			FLIGHT_NATURE_CODE,
+			FLIGHT_NATURE_NAME,
+			INOUT_TYPE_CODE,
+			INOUT_TYPE_NAME,
+			INOUT_STATUS_CODE,
+			INOUT_STATUS_NAME,
+			DEPARTURE_AIRPORT_CODE,
+			DEPARTURE_AIRPORT_THREE,
+			DEPARTURE_AIRPORT_NAME,
+			PASS_AIRPORT_1_CODE,
+			PASS_AIRPORT_1_NAME,
+			PASS_AIRPORT_2_CODE,
+			PASS_AIRPORT_2_NAME,
+			ARRIVAL_AIRPORT_CODE,
+			ARRIVAL_AIRPORT_THREE,
+			ARRIVAL_AIRPORT_NAME,
+			DEPARTURE_PLAN_TIME,
+			ARRIVAL_PLAN_TIME,
+			ETD,
+			ETA,
+			ATD,
+			ATA,
+			TRAVEL_TIME,
+			CAROUSEL_NUM,
+			DELAY_RESONS_CODE,
+			DELAY_RESONS_NAME,
+			DELAY_RESONS_REMARK,
+			GATE_CODE,
+			GATE_NAME,
+			BOARDING_START_TIME,
+			BOARDING_END_TIME,
+			CHECKIN_ISLAND_CODE,
+			CHECKIN_ISLAND_NAME,
+			CHECKIN_COUNTER_CODE,
+			CHECKIN_COUNTER_NAME,
+			CHECKIN_START_TIME,
+			CHECKIN_END_TIME,
+			DELAY_TIME_PEND,
+			STATUS,
+			STATUS_NAME,
+			FLIGHT_PROPERTIES_ID,
+			FLIGHT_ATTR_CODE,
+			FLIGHT_ATTR_NAME,
+			PLAN_DAY_OF_WEEK,
+			ALTERNATE_REMARKS,
+			DELAY_RESONS_AREA_CODE,
+			DELAY_RESONS_AREA_NAME,
+			ALTERNATE_AREA_CODE,
+			ALTERNATE_AREA_NAME,
+			CANCEL_FLIGHT_RESONS,
+			IS_EXTRA_FLIGHT,
+			EXTRA_FLIGHT_TIME_PEND,
+			URGE_BOARD_TIME,
+			PLAN_BOARDING_STARTTIME,
+			PLAN_BOARDING_ENDTIME,
+			GUEST_TIME,
+			TERMINAL_ID,
+			TERMINAL,
+			TURN_BACK_TIME,
+			FLIGHT_DYNIMIC_ID2,
+			FLIGHT_NUM2,
+			PLACE_NUM2,
+			FLIGHT_COMPANY_ID2,
+			FLIGHT_COMPANY_CODE2,
+			FLIGHT_COMPANY_NAME2,
+			SHARE_FLIGHT_NUM2,
+			FLIGHT_NATURE_CODE2,
+			FLIGHT_NATURE_NAME2,
+			INOUT_TYPE_CODE2,
+			INOUT_TYPE_NAME2,
+			INOUT_STATUS_CODE2,
+			INOUT_STATUS_NAME2,
+			DEPARTURE_AIRPORT_CODE2,
+			DEPARTURE_AIRPORT_THREE2,
+			DEPARTURE_AIRPORT_NAME2,
+			PASS_AIRPORT_1_CODE2,
+			PASS_AIRPORT_1_NAME2,
+			PASS_AIRPORT_2_CODE2,
+			PASS_AIRPORT_2_NAME2,
+			ARRIVAL_AIRPORT_CODE2,
+			ARRIVAL_AIRPORT_THREE2,
+			ARRIVAL_AIRPORT_NAME2,
+			DEPARTURE_PLAN_TIME2,
+			ARRIVAL_PLAN_TIME2,
+			ETD2,
+			ETA2,
+			ATD2,
+			ATA2,
+			TRAVEL_TIME2,
+			CAROUSEL_NUM2,
+			DELAY_RESONS_CODE2,
+			DELAY_RESONS_NAME2,
+			DELAY_RESONS_REMARK2,
+			GATE_CODE2,
+			GATE_NAME2,
+			BOARDING_START_TIME2,
+			BOARDING_END_TIME2,
+			CHECKIN_ISLAND_CODE2,
+			CHECKIN_ISLAND_NAME2,
+			CHECKIN_COUNTER_CODE2,
+			CHECKIN_COUNTER_NAME2,
+			CHECKIN_START_TIME2,
+			CHECKIN_END_TIME2,
+			DELAY_TIME_PEND2,
+			STATUS2,
+			STATUS_NAME2,
+			FLIGHT_PROPERTIES_ID2,
+			FLIGHT_ATTR_CODE2,
+			FLIGHT_ATTR_NAME2,
+			PLAN_DAY_OF_WEEK2,
+			ALTERNATE_REMARKS2,
+			DELAY_RESONS_AREA_CODE2,
+			DELAY_RESONS_AREA_NAME2,
+			ALTERNATE_AREA_CODE2,
+			ALTERNATE_AREA_NAME2,
+			CANCEL_FLIGHT_RESONS2,
+			IS_EXTRA_FLIGHT2,
+			EXTRA_FLIGHT_TIME_PEND2,
+			URGE_BOARD_TIME2,
+			PLAN_BOARDING_STARTTIME2,
+			PLAN_BOARDING_ENDTIME2,
+			GUEST_TIME2,
+			TERMINAL_ID2,
+			TERMINAL2,
+			TURN_BACK_TIME2,
+			PLAN_DATE,
+			AGENT_CODE,
+			AGENT_NAME,
+			AIRCRAFT_NUM,
+			AIRCRAFT_TYPE_CODE,
+			AIRCRAFT_TYPE_NAME,
+			SAFECUARD_TYPE_CODE,
+			SAFECUARD_TYPE_NAME,
+
+			delay_status,
+     		cancel_flight_status,
+            ext1,
+			ext2,
+			ext3,
+			ext4,
+			ext5,
+			ext6,
+			ext7,
+			ext8,
+			ext9,
+			ext10,
+			ext11,
+			ext12,
+			ext13,
+			ext14,
+			ext15,
+			ext16,
+			ext17,
+			ext18,
+			ext19,
+			ext20,
+			ext21,
+			ext22,
+			ext23,
+			ext24,
+			ext25,
+			delay_status2,
+     		cancel_flight_status2
+		  )
+		  VALUES
+		  (
+			#{id},
+			#{flightDynimicId},
+			#{flightNum},
+			#{placeNum},
+			#{flightCompanyId},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{shareFlightNum},
+			#{flightNatureCode},
+			#{flightNatureName},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{inoutStatusCode},
+			#{inoutStatusName},
+			#{departureAirportCode},
+			#{departureAirportThree},
+			#{departureAirportName} ,
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirportCode},
+			#{arrivalAirportThree},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{etd},
+			#{eta},
+			#{atd},
+		    #{ata},
+			#{travelTime},
+			#{carouselNum},
+			#{delayResonsCode},
+			#{delayResonsName},
+			#{delayResonsRemark},
+			#{gateCode},
+			#{gateName},
+			#{boardingStartTime},
+			#{boardingEndTime},
+			#{checkinIslandCode},
+			#{checkinIslandName},
+			#{checkinCounterCode},
+			#{checkinCounterName},
+			#{checkinStartTime},
+			#{checkinEndTime},
+			#{delayTimePend},
+			#{status},
+			#{statusName},
+			#{flightPropertiesId},
+			#{flightAttrCode},
+			#{flightAttrName},
+			#{planDayOfWeek},
+			#{alternateRemarks},
+			#{delayResonsAreaCode},
+			#{delayResonsAreaName},
+			#{alternateAreaCode},
+			#{alternateAreaName},
+			#{cancelFlightResons},
+			#{isExtraFlight},
+			#{extraFlightTimePend},
+			#{urgeBoardTime},
+			#{planBoardingStarttime},
+			#{planBoardingEndtime},
+			#{guestTime},
+			#{terminalId},
+			#{terminal},
+			#{turnBackTime},
+			#{flightDynimicId2},
+			#{flightNum2},
+			#{placeNum2},
+			#{flightCompanyId2},
+			#{flightCompanyCode2},
+			#{flightCompanyName2},
+			#{shareFlightNum2},
+			#{flightNatureCode2},
+			#{flightNatureName2},
+			#{inoutTypeCode2},
+			#{inoutTypeName2},
+			#{inoutStatusCode2},
+			#{inoutStatusName2},
+			#{departureAirportCode2},
+			#{departureAirportThree2},
+			#{departureAirportName2},
+			#{passAirport1Code2},
+			#{passAirport1Name2},
+			#{passAirport2Code2},
+			#{passAirport2Name2},
+			#{arrivalAirportCode2},
+			#{arrivalAirportThree2},
+			#{arrivalAirportName2},
+			#{departurePlanTime2},
+			#{arrivalPlanTime2},
+			#{etd2},
+			#{eta2},
+			#{atd2},
+			#{ata2},
+			#{travelTime2},
+			#{carouselNum2},
+			#{delayResonsCode2},
+			#{delayResonsName2},
+			#{delayResonsRemark2},
+			#{gateCode2},
+			#{gateName2},
+			#{boardingStartTime2},
+			#{boardingEndTime2},
+			#{checkinIslandCode2},
+			#{checkinIslandName2},
+			#{checkinCounterCode2},
+			#{checkinCounterName2},
+			#{checkinStartTime2},
+			#{checkinEndTime2},
+			#{delayTimePend2},
+			#{status2},
+			#{statusName2},
+			#{flightPropertiesId2},
+			#{flightAttrCode2},
+			#{flightAttrName2},
+			#{planDayOfWeek2},
+			#{alternateRemarks2},
+			#{delayResonsAreaCode2},
+			#{delayResonsAreaName2},
+			#{alternateAreaCode2},
+			#{alternateAreaName2},
+			#{cancelFlightResons2},
+			#{isExtraFlight2},
+			#{extraFlightTimePend2},
+			#{urgeBoardTime2},
+			#{planBoardingStarttime2},
+			#{planBoardingEndtime2},
+			#{guestTime2},
+			#{terminalId2},
+			#{terminal2},
+			#{turnBackTime2},
+			#{planDate},
+			#{agentCode},
+			#{agentName},
+			#{aircraftNum},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{safecuardTypeCode},
+			#{safecuardTypeName},
+
+			#{delayStatus},
+     		#{cancelFlightStatus},
+           	#{ext1},
+			#{ext2},
+			#{ext3},
+			#{ext4},
+			#{ext5},
+			#{ext6},
+			#{ext7},
+			#{ext8},
+			#{ext9},
+			#{ext10},
+			#{ext11},
+			#{ext12},
+			#{ext13},
+			#{ext14},
+			#{ext15},
+			#{ext16},
+			#{ext17},
+			#{ext18},
+			#{ext19},
+			#{ext20},
+			#{ext21},
+			#{ext22},
+			#{ext23},
+			#{ext24},
+			#{ext25},
+			#{delayStatus2},
+     		#{cancelFlightStatus2}
+		  )
+	</insert>
+
+
+    <select id="getPairFlightList" resultType="FlightPairWrapper">
+        SELECT * FROM (
+        SELECT
+        a.PLAN_DATE AS planDate,
+        a.agent_code AS agentCode,
+        a.agent_name AS agentName,
+        a.AIRCRAFT_NUM AS aircraftNum,
+        a.AIRCRAFT_TYPE_CODE AS aircraftTypeCode,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.PLACE_NUM, NULL)) AS placeNum,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', '进港', NULL)) AS inOutTypeName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.FLIGHT_NUM, NULL)) AS flightNum,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.share_flight_num, NULL)) AS shareFlightNum,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.FLIGHT_NATURE_NAME, NULL)) AS flightNatureName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.id, NULL)) AS ID,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.departure_airport_code, NULL)) AS departureAirportCode,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.departure_airport_name, NULL)) AS departureAirportName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.pass_airport_1_code, NULL)) AS passAirport1Code,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.pass_airport_1_name, NULL)) AS passAirport1Name,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.pass_airport_2_code, NULL)) AS passAirport2Code,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.pass_airport_2_name, NULL)) AS passAirport2Name,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.departure_plan_time, NULL)) AS departurePlanTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.arrival_plan_time, NULL)) AS arrivalPlanTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.atd, NULL)) AS atd,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.eta, NULL)) AS eta,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.ata, NULL)) AS ata,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.carousel_num, NULL)) AS carouselNum,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.vip, NULL)) AS VIP,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.delay_resons_name, NULL)) AS delayResonsName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'J', a.delay_resons_remark, NULL)) AS delayResonsRemark,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.ID, NULL)) AS ID2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.FLIGHT_NATURE_NAME, NULL)) AS flightNatureName2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', '出港', NULL)) AS inOutTypeName2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.FLIGHT_NUM, NULL)) AS flightNum2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.share_flight_num, NULL)) AS shareFlightNum2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.arrival_airport_code, NULL)) AS arrivalAirportCode,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.arrival_airport_Name, NULL)) AS arrivalAirportName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.pass_airport_1_code, NULL)) AS passAirport1Code2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.pass_airport_1_name, NULL)) AS passAirport1Name2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.pass_airport_2_code, NULL)) AS passAirport2Code2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.pass_airport_2_name, NULL)) AS passAirport2Name2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.vip, NULL)) AS VIP2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.gate_name, NULL)) AS gateName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.boarding_start_time, NULL)) AS boardingStartTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.boarding_end_time, NULL)) AS boardingEndTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.departure_plan_time, NULL)) AS departurePlanTime2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.etd, NULL)) AS etd,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.atd, NULL)) AS atd2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_island_code, NULL)) AS checkinIslandCode,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_island_name, NULL)) AS checkinIslandName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_counter_code, NULL)) AS checkinCounterCode,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_counter_name, NULL)) AS checkinCounterName,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_start_time, NULL)) AS checkinStartTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.checkin_end_time, NULL)) AS checkinEndTime,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.delay_resons_name, NULL)) AS delayResonsName2,
+        MAX(DECODE(a.INOUT_TYPE_CODE, 'C', a.delay_resons_remark, NULL)) AS delayResonsRemark2
+        FROM AMS_FLIGHT_DYNAMIC a
+        WHERE 1 = 1
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        GROUP BY a.PLAN_DATE, a.AIRCRAFT_NUM ,a.AIRCRAFT_TYPE_CODE,a.agent_code,a.agent_name
+        ) t
+        WHERE (t.ID IS NOT NULL OR t.ID2 IS NOT NULL)
+        <if test="planDate != null and planDate != ''">
+            AND TO_CHAR(t.planDate,'YYYYMMDD') like '%'||TO_CHAR(#{planDate},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="agentCode != null and agentCode !=''">
+            AND UPPER(t.agentCode) LIKE UPPER('%'||#{agentCode}||'%')
+        </if>
+        <if test="agentName != null and agentName !=''">
+            AND UPPER(t.agentName) LIKE UPPER('%'||#{agentName}||'%')
+        </if>
+        <if test="aircraftNum != null and aircraftNum != ''">
+            AND UPPER(t.aircraftNum) like UPPER('%'||#{aircraftNum}||'%')
+        </if>
+        <if test="aircraftTypeCode != null and aircraftTypeCode != ''">
+            AND UPPER(t.aircraftTypeCode) LIKE UPPER('%'||#{aircraftNum}||'%')
+        </if>
+        <if test="placeNum != null and placeNum != ''">
+            AND UPPER(t.placeNum) LIKE UPPER('%'||#{placeNum}||'%')
+        </if>
+        <if test="inOutTypeName != null and inOutTypeName != ''">
+            AND UPPER(t.inOutTypeName) LIKE UPPER('%'||#{inOutTypeName}||'%')
+        </if>
+        <if test="flightNum != null and flightNum != ''">
+            AND UPPER(t.flightNum) LIKE UPPER('%'||#{flightNum}||'%')
+        </if>
+        <if test="flightNatureName != null and flightNatureName != ''">
+            AND UPPER(t.flightNatureName) LIKE UPPER('%'||#{flightNatureName}||'%')
+        </if>
+        <if test="departureAirportCode != null and departureAirportCode != ''">
+            AND UPPER(t.departureAirportCode) LIKE UPPER('%'||#{departureAirportCode}||'%')
+        </if>
+        <if test="departureAirportName != null and departureAirportName != ''">
+            AND UPPER(t.departureAirportName) LIKE UPPER('%'||#{departureAirportName}||'%')
+        </if>
+        <if test="passAirport1Code != null and passAirport1Code != ''">
+            AND UPPER(t.passAirport1Code) LIKE UPPER('%'||#{passAirport1Code}||'%')
+        </if>
+        <if test="passAirport1Name != null and passAirport1Name != ''">
+            AND UPPER(t.passAirport1Name) LIKE UPPER('%'||#{passAirport1Name}||'%')
+        </if>
+        <if test="passAirport2Code != null and passAirport2Code != ''">
+            AND UPPER(t.passAirport2Code) LIKE UPPER('%'||#{passAirport2Code}||'%')
+        </if>
+        <if test="passAirport2Name != null and passAirport2Name != ''">
+            AND UPPER(t.passAirport2Name) LIKE UPPER('%'||#{passAirport2Name}||'%')
+        </if>
+        <if test="departurePlanTime != null and departurePlanTime != ''">
+            AND UPPER(t.departurePlanTime) LIKE UPPER('%'||#{departurePlanTime}||'%')
+        </if>
+        <if test="arrivalPlanTime != null and arrivalPlanTime != ''">
+            AND UPPER(t.arrivalPlanTime) LIKE UPPER('%'||#{arrivalPlanTime}||'%')
+        </if>
+        <if test="atd != null and atd != ''">
+            AND TO_CHAR(t.atd'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{atd},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="eta != null and eta != ''">
+            AND TO_CHAR(t.eta,'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{eta},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="ata != null and ata != ''">
+            AND TO_CHAR(t.ata,'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{ata},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="carouselNum != null and carouselNum != ''">
+            AND UPPER(carouselNum) like '%'|| UPPER('%'||#{carouselNum}||'%')
+        </if>
+        <if test="VIP != null and VIP != ''">
+            AND UPPER(VIP) like '%'|| UPPER('%'||#{VIP}||'%')
+        </if>
+        <if test="delayResonsName != null and delayResonsName != ''">
+            AND UPPER(delayResonsName) like '%'|| UPPER('%'||#{delayResonsName}||'%')
+        </if>
+        <if test="delayResonsRemark != null and delayResonsRemark != ''">
+            AND UPPER(delayResonsRemark) like '%'|| UPPER('%'||#{delayResonsRemark}||'%')
+        </if>
+        <if test="flightNatureName2 != null and flightNatureName2 != ''">
+            AND UPPER(t.flightNatureName2) LIKE UPPER('%'||#{flightNatureName2}||'%')
+        </if>
+        <if test="inOutTypeName2 != null and inOutTypeName2 != ''">
+            AND UPPER(t.inOutTypeName2) LIKE UPPER('%'||#{inOutTypeName2}||'%')
+        </if>
+        <if test="flightNum2 != null and flightNum2 != ''">
+            AND UPPER(t.flightNum2) LIKE UPPER('%'||#{flightNum2}||'%')
+        </if>
+        <if test="shareFlightNum2 != null and shareFlightNum2 != ''">
+            AND UPPER(t.shareFlightNum2) LIKE UPPER('%'||#{shareFlightNum2}||'%')
+        </if>
+        <if test="arrivalAirportCode != null and arrivalAirportCode != ''">
+            AND UPPER(t.arrivalAirportCode) LIKE UPPER('%'||#{arrivalAirportCode}||'%')
+        </if>
+        <if test="arrivalAirportName != null and arrivalAirportName != ''">
+            AND UPPER(t.arrivalAirportName) LIKE UPPER('%'||#{arrivalAirportName}||'%')
+        </if>
+        <if test="passAirport1Code2 != null and passAirport1Code2 != ''">
+            AND UPPER(t.passAirport1Code2) LIKE UPPER('%'||#{passAirport1Code2}||'%')
+        </if>
+        <if test="passAirport1Name2 != null and passAirport1Name2 != ''">
+            AND UPPER(t.passAirport1Name2) LIKE UPPER('%'||#{passAirport1Name2}||'%')
+        </if>
+        <if test="passAirport2Code2 != null and passAirport2Code2 != ''">
+            AND UPPER(t.passAirport2Code2) LIKE UPPER('%'||#{passAirport2Code2}||'%')
+        </if>
+        <if test="passAirport2Name2 != null and passAirport2Name2 != ''">
+            AND UPPER(t.passAirport2Name2) LIKE UPPER('%'||#{passAirport2Name2}||'%')
+        </if>
+        <if test="VIP2 != null and VIP2 != ''">
+            AND UPPER(t.VIP2) LIKE UPPER('%'||#{VIP2}||'%')
+        </if>
+        <if test="gateName != null and gateName != ''">
+            AND UPPER(t.gateName) LIKE UPPER('%'||#{gateName}||'%')
+        </if>
+        <if test="boardingStartTime != null and boardingStartTime != ''">
+            AND TO_CHAR(t.boardingStartTime,'HHYYYYMMDDMIss') like
+            '%'||TO_CHAR(#{boardingStartTime},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="boardingEndTime != null and boardingEndTime != ''">
+            AND TO_CHAR(t.boardingEndTime,'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{boardingEndTime},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="departurePlanTime2 != null and departurePlanTime2 != ''">
+            AND TO_CHAR(t.departurePlanTime2,'HHYYYYMMDDMIss') like
+            '%'||TO_CHAR(#{departurePlanTime2},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="etd != null and etd != ''">
+            AND TO_CHAR(t.etd,'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{etd},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="atd2 != null and atd2 != ''">
+            AND TO_CHAR(t.atd2,'HHYYYYMMDDMIss') like '%'||TO_CHAR(#{atd2},'HHYYYYMMDDMIss')||'%'
+        </if>
+        <if test="checkinIslandCode != null and checkinIslandCode != ''">
+            AND UPPER(t.checkinIslandCode) LIKE UPPER('%'||#{checkinIslandCode}||'%')
+        </if>
+        <if test="checkinIslandName != null and checkinIslandName != ''">
+            AND UPPER(t.checkinIslandName) LIKE UPPER('%'||#{checkinIslandName}||'%')
+        </if>
+        <if test="checkinCounterCode != null and checkinCounterCode != ''">
+            AND UPPER(t.checkinCounterCode) LIKE UPPER('%'||#{checkinCounterCode}||'%')
+        </if>
+        <if test="checkinCounterName != null and checkinCounterName != ''">
+            AND UPPER(t.checkinCounterName) LIKE UPPER('%'||#{checkinCounterName}||'%')
+        </if>
+        <if test="checkinStartTime != null and checkinStartTime != ''">
+            AND UPPER(t.checkinStartTime) LIKE UPPER('%'||#{checkinStartTime}||'%')
+        </if>
+        <if test="checkinEndTime != null and checkinEndTime != ''">
+            AND UPPER(t.checkinEndTime) LIKE UPPER('%'||#{checkinEndTime}||'%')
+        </if>
+        <if test="delayResonsName2 != null and delayResonsName2 != ''">
+            AND UPPER(t.delayResonsName2) LIKE UPPER('%'||#{delayResonsName2}||'%')
+        </if>
+        <if test="delayResonsRemark2 != null and delayResonsRemark2 != ''">
+            AND UPPER(t.delayResonsRemark2) LIKE UPPER('%'||#{delayResonsRemark2}||'%')
+        </if>
+    </select>
+
+    <select id="getFlighgtDynamicByConditon" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM ams_flight_dynamic a
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        and a.flight_num = #{flightNum}
+        and a.flight_company_code = #{flightCompanyCode}
+        and a.plan_date = #{planDate}
+    </select>
+
+    <select id="distedCarouselList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_carousel_num as expectedCarouselNum,
+		i.flight_dynamic_nature as "flightDynamicNature", i.inte_Carousel_Code as "inteCarouselCode", i.intl_Carousel_Code as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		 i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join rms_carousel_oci i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'J'  AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.ata, a.eta, a.arrival_plan_time
+	</select>
+
+    <select id="distedCarouselList4Mock" resultType="CarouselWrapper">
+		SELECT
+		  i.id                     AS id,
+		  a.id                     AS flightDynamicId,
+		  a.plan_date              AS planDate,
+		  a.place_num              AS placeNum,
+		  a.flight_Company_Code    AS flightCompanyCode,
+		  a.aircraft_type_code     AS aircraftTypeCode,
+		  a.arrival_plan_time      AS arrivalPlanTime,
+		  a.eta                    AS eta,
+		  a.ata                    AS ata,
+		  a.status                 AS status,
+		  a.flight_num             AS flightDynamicCode,
+		  a.aircraft_num           AS aircraftNum,
+		  i.expected_carousel_num  AS expectedCarouselNum,
+		  i.flight_dynamic_nature  AS flightDynamicNature,
+		  d.INTE                   AS inteCarouselCode,
+		  d.INTL                   AS intlCarouselCode,
+		  i.expected_Start_Time    AS expectedStartTime,
+		  i.expected_Over_time     AS expectedOverTime,
+		  i.inte_Actual_Start_Time AS inteActualStartTime,
+		  i.inte_Actual_Over_Time  AS inteActualOverTime
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID
+		  LEFT JOIN rms_carousel_oci i ON i.flight_dynamic_id = a.id
+		WHERE a.inout_type_code = 'J' AND d.INFO_ID = #{infoId}
+		ORDER BY a.plan_date, a.ata, a.eta, a.arrival_plan_time
+	</select>
+
+    <select id="distedBoardingGateList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_Num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_boarding_gate_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		i.inte_boarding_gate_Code as "inteCarouselCode", i.intl_boarding_gate_Code as "intlCarouselCode", i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join RMS_BOARDING_GATE_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedBoardingGateList4Mock" resultType="CarouselWrapper">
+		SELECT
+	   	a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_Num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_boarding_gate_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		d.inte as "inteCarouselCode", d.intl as "intlCarouselCode", i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_BOARDING_GATE_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND d.info_id = #{infoId}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedSlideCoastList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_slide_coast_num as expectedCarouselNum,
+		i.flight_dynamic_nature as "flightDynamicNature", i.inte_slide_coast_code as "inteCarouselCode", i.intl_slide_coast_code as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join RMS_SLIDE_COAST_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedSlideCoastList4Mock" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_slide_coast_num as expectedCarouselNum,
+		i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_SLIDE_COAST_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND d.info_id = #{infoId}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedCheckinCounterList" resultType="CarouselWrapper">
+        SELECT
+        a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_checking_counter_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+        i.inte_checking_counter_code as "inteCarouselCode", i.intl_checking_counter_code as "intlCarouselCode", i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime",
+        i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+        FROM ams_flight_dynamic a left join RMS_CHECKING_COUNTER_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND a.plan_DATE BETWEEN #{start} AND #{over}
+        order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+    </select>
+
+    <select id="distedCheckinCounterList4Mock" resultType="CarouselWrapper">
+        SELECT
+        a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd, a.status as "status",
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_checking_counter_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+        d.inte as "inteCarouselCode", d.intl as "intlCarouselCode", i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime",
+        i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_CHECKING_COUNTER_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND d.info_id = #{infoId}
+        order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+    </select>
+
+    <select id="distedDepartureHallList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , a.status as "status",
+		i.expected_departure_hall_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		i.inte_departure_hall_code as "inteCarouselCode", i.intl_departure_hall_code as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime",
+		i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime",
+		i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join rms_departure_hall_oci i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedDepartureHallList4Mock" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , a.status as "status",
+		i.expected_departure_hall_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime",
+		i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime",
+		i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join rms_departure_hall_oci i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND d.info_id = #{infoId}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedSecurityCheckinList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , a.status as "status",
+		i.expected_security_checkin_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		i.inte_security_checkin_code as "inteCarouselCode", i.intl_security_checkin_code as "intlCarouselCode",
+		i.expected_Start_Time as "expectedStartTime", i.expected_Over_time as "expectedOverTime",
+		i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime",
+		i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join rms_security_checkin_oci i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedSecurityCheckinList4Mock" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , a.status as "status",
+		i.expected_security_checkin_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature",
+		d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+		i.expected_Start_Time as "expectedStartTime", i.expected_Over_time as "expectedOverTime",
+		i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime",
+		i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join rms_security_checkin_oci i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'C' AND d.info_id = #{infoId}
+		order by a.plan_date, a.atd, a.etd, a.departure_plan_time
+	</select>
+
+    <select id="distedArrivalGateList" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_arrival_gate_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature", i.inte_arrival_gate_Code as "inteCarouselCode", i.intl_Arrival_Gate_Code as "intlCarouselCode", i.expected_Start_Time as expectedStartTime,
+		i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime",a.agent_code as "agentCode"
+		FROM ams_flight_dynamic a left join RMS_ARRIVAL_GATE_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'J' AND a.plan_DATE BETWEEN #{start} AND #{over}
+		order by a.plan_date, a.ata, a.eta, a.arrival_plan_time
+	</select>
+
+    <select id="distedArrivalGateList4Mock" resultType="CarouselWrapper">
+		SELECT
+		a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata, a.status as "status",
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_arrival_gate_num as expectedCarouselNum, i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCarouselCode", d.intl as "intlCarouselCode", i.expected_Start_Time as expectedStartTime,
+		 i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime", i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_ARRIVAL_GATE_OCI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = 0 and a.inout_type_code = 'J' AND d.info_id = #{infoId}
+		order by a.plan_date, a.ata, a.eta, a.arrival_plan_time
+	</select>
+
+    <select id="carouselList" resultType="CarouselOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode,
+        a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_carousel_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_Carousel_Code as "inteCarouselCode",
+        i.intl_Carousel_Code as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join rms_carousel_oci i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'J'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.PLAN_DATE , a.ata , a.eta , a.arrival_plan_time
+    </select>
+
+    <select id="carouselList4Mock" resultType="CarouselOccupyingInfoWrapper">
+        SELECT
+		i.id                     AS id,
+		d.id 					 AS detailId,
+		a.id                     AS flightDynamicId,
+		a.plan_date              AS planDate,
+		a.place_num              AS placeNum,
+		a.flight_Company_Code    AS flightCompanyCode,
+		a.aircraft_type_code     AS aircraftTypeCode,
+		a.arrival_plan_time      AS arrivalPlanTime,
+		a.eta                    AS eta,
+		a.ata                    AS ata,
+		a.status                 AS status,
+		a.flight_num             AS flightDynamicCode,
+		a.aircraft_num           AS aircraftNum,
+		i.expected_carousel_num  AS expectedCarouselNum,
+		i.flight_dynamic_nature  AS flightDynamicNature,
+		d.INTE                   AS inteCarouselCode,
+		d.INTL                   AS intlCarouselCode,
+		i.expected_Start_Time    AS expectedStartTime,
+		i.expected_Over_time     AS expectedOverTime,
+		i.inte_Actual_Start_Time AS inteActualStartTime,
+		i.inte_Actual_Over_Time  AS inteActualOverTime
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join rms_carousel_oci i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'J' and d.info_id = #{infoId}
+        ORDER BY a.PLAN_DATE , a.ata , a.eta , a.arrival_plan_time
+    </select>
+
+    <select id="arrivalGateList" resultType="BoardingGateOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode,
+        a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_arrival_gate_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_arrival_gate_Code as "inteCarouselCode",
+        i.intl_Arrival_Gate_Code as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join RMS_ARRIVAL_GATE_OCI i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'J'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.PLAN_DATE , a.ata , a.eta , a.arrival_plan_time
+    </select>
+
+    <select id="arrivalGateList4Mock" resultType="BoardingGateOccupyingInfoWrapper">
+        SELECT
+		d.id AS detailId, a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_arrival_gate_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_ARRIVAL_GATE_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'J' and d.info_id = #{infoId}
+        ORDER BY a.PLAN_DATE , a.ata , a.eta , a.arrival_plan_time
+    </select>
+
+    <select id="boardingGateList" resultType="CarouselListWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode,
+        a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as
+        atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_boarding_gate_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_boarding_gate_Code as "inteCarouselCode",
+        i.intl_boarding_gate_Code as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join RMS_BOARDING_GATE_OCI i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+    <select id="boardingGateList4Mock" resultType="CarouselListWrapper">
+        SELECT
+        d.id as detailId, a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_boarding_gate_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_BOARDING_GATE_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'C' and d.info_id = #{infoId}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="slideCoastList" resultType="CarouselOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode,
+        a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_slide_coast_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_slide_coast_code as "inteCarouselCode",
+        i.intl_slide_coast_code as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join RMS_SLIDE_COAST_OCI i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="slideCoastList4Mock" resultType="CarouselOccupyingInfoWrapper">
+        SELECT
+        d.id as detailId, a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_slide_coast_num as expectedCarouselNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCarouselCode", d.intl as "intlCarouselCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_SLIDE_COAST_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'C' and d.info_id = #{infoId}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="checkinCounterList" parameterType="FlightDynamic" resultType="CheckingCounterOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode,
+        a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_checking_counter_num as expectedCheckingCounterNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_checking_counter_code as "inteCheckingCounterCode",
+        i.intl_checking_counter_code as "intlCheckingCounterCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join RMS_CHECKING_COUNTER_OCI i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="checkinCounterList4Mock" resultType="CheckingCounterOccupyingInfoWrapper">
+        SELECT
+        d.id as detailId, a.plan_date "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_checking_counter_num as expectedCheckingCounterNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteCheckingCounterCode", d.intl as "intlCheckingCounterCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join RMS_CHECKING_COUNTER_OCI i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'C' and d.info_id = #{infoId}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="securityCheckinList" resultType="SecurityCheckinOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode,
+        a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_security_checkin_num as expectedSecurityCheckinNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_security_checkin_code as "inteSecurityCheckinCode",
+        i.intl_security_checkin_code as "intlSecurityCheckinCode",
+        i.expected_Start_Time as "expectedStartTime", i.expected_Over_time as "expectedOverTime",
+        i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join rms_security_checkin_oci i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="securityCheckinList4Mock" resultType="SecurityCheckinOccupyingInfoWrapper">
+        SELECT
+        d.id as detailId, a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_security_checkin_num as expectedSecurityCheckinNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteSecurityCheckinCode", d.intl as "intlSecurityCheckinCode",
+        i.expected_Start_Time as "expectedStartTime", i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join rms_security_checkin_oci i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'C' and d.info_id = #{infoId}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="departureHallList" resultType="DepartureHallOccupyingInfoWrapper">
+        SELECT
+        <include refid="flightDynamicColumnsWithoutId"/>,
+        a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode,
+        a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum ,
+        i.expected_departure_hall_num as expectedDepartureHallNum,
+        i.flight_dynamic_nature as "flightDynamicNature", i.inte_departure_hall_code as "inteDepartureHallCode",
+        i.intl_departure_hall_code as "intlDepartureHallCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time
+        as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime",
+        i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM ams_flight_dynamic a left join rms_departure_hall_oci i on i.flight_dynamic_id = a.id
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="departureHallList4Mock" resultType="DepartureHallOccupyingInfoWrapper">
+        SELECT
+        d.id as detailId, a.plan_date as "planDate",a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+        a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_departure_hall_num as expectedDepartureHallNum,
+        i.flight_dynamic_nature as "flightDynamicNature", d.inte as "inteDepartureHallCode", d.intl as "intlDepartureHallCode",
+        i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+        i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN ams_flight_dynamic a ON d.DATA_ID = a.ID left join rms_departure_hall_oci i on i.flight_dynamic_id = a.id
+        WHERE a.inout_type_code = 'C' and d.info_id = #{infoId}
+        ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+    </select>
+
+    <select id="queryDoubleInOutFlight" resultType="java.lang.Integer">
+        SELECT
+        count(*) count
+        FROM ams_flight_dynamic a
+        <include refid="flightDynamicJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.flight_num = #{flightNum}
+        AND a.plan_date = #{planDate}
+        AND a.inout_type_code = #{inoutTypeCode}
+    </select>
+
+    <update id="updateStatus">
+		UPDATE AMS_FLIGHT_DYNAMIC SET STATUS = #{status},STATUS_NAME=#{statusName} WHERE ID = #{id}
+	</update>
+
+    <select id="queryListByIds" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM ams_flight_dynamic a
+        <include refid="flightDynamicJoins"/>
+        WHERE id IN
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findCompletedByDate" resultType="FlightDynamic">
+        select
+        <include refid="flightDynamicColumns4Completed"/>
+        from
+        <![CDATA[
+		--查询单进的完成的历史数据
+		(select m.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and a.ATA IS NOT NULL) m left join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM
+		where n.AIRCRAFT_NUM IS NULL
+
+		Union ALL
+		--查询单出的完成的历史数据
+		select n.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) m right join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and b.atd IS NOT NULL) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM
+		where m.AIRCRAFT_NUM IS NULL
+
+		Union ALL
+
+		--查询连班的完成的历史数据
+		select m.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and a.ATA IS NOT NULL) m join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and b.atd IS NOT NULL) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM
+		where m.ARRIVAL_PLAN_TIME <= n.DEPARTURE_PLAN_TIME
+
+		Union ALL
+
+		select n.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and a.ATA IS NOT NULL) m join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and b.atd IS NOT NULL) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM
+		where m.ARRIVAL_PLAN_TIME <= n.DEPARTURE_PLAN_TIME
+
+		Union ALL
+
+		--查询先出后进的历史数据
+		select m.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and a.ATA IS NOT NULL) m join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM and n.AIRCRAFT_NUM is not NULL
+		where m.ARRIVAL_PLAN_TIME > n.DEPARTURE_PLAN_TIME
+
+		Union ALL
+
+		select n.* from
+		(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) m join
+		(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd') and b.atd IS NOT NULL) n
+		on m.AIRCRAFT_NUM=n.AIRCRAFT_NUM and n.AIRCRAFT_NUM is not NULL
+		where m.ARRIVAL_PLAN_TIME > n.DEPARTURE_PLAN_TIME) t
+		ORDER BY t.DEPARTURE_PLAN_TIME asc,t.ARRIVAL_PLAN_TIME asc
+		]]>
+    </select>
+
+    <select id="findOutTypeDynamicByIn" resultType="FlightDynamic">
+        select
+        <include refid="flightDynamicColumns4Completed"/>
+        <![CDATA[
+		from
+			(select * from AMS_FLIGHT_DYNAMIC a where a.ID=#{id}) m left join
+			(select * from AMS_FLIGHT_DYNAMIC b where b.INOUT_TYPE_CODE='C' and to_char(b.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) t
+			on m.AIRCRAFT_NUM=t.AIRCRAFT_NUM
+		where t.AIRCRAFT_NUM IS not null and m.ARRIVAL_PLAN_TIME <= t.DEPARTURE_PLAN_TIME
+		]]>
+    </select>
+
+    <select id="findInTypeDynamicByOut" resultType="FlightDynamic">
+        select
+        <include refid="flightDynamicColumns4Completed"/>
+        <![CDATA[
+		FROM
+			(select * from AMS_FLIGHT_DYNAMIC a where a.INOUT_TYPE_CODE='J' and to_char(a.PLAN_DATE, 'yyyy-mm-dd') = to_char(#{planDate}, 'yyyy-mm-dd')) t right join
+			(select * from AMS_FLIGHT_DYNAMIC b where b.ID=#{id}) n
+			on t.AIRCRAFT_NUM=n.AIRCRAFT_NUM
+		where t.AIRCRAFT_NUM IS NULL and t.ARRIVAL_PLAN_TIME <= n.DEPARTURE_PLAN_TIME
+		]]>
+    </select>
+
+    <select id="findMockDynamics4ArrivalGate" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join rms_arrival_gate_oci oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'J' AND a.arrival_plan_time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_ARRIVAL_GATE_CODE is null AND oci.INTL_ARRIVAL_GATE_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4Carousel" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join rms_carousel_oci oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'J' AND a.arrival_plan_time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_CAROUSEL_CODE is null AND oci.INTL_CAROUSEL_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4BoardingGate" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join rms_boarding_gate_oci oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_BOARDING_GAET_CODE is null AND oci.INTL_BOARDING_GAET_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4SlideCoast" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join rms_slide_coast_oci oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_SLIDE_COAST_CODE is null AND oci.INTL_SLIDE_COAST_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4CheckinCounter" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join RMS_CHECKING_COUNTER_OCI oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_CHECKING_COUNTER_CODE is null AND oci.INTL_CHECKING_COUNTER_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4SecurityCheckin" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join RMS_SECURITY_CHECKIN_OCI oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_SECURITY_CHECKIN_CODE is null AND oci.INTL_SECURITY_CHECKIN_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+    <select id="findMockDynamics4DepartureHall" resultType="FlightDynamic" parameterType="Map">
+        select * from ams_flight_dynamic a left join RMS_DEPARTURE_HALL_OCI oci on a.id = oci.flight_dynamic_id
+        where a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN #{startTime} AND #{endTime} AND a.id is not null
+        <if test="filterDistedRes == true">
+            AND (oci.INTE_DEPARTURE_HALL_CODE is null AND oci.INTL_DEPARTURE_HALL_CODE is null)
+        </if>
+        ${dsfn}
+    </select>
+
+
+    <update id="updateAircraftNum">
+		update ams_flight_dynamic set aircraft_num = #{aircraftNum}  where id = #{id}
+	</update>
+
+    <select id="queryPairForChangeAircraft" resultType="FlightPairWrapper">
+        SELECT
+        AIRCRAFT_NUM AS aircraftNum,
+        max(decode(INOUT_TYPE_CODE, 'J', ID, NULL)) id,
+        max(decode(INOUT_TYPE_CODE, 'J', FLIGHT_NUM, NULL)) flightNum,
+        max(decode(INOUT_TYPE_CODE, 'J', '进港', NULL)) inOutTypeName,
+        max(decode(INOUT_TYPE_CODE, 'C', ID, NULL)) id2,
+        max(decode(INOUT_TYPE_CODE, 'C', FLIGHT_NUM, NULL)) flightNum2,
+        max(decode(INOUT_TYPE_CODE, 'C', '进港', NULL)) inOutTypeName2
+        FROM AMS_FLIGHT_DYNAMIC
+        WHERE ID IN
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        GROUP BY AIRCRAFT_NUM
+    </select>
+
+    <select id="queryCountByPlanDateFlightNumInout" resultType="java.lang.Integer">
+		SELECT count(*) FROM AMS_FLIGHT_DYNAMIC
+		WHERE to_char(PLAN_DATE,'YYYYMMDD') = to_char(#{planDate},'YYYYMMDD')
+		AND INOUT_TYPE_CODE = #{inoutTypeCode}
+		AND aircraft_num = #{aircraftNum}
+	</select>
+
+    <select id="findByPlaceNum" resultType="FlightDynamic" parameterType="java.lang.String">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM ams_flight_dynamic a WHERE a.DEL_FLAG = 0 AND a.PLACE_NUM = #{placeNumber}
+    </select>
+
+    <select id="findOccupiedGates" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+
+
+
+
+		select OCCUPIED_NUM FROM (
+            select REGEXP_SUBSTR(info.ACTUAL_GATE_NUM, '[^,]+', 1, L) AS OCCUPIED_NUM FROM (
+            select * from ( select FLIGHT_DYNAMIC_ID, WST, WLT, ACTUAL_GATE_NUM, START_TIME, (CASE LEAVE WHEN '1' THEN LEAVE_TIME ELSE OVER_TIME END) AS LEAVE_TIME
+            FROM RMS_GATE_OCCUPYING_INFO, (select to_timestamp(${start}, 'yyyy-mm-dd hh24:mi:ss') as wst, to_timestamp(${over}, 'yyyy-mm-dd hh24:mi:ss') as wlt from dual ) ) tt
+			WHERE  ((tt.START_TIME > tt.wst AND tt.START_TIME < tt.wlt) OR (tt.LEAVE_TIME > tt.wst AND tt.LEAVE_TIME < tt.wlt) OR (tt.wst > tt.start_time AND tt.wst < tt.leave_time)
+			OR (tt.wlt > tt.start_time AND tt.wlt < tt.leave_time)) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic} ) info,  (SELECT LEVEL L FROM DUAL CONNECT BY LEVEL <= 1000)
+            WHERE L(+) <= LENGTH(info.ACTUAL_GATE_NUM) - LENGTH(REPLACE(info.ACTUAL_GATE_NUM, ',')) + 1
+        ) WHERE OCCUPIED_NUM IS NOT NULL group by OCCUPIED_NUM
+
+
+
+
+        ]]>
+	</select>
+
+    <select id="findoccupiedGates4Mock" parameterType="Map" resultType="java.lang.String">
+        <if test="omitOci != true">
+            SELECT OCCUPIED_NUM FROM (
+            SELECT REGEXP_SUBSTR(ot.ACTUAL_GATE_NUM, '[^,]+', 1, L) AS OCCUPIED_NUM FROM (
+            SELECT * FROM (
+            SELECT PLAN_DATE, FLIGHT_DYNAMIC_ID, ACTUAL_GATE_NUM, START_TIME, (CASE LEAVE WHEN '1' THEN LEAVE_TIME ELSE
+            OVER_TIME END) AS LEAVE_TIME
+            FROM RMS_GATE_OCCUPYING_INFO oci LEFT JOIN AMS_FLIGHT_DYNAMIC_PAIR pair ON pair.ID = oci.FLIGHT_DYNAMIC_ID
+            WHERE ACTUAL_GATE_NUM IS NOT NULL
+            UNION ALL
+            SELECT PLAN_DATE, detail.DATA_ID as FLIGHT_DYNAMIC_ID, detail.INTE AS ACTUAL_GATE_NUM, oci.START_TIME, (CASE
+            oci.LEAVE WHEN '1' THEN oci.LEAVE_TIME ELSE oci.OVER_TIME END) AS LEAVE_TIME
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_GATE_OCCUPYING_INFO oci ON oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC_PAIR pair ON pair.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE INTE IS NOT NULL AND info.ID = #{mockInfoId}
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((START_TIME > wst AND START_TIME < wlt) OR (LEAVE_TIME > wst AND LEAVE_TIME < wlt) OR (wst > START_TIME AND wst < LEAVE_TIME) OR (wlt > START_TIME AND wlt < LEAVE_TIME)) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, (SELECT LEVEL L FROM DUAL CONNECT BY LEVEL <= 1000) WHERE L (+) <= LENGTH(ot.ACTUAL_GATE_NUM) - LENGTH(REPLACE(ot.ACTUAL_GATE_NUM, ',')) + 1
+				]]>
+            ) WHERE OCCUPIED_NUM IS NOT NULL GROUP BY OCCUPIED_NUM ORDER BY OCCUPIED_NUM
+        </if>
+        <if test="omitOci == true">
+            SELECT OCCUPIED_NUM FROM (
+            SELECT REGEXP_SUBSTR(ot.ACTUAL_GATE_NUM, '[^,]+', 1, L) AS OCCUPIED_NUM FROM (
+            SELECT * FROM (
+            SELECT PLAN_DATE, detail.DATA_ID as FLIGHT_DYNAMIC_ID, detail.INTE AS ACTUAL_GATE_NUM, oci.START_TIME, (CASE
+            oci.LEAVE WHEN '1' THEN oci.LEAVE_TIME ELSE oci.OVER_TIME END) AS LEAVE_TIME
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_GATE_OCCUPYING_INFO oci ON oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC_PAIR pair ON pair.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE INTE IS NOT NULL AND info.ID = #{mockInfoId}
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((START_TIME > wst AND START_TIME < wlt) OR (LEAVE_TIME > wst AND LEAVE_TIME < wlt) OR (wst > START_TIME AND wst < LEAVE_TIME) OR (wlt > START_TIME AND wlt < LEAVE_TIME)) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, (SELECT LEVEL L FROM DUAL CONNECT BY LEVEL <= 1000) WHERE L (+) <= LENGTH(ot.ACTUAL_GATE_NUM) - LENGTH(REPLACE(ot.ACTUAL_GATE_NUM, ',')) + 1
+				]]>
+            ) WHERE OCCUPIED_NUM IS NOT NULL GROUP BY OCCUPIED_NUM ORDER BY OCCUPIED_NUM
+        </if>
+    </select>
+
+    <select id="findOccupiedCarouselCodes" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+
+
+
+
+		SELECT OCCUPIED_CODE FROM (SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+		SELECT ID, FLIGHT_DYNAMIC_ID, FLIGHT_DYNAMIC_CODE,
+		CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_CAROUSEL_CODE WHEN '2' THEN INTL_CAROUSEL_CODE
+		WHEN '3' THEN INTE_CAROUSEL_CODE || ',' || INTL_CAROUSEL_CODE END AS OCCUPIED_CODE, WST, WLT FROM RMS_CAROUSEL_OCI,
+		(select to_timestamp(${start}, 'yyyy-mm-dd hh24:mi:ss') as wst, to_timestamp(${over}, 'yyyy-mm-dd hh24:mi:ss') as wlt from dual )
+		WHERE ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+			OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) )
+		AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}) temp, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 )
+		WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1) GROUP BY OCCUPIED_CODE
+
+
+
+
+        ]]>
+	</select>
+
+    <select id="findOccupiedArrivalGateCodes" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+
+
+
+
+		SELECT OCCUPIED_CODE FROM (SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+		SELECT ID, FLIGHT_DYNAMIC_ID, FLIGHT_DYNAMIC_CODE,
+		CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_ARRIVAL_GATE_CODE WHEN '2' THEN INTL_ARRIVAL_GATE_CODE
+		WHEN '3' THEN INTE_ARRIVAL_GATE_CODE || ',' || INTL_ARRIVAL_GATE_CODE END AS OCCUPIED_CODE, WST, WLT FROM RMS_ARRIVAL_GATE_OCI,
+		(select to_timestamp(${start}, 'yyyy-mm-dd hh24:mi:ss') as wst, to_timestamp(${over}, 'yyyy-mm-dd hh24:mi:ss') as wlt from dual )
+		WHERE ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+			OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) )
+		AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}) temp, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 )
+		WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1) GROUP BY OCCUPIED_CODE
+
+
+
+
+        ]]>
+	</select>
+
+    <select id="findOccupiedArrivalGateCodes4Mock" parameterType="java.util.Map" resultType="java.lang.String">
+        <if test="omitOci != true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_ARRIVAL_GATE_CODE WHEN '2' THEN INTL_ARRIVAL_GATE_CODE WHEN
+            '3' THEN INTE_ARRIVAL_GATE_CODE || ',' || INTL_ARRIVAL_GATE_CODE END AS OCCUPIED_CODE
+            FROM RMS_ARRIVAL_GATE_OCI oci LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            UNION ALL
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_ARRIVAL_GATE_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+						OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+			) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+        <if test="omitOci == true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_ARRIVAL_GATE_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+							AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+							OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+    </select>
+    <select id="findOccupiedBoardingGateCodes4Mock" parameterType="java.util.Map" resultType="java.lang.String">
+        <if test="omitOci != true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_BOARDING_GATE_CODE WHEN '2' THEN INTL_BOARDING_GATE_CODE WHEN
+            '3' THEN INTE_BOARDING_GATE_CODE || ',' || INTL_BOARDING_GATE_CODE END AS OCCUPIED_CODE
+            FROM RMS_BOARDING_GATE_OCI oci LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            UNION ALL
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_BOARDING_GATE_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+						OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+			) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+        <if test="omitOci == true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_BOARDING_GATE_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+							AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+							OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+    </select>
+
+    <select id="findOccupiedSlideCoastCodes4Mock" parameterType="java.util.Map" resultType="java.lang.String">
+        <if test="omitOci != true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_SLIDE_COAST_CODE WHEN '2' THEN INTL_SLIDE_COAST_CODE WHEN '3'
+            THEN INTE_SLIDE_COAST_CODE || ',' || INTL_SLIDE_COAST_CODE END AS OCCUPIED_CODE
+            FROM RMS_SLIDE_COAST_OCI oci LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            UNION ALL
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_SLIDE_COAST_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+						OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+			) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+        <if test="omitOci == true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_SLIDE_COAST_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+							AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+							OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+    </select>
+
+    <select id="findOccupiedCarouselCodes4Mock" parameterType="java.util.Map" resultType="java.lang.String">
+        <if test="omitOci != true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE_CAROUSEL_CODE WHEN '2' THEN INTL_CAROUSEL_CODE WHEN '3' THEN
+            INTE_CAROUSEL_CODE || ',' || INTL_CAROUSEL_CODE END AS OCCUPIED_CODE
+            FROM RMS_CAROUSEL_OCI oci LEFT JOIN AMS_FLIGHT_DYNAMIC dynamic ON dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            UNION ALL
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_CAROUSEL_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+						AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+						OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+			) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+        <if test="omitOci == true">
+            SELECT OCCUPIED_CODE FROM (
+            SELECT REGEXP_SUBSTR(ot.OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+            SELECT dynamic.PLAN_DATE, oci.ID, oci.FLIGHT_DYNAMIC_ID, oci.FLIGHT_DYNAMIC_CODE, EXPECTED_START_TIME,
+            EXPECTED_OVER_TIME,
+            CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN INTE WHEN '2' THEN INTL WHEN '3' THEN INTE || ',' || INTL END AS
+            OCCUPIED_CODE
+            FROM RMS_RESOURCE_MOCK_DIST_DETAIL detail RIGHT JOIN RMS_CAROUSEL_OCI oci on oci.FLIGHT_DYNAMIC_ID =
+            detail.DATA_ID
+            RIGHT JOIN AMS_FLIGHT_DYNAMIC dynamic on dynamic.ID = oci.FLIGHT_DYNAMIC_ID
+            RIGHT JOIN RMS_RESOURCE_MOCK_DIST_INFO info on info.ID = detail.INFO_ID
+            WHERE info.ID = #{mockInfoId}
+            ) WHERE OCCUPIED_CODE IS NOT NULL
+            ) t, (SELECT TO_TIMESTAMP(${start}, 'YYYY-MM-DD HH24:MI:SS') AS wst, TO_TIMESTAMP(${over}, 'YYYY-MM-DD
+            HH24:MI:SS') AS wlt FROM DUAL)
+            WHERE
+            <if test="samePlanDate != true">
+                t.PLAN_DATE BETWEEN #{startMockPlanDate} AND #{overMockPlanDate}
+            </if>
+            <if test="samePlanDate == true">
+                t.PLAN_DATE = #{startMockPlanDate}
+            </if>
+            <![CDATA[
+							AND ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+							OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) ) AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}
+				) ot, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 ) WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1)
+  			]]>
+            WHERE OCCUPIED_CODE IS NOT NULL GROUP BY OCCUPIED_CODE ORDER BY OCCUPIED_CODE
+        </if>
+    </select>
+
+    <select id="findOccupiedBoardingGateCodes" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+
+
+
+
+			SELECT OCCUPIED_CODE FROM (SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+			SELECT ID, FLIGHT_DYNAMIC_ID, FLIGHT_DYNAMIC_CODE,
+			CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN inte_boarding_gate_Code WHEN '2' THEN intl_boarding_gate_Code
+			WHEN '3' THEN inte_boarding_gate_Code || ',' || intl_boarding_gate_Code END AS OCCUPIED_CODE, WST, WLT FROM RMS_BOARDING_GATE_OCI,
+			(select to_timestamp(${start}, 'yyyy-mm-dd hh24:mi:ss') as wst, to_timestamp(${over}, 'yyyy-mm-dd hh24:mi:ss') as wlt from dual )
+		WHERE ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+			OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) )
+			AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}) temp, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 )
+			WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1) GROUP BY OCCUPIED_CODE
+
+
+
+
+        ]]>
+	</select>
+
+    <select id="findOccupiedSlideCoastCodes" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+
+
+
+
+			SELECT OCCUPIED_CODE FROM (SELECT REGEXP_SUBSTR(OCCUPIED_CODE, '[^,]+', 1, L) AS OCCUPIED_CODE FROM (
+				SELECT ID, FLIGHT_DYNAMIC_ID, FLIGHT_DYNAMIC_CODE,
+				CASE FLIGHT_DYNAMIC_NATURE WHEN '1' THEN inte_slide_coast_code WHEN '2' THEN intl_slide_coast_code
+				WHEN '3' THEN inte_slide_coast_code || ',' || intl_slide_coast_code END AS OCCUPIED_CODE, WST, WLT FROM RMS_SLIDE_COAST_OCI,
+				(select to_timestamp(${start}, 'yyyy-mm-dd hh24:mi:ss') as wst, to_timestamp(${over}, 'yyyy-mm-dd hh24:mi:ss') as wlt from dual )
+			WHERE ((EXPECTED_START_TIME > wst AND EXPECTED_START_TIME <= wlt) OR (EXPECTED_OVER_TIME >= wst AND EXPECTED_OVER_TIME <= wlt)
+			OR (wst >= EXPECTED_START_TIME AND wst <= EXPECTED_OVER_TIME) OR (wlt >= EXPECTED_START_TIME AND wlt <= EXPECTED_OVER_TIME) )
+				AND FLIGHT_DYNAMIC_ID <> #{flightDynamic}) temp, ( SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 1000 )
+			WHERE L(+) <= LENGTH(OCCUPIED_CODE) - LENGTH(REPLACE(OCCUPIED_CODE, ',')) + 1) GROUP BY OCCUPIED_CODE
+
+
+
+
+        ]]>
+	</select>
+
+    <select id="findUnDistDynamics" resultType="FlightDynamic">
+        select
+        <include refid="flightDynamicColumns"/>
+        from ams_flight_dynamic a WHERE a.DEL_FLAG = 0 AND (a.place_num is null or a.place_num = '') AND
+        a.INOUT_TYPE_CODE = 'J'
+    </select>
+
+    <select id="findCarouselUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN RMS_CAROUSEL_OCI oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.INTE_CAROUSEL_CODE IS NULL AND oci.INTL_CAROUSEL_CODE IS NULL)) AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'J' AND a.arrival_plan_time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+
+    <select id="findArrivalGateUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN RMS_ARRIVAL_GATE_OCI oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.INTE_ARRIVAL_GATE_CODE IS NULL AND oci.INTL_ARRIVAL_GATE_CODE IS NULL)) AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'J' AND a.arrival_plan_time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="findBoardingGateUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN RMS_BOARDING_GATE_OCI oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.INTE_BOARDING_GATE_CODE IS NULL AND oci.INTL_BOARDING_GATE_CODE IS NULL)) AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="findSlideCoastUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN RMS_SLIDE_COAST_OCI oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.inte_slide_coast_code IS NULL AND oci.intl_slide_coast_code IS NULL)) AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="findCheckinCounterUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN RMS_CHECKING_COUNTER_OCI oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.inte_checking_counter_code IS NULL AND oci.intl_checking_counter_code IS NULL))
+        AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="findDepartureHallUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN rms_departure_hall_oci oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.inte_departure_hall_code IS NULL AND oci.intl_departure_hall_code IS NULL)) AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="findSecurityCheckinUnDistDynamics" resultType="FlightDynamic">
+        SELECT
+        <include refid="flightDynamicColumns"/>
+        FROM AMS_FLIGHT_DYNAMIC a LEFT JOIN rms_security_checkin_oci oci
+        ON oci.FLIGHT_DYNAMIC_ID = a.ID
+        WHERE (oci.ID IS NULL OR (oci.inte_security_checkin_code IS NULL AND oci.intl_security_checkin_code IS NULL))
+        AND
+        (STATUS_NAME IS NULL OR STATUS_NAME != '已起飞') AND a.INOUT_TYPE_CODE = 'C' AND a.departure_Plan_Time BETWEEN
+        #{startTime} AND #{endTime}
+        AND oci.id is not null ${dsfn}
+    </select>
+
+    <select id="getDateRange" resultType="map">
+		SELECT TO_CHAR( PLAN_DATE, 'YYYY-MM-DD' ) PLAN_DATE FROM AMS_FLIGHT_DYNAMIC_PAIR GROUP BY PLAN_DATE ORDER BY PLAN_DATE
+	</select>
+
+    <select id="getMaxPlanDate" resultType="java.lang.String">
+		SELECT TO_CHAR( nvl(MAX (PLAN_DATE), sysdate), 'YYYY-MM-DD' ) PLAN_DATE FROM AMS_FLIGHT_DYNAMIC
+	</select>
+
+    <select id="getMaxPlanDate4Mock" resultType="java.lang.String">
+        SELECT TO_CHAR(nvl(MAX(p.PLAN_DATE), sysdate), 'YYYY-MM-DD')
+        FROM RMS_RESOURCE_MOCK_DIST_DETAIL d LEFT JOIN
+        <if test="resourceType == '机位'">AMS_FLIGHT_DYNAMIC_PAIR</if>
+        <if test="resourceType != '机位'">AMS_FLIGHT_DYNAMIC</if>
+        p ON p.ID = d.DATA_ID WHERE INFO_ID = #{infoId}
+    </select>
+
+    <update id="updateSafeguardTypeCode">
+		update ams_flight_dynamic set safeguard_type_code = #{safeguardTypeCode},safeguard_type_name=#{safeguardTypeName} where id = #{id}
+	</update>
+
+    <insert id="insertAmsNo">
+		INSERT INTO AMS_NO (no) VALUES (#{no})
+	</insert>
+
+    <insert id="insertRmsNo">
+		INSERT INTO RMS_NO (no) VALUES (#{no})
+	</insert>
+
+    <select id="clearResourceBeforeDynamicInit" statementType="CALLABLE" parameterType="Date">
+		{call DYNAMIC_INIT_CLEAR_RESOURCE(#{planDate, mode=IN})}
+	</select>
+
+    <select id="ociToHistory" resultType="java.lang.Integer" statementType="CALLABLE">
+		<![CDATA[
+
+
+        {call p_oci(#{flightDynamicId,jdbcType=VARCHAR,mode=IN})}
+
+
+        ]]>
+	</select>
+
+    <select id="ociDelete" resultType="java.lang.Integer" statementType="CALLABLE">
+		<![CDATA[
+
+
+        {call p_d_oci(#{flightDynamicId,jdbcType=VARCHAR,mode=IN})}
+
+
+        ]]>
+	</select>
+
+    <select id="manifestToHistory" resultType="java.lang.Integer" statementType="CALLABLE">
+		<![CDATA[
+
+
+        {call p_manifest(#{flightDynamicId,jdbcType=VARCHAR,mode=IN})}
+
+
+        ]]>
+	</select>
+
+    <select id="getAgents" resultType="ServiceProvider">
+        SELECT service_provider_name as "serviceProviderName",service_provider_no as "serviceProviderNo" from
+        ams_service_provider WHERE service_provider_no in
+        (
+        SELECT DISTINCT(a.agent_code) from ams_flight_dynamic a WHERE 1=1
+        <!-- 数据权限 new -->
+        ${sqlMap.dsfn}
+        )
+    </select>
+
+
+    <select id="getFIdByAgents" resultType="map">
+        select a.id as "id" from ams_flight_dynamic a WHERE a.agent_code IN
+        <foreach item="item" index="index" collection="agentIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+		<if test="null != companyList and companyList.size > 0">
+			AND a.flight_company_code IN
+			<foreach item="company" index="index" collection="companyList" open="(" separator="," close=")">
+				#{company}
+			</foreach>
+		</if>
+        <!-- 数据权限 new -->
+        ${dsfn}
+    </select>
+
+	<select id="getPairIdByDynamic" resultType="java.lang.String">
+		select id FROM AMS_FLIGHT_DYNAMIC_PAIR
+        WHERE FLIGHT_DYNIMIC_ID = #{flightDynamicId} OR FLIGHT_DYNIMIC_ID2 = #{flightDynamicId}
+	</select>
+
+	<select id="getPairByDynamic" resultType="FlightPlanPair">
+		select * FROM AMS_FLIGHT_DYNAMIC_PAIR
+        WHERE FLIGHT_DYNIMIC_ID = #{flightDynamicId} OR FLIGHT_DYNIMIC_ID2 = #{flightDynamicId}
+	</select>
+</mapper>

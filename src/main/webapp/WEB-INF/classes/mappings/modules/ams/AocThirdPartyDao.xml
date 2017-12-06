@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.AocThirdPartyDao">
+    
+	<sql id="aocThirdPartyColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_num AS "flightNum",
+		a.update_time AS "updateTime",
+		a.send_time AS "sendTime",
+		a.update_type AS "updateType",
+		a.method AS "method",
+		a.description AS "description",
+		a.advice_flag AS "adviceFlag",
+		(SELECT name FROM sys_user WHERE id = a.DAVICE_BY) AS "daviceBy",
+		a.ext1 AS "ext1",
+		a.ext2 AS "ext2",
+		a.ext3 AS "ext3"
+	</sql>
+	
+	<sql id="aocThirdPartyJoins">
+	</sql>
+    
+	<select id="get" resultType="AocThirdParty">
+		SELECT 
+			<include refid="aocThirdPartyColumns"/>
+		FROM aoc_third_party a
+		<include refid="aocThirdPartyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AocThirdParty">
+		SELECT 
+			<include refid="aocThirdPartyColumns"/>
+		FROM aoc_third_party a
+		<include refid="aocThirdPartyJoins"/>
+		<where>
+			a.del_flag = 0
+			AND (a.ADVICE_FLAG IS NULL OR a.create_date >= trunc(sysdate - 2))
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AocThirdParty">
+		SELECT 
+			<include refid="aocThirdPartyColumns"/>
+		FROM aoc_third_party a
+		<include refid="aocThirdPartyJoins"/>
+		<where>
+			a.del_flag = 0
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="isChackAll" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM aoc_third_party
+		WHERE del_flag = 0 AND davice_by is NOT NULL
+		AND id IN
+		<foreach collection="ids" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO aoc_third_party(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_company_code,
+			flight_num,
+			update_time,
+			send_time,
+			update_type,
+			method,
+			description,
+			advice_flag,
+			davice_by,
+			ext1,
+			ext2,
+			ext3
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightCompanyCode},
+			#{flightNum},
+			#{updateTime},
+			#{sendTime},
+			#{updateType},
+			#{method},
+			#{description},
+			#{adviceFlag},
+			#{daviceBy},
+			#{ext1},
+			#{ext2},
+			#{ext3}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE aoc_third_party SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_company_code = #{flightCompanyCode},
+			flight_num = #{flightNum},
+			update_time = #{updateTime},
+			send_time = #{sendTime},
+			update_type = #{updateType},
+			method = #{method},
+			description = #{description},
+			advice_flag = #{adviceFlag},
+			davice_by = #{daviceBy},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			ext3 = #{ext3}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE aoc_third_party SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateList">
+		UPDATE aoc_third_party SET
+		advice_flag = #{adviceFlag},
+		davice_by = #{adviceBy}
+		WHERE ADVICE_FLAG is NULL
+		AND id IN
+		<foreach collection="ids" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+</mapper>

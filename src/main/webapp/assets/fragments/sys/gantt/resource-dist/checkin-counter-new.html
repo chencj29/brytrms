@@ -1,0 +1,35 @@
+<form id="mixingCarouselDistForm" style="padding:15px;">
+    <table cellpadding="5" width="100%">
+        <tr>
+            <td width="40%">代理名称：</td>
+            <td>
+                <select id="cCode" style="width:300px;" name="cCode" multiple="multiple">
+                    {{each agents as agent}}
+                    <option value="{{agent.k}}">{{agent.v}}</option>
+                    {{/each}}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td width="40%">航空公司：</td>
+            <td>
+                <select id="companyCode" style="width:300px;" name="companyCode" multiple="multiple">
+                    {{each flightCompanys as flightCompany}}
+                    <option value="{{flightCompany.k}}">{{flightCompany.v}}</option>
+                    {{/each}}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><hr/></td>
+        </tr>
+        <tr>
+            <td width="40%">国内值机柜台：</td>
+            <td width="100%"><input type='text' id="inteCode" style="width: 100%;"/></td>
+        </tr>
+        <tr>
+            <td width="40%">国际值机柜台：</td>
+            <td width="100%"><input type='text' id="intlCode" style="width: 100%;"/></td>
+        </tr>
+    </table>
+</form>

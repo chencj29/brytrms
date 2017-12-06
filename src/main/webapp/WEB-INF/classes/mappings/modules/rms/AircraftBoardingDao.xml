@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.AircraftBoardingDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="aircraftBoardingColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.aircraft_stand_num AS "aircraftStandNum",
+		a.boarding_gate_num AS "boardingGateNum",
+		a.intl_boarding_gate_num as "intlBoardingGateNum"
+	</sql>
+
+    <sql id="aircraftBoardingJoins">
+    </sql>
+
+    <select id="get" resultType="AircraftBoarding">
+        SELECT
+        <include refid="aircraftBoardingColumns"/>
+        FROM rms_aircraft_boarding a
+        <include refid="aircraftBoardingJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="AircraftBoarding">
+        SELECT
+        <include refid="aircraftBoardingColumns"/>
+        FROM rms_aircraft_boarding a
+        <include refid="aircraftBoardingJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="AircraftBoarding">
+        SELECT
+        <include refid="aircraftBoardingColumns"/>
+        FROM rms_aircraft_boarding a
+        <include refid="aircraftBoardingJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_aircraft_boarding(
+			id, create_by, create_time, update_by, update_time, remarks,
+			del_flag, aircraft_stand_num, boarding_gate_num, intl_boarding_gate_num
+		) VALUES (
+			#{id}, #{createBy.id}, #{createTime}, #{updateBy.id}, #{updateTime}, #{remarks},
+			#{delFlag}, #{aircraftStandNum}, #{boardingGateNum}, #{intlBoardingGateNum}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_aircraft_boarding SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			aircraft_stand_num = #{aircraftStandNum},
+			boarding_gate_num = #{boardingGateNum},
+			intl_boarding_gate_num = #{intlBoardingGateNum}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_aircraft_boarding SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <select id="findByAircraftStandNum" resultType="AircraftBoarding">
+        SELECT
+        <include refid="aircraftBoardingColumns"/>
+        FROM rms_aircraft_boarding a
+        WHERE a.aircraft_stand_num in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

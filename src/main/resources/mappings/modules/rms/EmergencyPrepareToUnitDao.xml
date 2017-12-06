@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.EmergencyPrepareToUnitDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="emergencyPrepareToUnitColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.rms_emergency_prepare_id AS "rmsEmergencyPrepareId",
+		a.rms_emergency_unit_id AS "rmsEmergencyUnitId"
+	</sql>
+	
+	<sql id="emergencyPrepareToUnitJoins">
+	</sql>
+    
+	<select id="get" resultType="EmergencyPrepareToUnit">
+		SELECT
+			<include refid="emergencyPrepareToUnitColumns"/>
+		FROM rms_emergency_prepare_to_unit a
+		<include refid="emergencyPrepareToUnitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EmergencyPrepareToUnit">
+		SELECT 
+			<include refid="emergencyPrepareToUnitColumns"/>
+		FROM rms_emergency_prepare_to_unit a
+		<include refid="emergencyPrepareToUnitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EmergencyPrepareToUnit">
+		SELECT 
+			<include refid="emergencyPrepareToUnitColumns"/>
+		FROM rms_emergency_prepare_to_unit a
+		<include refid="emergencyPrepareToUnitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<choose>
+				<when test="rmsEmergencyPrepareId !=null">
+					and a.rms_emergency_prepare_id = #{rmsEmergencyPrepareId}
+				</when>
+			</choose>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByEUNames" resultType="hashmap">
+		SELECT
+			u.id as "euid",
+			u.unit_name as "unitName"
+		FROM
+			rms_emergency_prepare_to_unit pu
+			join RMS_EMERGENCY_UNIT u on PU.RMS_EMERGENCY_UNIT_ID=u.id
+		<where>
+			pu.del_flag = 0
+			and pu.rms_emergency_prepare_id = #{epid}
+		</where>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_emergency_prepare_to_unit(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			rms_emergency_prepare_id,
+			rms_emergency_unit_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{rmsEmergencyPrepareId},
+			#{rmsEmergencyUnitId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_emergency_prepare_to_unit SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			rms_emergency_prepare_id = #{rmsEmergencyPrepareId},
+			rms_emergency_unit_id = #{rmsEmergencyUnitId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_emergency_prepare_to_unit SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="EPDelete">
+		UPDATE rms_emergency_prepare_to_unit SET
+		del_flag = 1
+		WHERE rms_emergency_prepare_id = #{epid}
+	</update>
+</mapper>

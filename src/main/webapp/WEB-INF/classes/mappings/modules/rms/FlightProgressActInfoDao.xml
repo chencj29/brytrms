@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightProgressActInfoDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="flightProgressActInfoColumns">
+		a.id AS "id",
+		a.pair_id AS "pairId",
+		a.progress_id AS "progressId",
+		a.plan_start_time AS "planStartTime",
+		a.plan_over_time AS "planOverTime",
+		a.actual_start_time AS "actualStartTime",
+		a.actual_over_time AS "actualOverTime"
+	</sql>
+
+    <sql id="flightProgressActInfoJoins">
+    </sql>
+
+    <select id="get" resultType="FlightProgressActInfo">
+        SELECT
+        <include refid="flightProgressActInfoColumns"/>
+        FROM rms_flight_progress_act_info a
+        <include refid="flightProgressActInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="FlightProgressActInfo">
+        SELECT
+        <include refid="flightProgressActInfoColumns"/>
+        FROM rms_flight_progress_act_info a
+        <include refid="flightProgressActInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="FlightProgressActInfo">
+        SELECT
+        <include refid="flightProgressActInfoColumns"/>
+        FROM rms_flight_progress_act_info a
+        <include refid="flightProgressActInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_flight_progress_act_info(
+			id,
+			pair_id,
+			progress_id,
+			plan_start_time,
+			plan_over_time,
+			actual_start_time,
+			actual_over_time
+		) VALUES (
+			#{id},
+			#{pairId},
+			#{progressId},
+			#{planStartTime},
+			#{planOverTime},
+			#{actualStartTime},
+			#{actualOverTime}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_flight_progress_act_info SET 	
+			pair_id = #{pairId},
+			progress_id = #{progressId},
+			plan_start_time = #{planStartTime},
+			plan_over_time = #{planOverTime},
+			actual_start_time = #{actualStartTime},
+			actual_over_time = #{actualOverTime}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM rms_flight_progress_act_info
+		WHERE id = #{id}
+	</update>
+
+    <select id="findByPairIdAndProgressId" parameterType="map" resultType="FlightProgressActInfo">
+        SELECT <include refid="flightProgressActInfoColumns"/>
+        FROM rms_flight_progress_act_info a where pair_id = #{pairId} AND progress_id = #{progressId}
+    </select>
+
+</mapper>

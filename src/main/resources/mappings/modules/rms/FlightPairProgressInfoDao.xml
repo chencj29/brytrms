@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightPairProgressInfoDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="flightPairProgressInfoColumns">
+		a.id AS "id",
+		a.pair_id AS "pairId",
+		a.main_type_code AS "mainTypeCode",
+		a.main_type_name AS "mainTypeName",
+		a.sub_type_code AS "subTypeCode",
+		a.sub_type_name AS "subTypeName",
+		a.progress_name AS "progressName",
+		a.progress_code AS "progressCode",
+		a.plan_start_time AS "planStartTime",
+		a.plan_over_time AS "planOverTime",
+		a.actual_start_time AS "actualStartTime",
+		a.actual_over_time AS "actualOverTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.progress_ref_id AS "progressRefId",
+	  	a.op_name as "opName",
+	  	a.special_car_type as "specialCarType",
+	  	a.special_car_code as "specialCarCode"
+	</sql>
+
+    <sql id="flightPairProgressInfoJoins">
+    </sql>
+
+    <select id="get" resultType="FlightPairProgressInfo">
+        SELECT
+        <include refid="flightPairProgressInfoColumns"/>
+        FROM rms_pair_prog_info a
+        <include refid="flightPairProgressInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="FlightPairProgressInfo">
+        SELECT
+        <include refid="flightPairProgressInfoColumns"/>
+        FROM rms_pair_prog_info a
+        <include refid="flightPairProgressInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+	<select id="getProgressInfo"  resultType="FlightPairProgressInfo">
+		SELECT
+		<include refid="flightPairProgressInfoColumns"/>
+		FROM rms_pair_prog_info a
+		<include refid="flightPairProgressInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pair_id = #{pairId} AND a.progress_ref_id = #{progressRefId}
+			<if test="progressCode != null and progressCode != ''">
+				AND a.progress_code = #{progressCode}
+			</if>
+		</where>
+	</select>
+
+    <select id="findAllList" resultType="FlightPairProgressInfo">
+        SELECT
+        <include refid="flightPairProgressInfoColumns"/>
+        FROM rms_pair_prog_info a
+        <include refid="flightPairProgressInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_pair_prog_info(
+			id,
+			pair_id,
+			main_type_code,
+			main_type_name,
+			sub_type_code,
+			sub_type_name,
+			progress_name,
+			progress_code,
+			plan_start_time,
+			plan_over_time,
+			actual_start_time,
+			actual_over_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			progress_ref_id, op_name, special_car_type, special_car_code
+		) VALUES (
+			#{id},
+			#{pairId},
+			#{mainTypeCode},
+			#{mainTypeName},
+			#{subTypeCode},
+			#{subTypeName},
+			#{progressName},
+			#{progressCode},
+			#{planStartTime},
+			#{planOverTime},
+			#{actualStartTime},
+			#{actualOverTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{progressRefId},
+			#{opName}, #{specialCarType}, #{specialCarCode}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_pair_prog_info SET 	
+			pair_id = #{pairId},
+			main_type_code = #{mainTypeCode},
+			main_type_name = #{mainTypeName},
+			sub_type_code = #{subTypeCode},
+			sub_type_name = #{subTypeName},
+			progress_name = #{progressName},
+			progress_code = #{progressCode},
+			plan_start_time = #{planStartTime},
+			plan_over_time = #{planOverTime},
+			actual_start_time = #{actualStartTime},
+			actual_over_time = #{actualOverTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			progress_ref_id = #{progressRefId}, op_name = #{opName}, special_car_type = #{specialCarType}, special_car_code = #{specialCarCode}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+		delete from rms_pair_prog_info WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteByPairId" parameterType="string">
+		delete from rms_pair_prog_info where pair_id = #{pairId}
+	</delete>
+
+
+    <select id="queryByPairId" parameterType="string" resultType="FlightPairProgressInfo">
+        SELECT
+        <include refid="flightPairProgressInfoColumns"/>
+        FROM rms_pair_prog_info a
+        <include refid="flightPairProgressInfoJoins"/>
+        <where>
+            a.pair_Id = #{param0}
+        </where>
+    </select>
+
+    <select id="checkPairExists" parameterType="string" resultType="boolean">
+        SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END RESULT FROM rms_pair_prog_info WHERE pair_id=#{pairId}
+    </select>
+
+	<select id="batchDelete">
+		DELETE FROM rms_pair_prog_info
+		WHERE id in
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

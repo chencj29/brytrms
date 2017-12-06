@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardResourceDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="safeguardResourceColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.service_provider_code AS "serviceProviderCode",
+		a.service_provider_name AS "serviceProviderName",
+		a.resource_name AS "resourceName",
+		a.resource_type_code AS "resourceTypeCode",
+		a.resource_type_name AS "resourceTypeName",
+		a.billing_models_code AS "billingModelsCode",
+		a.billing_models_name AS "billingModelsName",
+		a.resource_num AS "resourceNum",
+		a.maintained_station AS "maintainedStation",
+		a.use_station AS "useStation",
+		a.car_name AS "carName",
+		a.car_model_code AS "carModelCode",
+		a.car_model_name AS "carModelName",
+		a.car_status AS "carStatus",
+		a.redundance1 AS "redundance1",
+		a.redundance2 AS "redundance2",
+		a.redundance3 AS "redundance3",
+		a.redundance4 AS "redundance4",
+		a.redundance5 AS "redundance5"
+	</sql>
+	
+	<sql id="safeguardResourceJoins">
+	</sql>
+    
+	<select id="get" resultType="SafeguardResource">
+		SELECT 
+			<include refid="safeguardResourceColumns"/>
+		FROM rms_safeguard_resource a
+		<include refid="safeguardResourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeguardResource">
+		SELECT 
+			<include refid="safeguardResourceColumns"/>
+		FROM rms_safeguard_resource a
+		<include refid="safeguardResourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SafeguardResource">
+		SELECT 
+			<include refid="safeguardResourceColumns"/>
+		FROM rms_safeguard_resource a
+		<include refid="safeguardResourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_safeguard_resource(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			service_provider_code,
+			service_provider_name,
+			resource_name,
+			resource_type_code,
+			resource_type_name,
+			billing_models_code,
+			billing_models_name,
+			resource_num,
+			maintained_station,
+			use_station,
+			car_name,
+			car_model_code,
+			car_model_name,
+			car_status,
+			redundance1,
+			redundance2,
+			redundance3,
+			redundance4,
+			redundance5
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{serviceProviderCode},
+			#{serviceProviderName},
+			#{resourceName},
+			#{resourceTypeCode},
+			#{resourceTypeName},
+			#{billingModelsCode},
+			#{billingModelsName},
+			#{resourceNum},
+			#{maintainedStation},
+			#{useStation},
+			#{carName},
+			#{carModelCode},
+			#{carModelName},
+			#{carStatus},
+			#{redundance1},
+			#{redundance2},
+			#{redundance3},
+			#{redundance4},
+			#{redundance5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_safeguard_resource SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			service_provider_code = #{serviceProviderCode},
+			service_provider_name = #{serviceProviderName},
+			resource_name = #{resourceName},
+			resource_type_code = #{resourceTypeCode},
+			resource_type_name = #{resourceTypeName},
+			billing_models_code = #{billingModelsCode},
+			billing_models_name = #{billingModelsName},
+			resource_num = #{resourceNum},
+			maintained_station = #{maintainedStation},
+			use_station = #{useStation},
+			car_name = #{carName},
+			car_model_code = #{carModelCode},
+			car_model_name = #{carModelName},
+			car_status = #{carStatus},
+			redundance1 = #{redundance1},
+			redundance2 = #{redundance2},
+			redundance3 = #{redundance3},
+			redundance4 = #{redundance4},
+			redundance5 = #{redundance5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_safeguard_resource SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

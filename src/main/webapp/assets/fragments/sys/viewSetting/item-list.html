@@ -1,0 +1,5 @@
+{{ each columns as column }}
+<li class="drag-item" value="{{column.uid}}">
+    <input type="checkbox" style="width: 20px;height: 20px;margin: 0;" value="{{column.uid}}" {{ if column.visible }} checked="checked" {{ /if }}>{{column.text}}
+</li>
+{{ /each }}

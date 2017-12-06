@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.FlightCompanyInfoDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightCompanyInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.two_code AS "twoCode",
+		a.three_code AS "threeCode",
+		a.chinese_short AS "chineseShort",
+		a.chinese_name AS "chineseName",
+		a.english_name AS "englishName",
+		a.other_flight AS "otherFlight"
+	</sql>
+	
+	<sql id="flightCompanyInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FlightCompanyInfo">
+		SELECT 
+			<include refid="flightCompanyInfoColumns"/>
+		FROM ams_flight_company_info a
+		<include refid="flightCompanyInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlightCompanyInfo">
+		SELECT 
+			<include refid="flightCompanyInfoColumns"/>
+		FROM ams_flight_company_info a
+		<include refid="flightCompanyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlightCompanyInfo">
+		SELECT 
+			<include refid="flightCompanyInfoColumns"/>
+		FROM ams_flight_company_info a
+		<include refid="flightCompanyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_flight_company_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			two_code,
+			three_code,
+			chinese_short,
+			chinese_name,
+			english_name,
+			other_flight
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{twoCode},
+			#{threeCode},
+			#{chineseShort},
+			#{chineseName},
+			#{englishName},
+			#{otherFlight}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_flight_company_info SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			two_code = #{twoCode},
+			three_code = #{threeCode},
+			chinese_short = #{chineseShort},
+			chinese_name = #{chineseName},
+			english_name = #{englishName},
+			other_flight = #{otherFlight}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_flight_company_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

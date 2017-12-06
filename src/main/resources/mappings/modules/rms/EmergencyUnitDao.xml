@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.EmergencyUnitDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="emergencyUnitColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pid AS "pid",
+		a.unit_name AS "unitName",
+		a.contact_name AS "contactName",
+		a.contact_tel AS "contactTel",
+		a.ntype AS "ntype"
+	</sql>
+	
+	<sql id="emergencyUnitJoins">
+	</sql>
+    
+	<select id="get" resultType="EmergencyUnit">
+		SELECT 
+			<include refid="emergencyUnitColumns"/>
+		FROM rms_emergency_unit a
+		<include refid="emergencyUnitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EmergencyUnit">
+		SELECT 
+			<include refid="emergencyUnitColumns"/>
+		FROM rms_emergency_unit a
+		<include refid="emergencyUnitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<choose>
+				<when test="pid !=null">
+					and (a.pid = #{pid} or a.id = #{pid})
+				</when>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EmergencyUnit">
+		SELECT 
+			<include refid="emergencyUnitColumns"/>
+		FROM rms_emergency_unit a
+		<include refid="emergencyUnitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_emergency_unit(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			pid,
+			unit_name,
+			contact_name,
+			contact_tel,
+			ntype
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{pid},
+			#{unitName},
+			#{contactName},
+			#{contactTel},
+			#{ntype}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_emergency_unit SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			pid = #{pid},
+			unit_name = #{unitName},
+			contact_name = #{contactName},
+			contact_tel = #{contactTel},
+			ntype = #{ntype}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_emergency_unit SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="batchDelete">
+		UPDATE rms_emergency_unit SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id in
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

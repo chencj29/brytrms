@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.IrregularServicesDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="irregularServicesColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.IRREGULAR_SERVICE_DATE AS "irregularServicesDate",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_num AS "flightNum",
+		a.place AS "place",
+		a.irregular_service_code AS "irregularServiceCode",
+		a.irregular_service_name AS "irregularServiceName",
+		a.cause AS "cause",
+		a.remedial_measure AS "remedialMeasure",
+		a.redundance1 AS "redundance1",
+		a.redundance2 AS "redundance2",
+		a.redundance3 AS "redundance3",
+		a.redundance4 AS "redundance4",
+		a.redundance5 AS "redundance5"
+	</sql>
+	
+	<sql id="irregularServicesJoins">
+	</sql>
+    
+	<select id="get" resultType="IrregularServices">
+		SELECT 
+			<include refid="irregularServicesColumns"/>
+		FROM rms_irregular_services a
+		<include refid="irregularServicesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IrregularServices">
+		SELECT 
+			<include refid="irregularServicesColumns"/>
+		FROM rms_irregular_services a
+		<include refid="irregularServicesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 数据权限 new -->
+			${sqlMap.dsfn}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IrregularServices">
+		SELECT 
+			<include refid="irregularServicesColumns"/>
+		FROM rms_irregular_services a
+		<include refid="irregularServicesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_irregular_services(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			irregular_service_date,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			place,
+			irregular_service_code,
+			irregular_service_name,
+			cause,
+			remedial_measure,
+			redundance1,
+			redundance2,
+			redundance3,
+			redundance4,
+			redundance5
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{irregularServicesDate},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{place},
+			#{irregularServiceCode},
+			#{irregularServiceName},
+			#{cause},
+			#{remedialMeasure},
+			#{redundance1},
+			#{redundance2},
+			#{redundance3},
+			#{redundance4},
+			#{redundance5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_irregular_services SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			irregular_service_date = #{irregularServicesDate},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			place = #{place},
+			irregular_service_code = #{irregularServiceCode},
+			irregular_service_name = #{irregularServiceName},
+			cause = #{cause},
+			remedial_measure = #{remedialMeasure},
+			redundance1 = #{redundance1},
+			redundance2 = #{redundance2},
+			redundance3 = #{redundance3},
+			redundance4 = #{redundance4},
+			redundance5 = #{redundance5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_irregular_services SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

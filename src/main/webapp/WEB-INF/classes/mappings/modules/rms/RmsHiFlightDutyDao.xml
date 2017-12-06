@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsHiFlightDutyDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsFlightDutyColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.flight_num AS "flightNum",
+		a.addr AS "addr",
+		a.addr_two_code AS "addrTwoCode",
+		a.addr_two_nature AS "addrTwoNature",
+		a.person_count AS "personCount",
+		a.child_count AS "childCount",
+		a.baby_count AS "babyCount",
+		a.baby_alone_count AS "babyAloneCount",
+		a.nonstop_luggage_count AS "nonstopLuggageCount",
+		a.nonstop_luggage_weight AS "nonstopLuggageWeight",
+		a.transfer_luggage_count AS "transferLuggageCount",
+		a.transfer_luggage_weight AS "transferLuggageWeight",
+		a.vip_person_count AS "vipPersonCount",
+		a.vip_seat AS "vipSeat",
+		a.vip_luggage_count AS "vipLuggageCount",
+		a.vip_luggage_weight AS "vipLuggageWeight",
+		a.first_cabin_person_count AS "firstCabinPersonCount",
+		a.first_cabin_seat AS "firstCabinSeat",
+		a.business_cabin_person_count AS "businessCabinPersonCount",
+		a.business_cabin_seat AS "businessCabinSeat"
+	</sql>
+	
+	<sql id="rmsFlightDutyJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsFlightDuty">
+		SELECT 
+			<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty a
+		<include refid="rmsFlightDutyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsFlightDuty">
+		SELECT 
+			<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		<include refid="rmsFlightDutyJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsFlightDuty">
+		SELECT 
+			<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		<include refid="rmsFlightDutyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findByFdidAndAddr" resultType="RmsFlightDuty">
+		SELECT
+		<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		WHERE a.flight_dynamic_id = #{flightDynamicId}
+		AND a.addr_two_code = #{addrTwoCode}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_flight_duty_h(
+			id,
+			flight_dynamic_id,
+			flight_num,
+			addr,
+			addr_two_code,
+			addr_two_nature,
+			person_count,
+			child_count,
+			baby_count,
+			baby_alone_count,
+			nonstop_luggage_count,
+			nonstop_luggage_weight,
+			transfer_luggage_count,
+			transfer_luggage_weight,
+			vip_person_count,
+			vip_seat,
+			vip_luggage_count,
+			vip_luggage_weight,
+			first_cabin_person_count,
+			first_cabin_seat,
+			business_cabin_person_count,
+			business_cabin_seat
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{flightNum},
+			#{addr},
+			#{addrTwoCode},
+			#{addrTwoNature},
+			#{personCount},
+			#{childCount},
+			#{babyCount},
+			#{babyAloneCount},
+			#{nonstopLuggageCount},
+			#{nonstopLuggageWeight},
+			#{transferLuggageCount},
+			#{transferLuggageWeight},
+			#{vipPersonCount},
+			#{vipSeat},
+			#{vipLuggageCount},
+			#{vipLuggageWeight},
+			#{firstCabinPersonCount},
+			#{firstCabinSeat},
+			#{businessCabinPersonCount},
+			#{businessCabinSeat}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_flight_duty_h SET
+			flight_dynamic_id = #{flightDynamicId},
+			flight_num = #{flightNum},
+			addr = #{addr},
+			addr_two_code = #{addrTwoCode},
+			addr_two_nature = #{addrTwoNature},
+			person_count = #{personCount},
+			child_count = #{childCount},
+			baby_count = #{babyCount},
+			baby_alone_count = #{babyAloneCount},
+			nonstop_luggage_count = #{nonstopLuggageCount},
+			nonstop_luggage_weight = #{nonstopLuggageWeight},
+			transfer_luggage_count = #{transferLuggageCount},
+			transfer_luggage_weight = #{transferLuggageWeight},
+			vip_person_count = #{vipPersonCount},
+			vip_seat = #{vipSeat},
+			vip_luggage_count = #{vipLuggageCount},
+			vip_luggage_weight = #{vipLuggageWeight},
+			first_cabin_person_count = #{firstCabinPersonCount},
+			first_cabin_seat = #{firstCabinSeat},
+			business_cabin_person_count = #{businessCabinPersonCount},
+			business_cabin_seat = #{businessCabinSeat}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rms_flight_duty_h
+		WHERE id = #{id}
+	</update>
+
+    <!-- 获取本站出港的值机数据 -->
+	<select id="getHomeFlightDuty" parameterType="java.lang.String" resultType="RmsFlightDuty">
+		SELECT
+			<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		WHERE a.FLIGHT_DYNAMIC_ID =#{dynamicId}
+		AND a.ADDR_TWO_NATURE ='ARRI'
+	</select>
+
+	<!-- 获取当次航班出港某个落点的值机数据 -->
+	<select id="getFlightDutys" resultType="RmsFlightDuty">
+		SELECT
+		<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		WHERE a.FLIGHT_DYNAMIC_ID =#{flightDynamicId}
+		AND a.ADDR_TWO_NATURE =#{addrTwoNature}
+	</select>
+
+	<!-- 获取航班动态对应的所有出港的值机数据 -->
+	<select id="getFlightDutysByFlightDynamicId" parameterType="java.lang.String" resultType="RmsFlightDuty">
+		SELECT
+		<include refid="rmsFlightDutyColumns"/>
+		FROM rms_flight_duty_h a
+		WHERE a.FLIGHT_DYNAMIC_ID =#{dynamicId}
+	</select>
+
+</mapper>

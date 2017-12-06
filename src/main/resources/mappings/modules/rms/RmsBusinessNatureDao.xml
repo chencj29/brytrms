@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsBusinessNatureDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsBusinessNatureColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.post_id AS "postId",
+		a.post_name AS "postName",
+		a.bussiness_nature_name AS "bussinessNatureName",
+		a.comments AS "comments"
+	</sql>
+	
+	<sql id="rmsBusinessNatureJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsBusinessNature">
+		SELECT 
+			<include refid="rmsBusinessNatureColumns"/>
+		FROM rms_business_nature a
+		<include refid="rmsBusinessNatureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsBusinessNature">
+		SELECT 
+			<include refid="rmsBusinessNatureColumns"/>
+		FROM rms_business_nature a
+		<include refid="rmsBusinessNatureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				AND post_id = #{postId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsBusinessNature">
+		SELECT 
+			<include refid="rmsBusinessNatureColumns"/>
+		FROM rms_business_nature a
+		<include refid="rmsBusinessNatureJoins"/>
+		<where>
+		</where>
+		<choose>
+
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_business_nature(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			post_id,
+			post_name,
+			bussiness_nature_name,
+			comments
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{postId},
+			#{postName},
+			#{bussinessNatureName},
+			#{comments}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_business_nature SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			post_id = #{postId},
+			post_name = #{postName},
+			bussiness_nature_name = #{bussinessNatureName},
+			comments = #{comments}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_business_nature SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

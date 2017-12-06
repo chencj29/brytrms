@@ -1,0 +1,20 @@
+[
+  {"planDate":"计划日期"},
+  {"flightCompanyName":"航空公司"},
+  {"flightNum":"航班号"},
+  {"aircraftTypeCode":"机型"},
+  {"aircraftNum":"机号"},
+  {"passAirport1Code":"经停1"},
+  {"passAirport2Code":"经停2"},
+  {"arrivalAirportCode":"到达地"},
+  {"departurePlanTime":"计划起飞"},
+
+  {"travellerAllCount":"结载总人数"},
+  {"personCount":"成人"},
+  {"childCount":"儿童"},
+  {"babyCount":"婴儿"},
+  {"firstCabinPersonCount":"头等舱"},
+  {"allLuggageCount":"结载总行李"},
+  {"transferLuggageCount":"中转行李"},
+  {"vipLuggageCount":"VIP行李"}
+]

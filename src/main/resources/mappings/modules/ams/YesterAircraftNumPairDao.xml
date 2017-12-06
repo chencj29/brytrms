@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.YesterAircraftNumPairDao">
+
+    <sql id="yesterAircraftNumPairColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pair_id AS "pairId",
+		a.plan_date AS "planDate",
+		a.aircraft_num AS "aircraftNum",
+		a.place_num AS "placeNum",
+		a.place_status AS "placeStatus",
+		a.ext1 AS "ext1",
+		a.ext2 AS "ext2",
+		a.ext3 AS "ext3"
+	</sql>
+
+    <sql id="yesterAircraftNumPairJoins">
+    </sql>
+
+    <select id="get" resultType="YesterAircraftNumPair">
+        SELECT
+        <include refid="yesterAircraftNumPairColumns"/>
+        FROM ams_yester_aircraft_num_pair a
+        <include refid="yesterAircraftNumPairJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="YesterAircraftNumPair">
+        SELECT
+        <include refid="yesterAircraftNumPairColumns"/>
+        FROM ams_yester_aircraft_num_pair a
+        <include refid="yesterAircraftNumPairJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL} AND a.place_status IS NULL
+            <if test="planDate != null and planDate != ''">
+                AND TO_CHAR(a.plan_date,'YYYYMMDD') = TO_CHAR(#{planDate},'YYYYMMDD')
+            </if>
+            <if test="pairId != null and pairId != ''">
+                AND a.pair_id = #{pairId}
+            </if>
+            <if test="aircraftNum != null and aircraftNum != ''">
+                AND a.aircraft_num = #{aircraftNum}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+	<select id="findListByPlanDate" resultType="YesterAircraftNumPair">
+		SELECT
+		<include refid="yesterAircraftNumPairColumns"/>
+		FROM ams_yester_aircraft_num_pair a
+		<include refid="yesterAircraftNumPairJoins"/>
+		<where>
+			a.del_flag = 0 AND
+			(a.place_status IS NULL OR a.plan_date >= trunc(sysdate - 10))
+			<if test="planDate != null and planDate != ''">
+				AND TO_CHAR(a.plan_date,'YYYYMMDD') = TO_CHAR(#{planDate},'YYYYMMDD')
+			</if>
+			<if test="pairId != null and pairId != ''">
+				AND a.pair_id = #{pairId}
+			</if>
+			<if test="aircraftNum != null and aircraftNum != ''">
+				AND a.aircraft_num = #{aircraftNum}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.place_status DESC,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+    <select id="findListByStatus" resultType="YesterAircraftNumPair">
+        SELECT
+        <include refid="yesterAircraftNumPairColumns"/>
+        FROM ams_yester_aircraft_num_pair a
+        <include refid="yesterAircraftNumPairJoins"/>
+		<![CDATA[
+            WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.aircraft_num = #{aircraftNum} AND
+            ((a.place_status IS NULL AND PLAN_DATE != #{planDate})
+            OR
+            (a.place_status = '1' AND PLAN_DATE = #{planDate}))
+        ]]>
+    </select>
+
+    <select id="findAllList" resultType="YesterAircraftNumPair">
+        SELECT
+        <include refid="yesterAircraftNumPairColumns"/>
+        FROM ams_yester_aircraft_num_pair a
+        <include refid="yesterAircraftNumPairJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO ams_yester_aircraft_num_pair(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pair_id,
+			plan_date,
+			aircraft_num,
+			place_num,
+			place_status,
+			ext1,
+			ext2,
+			ext3
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{pairId},
+			#{planDate},
+			#{aircraftNum},
+			#{placeNum},
+			#{placeStatus},
+			#{ext1},
+			#{ext2},
+			#{ext3}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE ams_yester_aircraft_num_pair SET 	
+			pair_id = #{pairId},
+			plan_date = #{planDate},
+			aircraft_num = #{aircraftNum},
+			place_num = #{placeNum},
+			place_status = #{placeStatus},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			ext3 = #{ext3}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateByPlaceStatuse">
+		UPDATE ams_yester_aircraft_num_pair SET place_status = #{placeStatus} WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+		DELETE FROM ams_yester_aircraft_num_pair
+		WHERE id = #{id}
+	</delete>
+
+    <update id="updateStatus">
+		UPDATE ams_yester_aircraft_num_pair SET
+			place_status = #{placeStatus},
+			plan_date = #{planDate}
+		WHERE pair_id = #{pairId}
+	</update>
+
+    <update id="updateStatusByNull">
+		UPDATE ams_yester_aircraft_num_pair SET
+		place_status = '1',
+		plan_date = #{planDate}
+		WHERE aircraft_num = #{aircraftNum} AND place_status is NULL
+	</update>
+
+	<select id="findListByOci" resultType="YesterAircraftNumPair">
+		SELECT
+		<include refid="yesterAircraftNumPairColumns"/>
+		FROM ams_yester_aircraft_num_pair a
+		<include refid="yesterAircraftNumPairJoins"/>
+        WHERE a.del_flag = 0 AND a.place_status IS NULL AND place_num = #{placeNum}
+		ORDER BY plan_date DESC
+	</select>
+</mapper>

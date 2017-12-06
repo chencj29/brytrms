@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsGateOccupyingInfoHiDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsGateOccupyingInfoHiColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.flight_dynamic_code AS "flightDynamicCode",
+		a.expected_gate_num AS "expectedGateNum",
+		a.actual_gate_num AS "actualGateNum",
+		a.start_time AS "startTime",
+		a.over_time AS "overTime",
+		a.leave AS "leave",
+		a.leave_time AS "leaveTime"
+	</sql>
+	
+	<sql id="rmsGateOccupyingInfoHiJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsGateOccupyingInfoHi">
+		SELECT 
+			<include refid="rmsGateOccupyingInfoHiColumns"/>
+		FROM rms_gate_occupying_info_hi a
+		<include refid="rmsGateOccupyingInfoHiJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsGateOccupyingInfoHi">
+		SELECT 
+			<include refid="rmsGateOccupyingInfoHiColumns"/>
+		FROM rms_gate_occupying_info_hi a
+		<include refid="rmsGateOccupyingInfoHiJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsGateOccupyingInfoHi">
+		SELECT 
+			<include refid="rmsGateOccupyingInfoHiColumns"/>
+		FROM rms_gate_occupying_info_hi a
+		<include refid="rmsGateOccupyingInfoHiJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_gate_occupying_info_hi(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_dynamic_id,
+			flight_dynamic_code,
+			expected_gate_num,
+			actual_gate_num,
+			start_time,
+			over_time,
+			leave,
+			leave_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightDynamicId},
+			#{flightDynamicCode},
+			#{expectedGateNum},
+			#{actualGateNum},
+			#{startTime},
+			#{overTime},
+			#{leave},
+			#{leaveTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_gate_occupying_info_hi SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_dynamic_id = #{flightDynamicId},
+			flight_dynamic_code = #{flightDynamicCode},
+			expected_gate_num = #{expectedGateNum},
+			actual_gate_num = #{actualGateNum},
+			start_time = #{startTime},
+			over_time = #{overTime},
+			leave = #{leave},
+			leave_time = #{leaveTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_gate_occupying_info_hi SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

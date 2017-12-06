@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsDamagedLuggageDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsDamagedLuggageColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_num AS "flightNum",
+		a.name AS "name",
+		a.luggage_name AS "luggageName",
+		a.damaged_condition_code AS "damagedConditionCode",
+		a.damaged_condition_name AS "damagedConditionName",
+		a.damaged_part AS "damagedPart",
+		a.luggage_price AS "luggagePrice",
+		a.purchase_price AS "purchasePrice",
+		a.isreceipt AS "isreceipt",
+		a.processing_mode AS "processingMode",
+		a.indemnify AS "indemnify",
+		a.redundance1 AS "redundance1",
+		a.redundance2 AS "redundance2",
+		a.redundance3 AS "redundance3",
+		a.redundance4 AS "redundance4",
+		a.redundance5 AS "redundance5"
+	</sql>
+	
+	<sql id="rmsDamagedLuggageJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsDamagedLuggage">
+		SELECT 
+			<include refid="rmsDamagedLuggageColumns"/>
+		FROM rms_damaged_luggage a
+		<include refid="rmsDamagedLuggageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsDamagedLuggage">
+		SELECT 
+			<include refid="rmsDamagedLuggageColumns"/>
+		FROM rms_damaged_luggage a
+		<include refid="rmsDamagedLuggageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsDamagedLuggage">
+		SELECT 
+			<include refid="rmsDamagedLuggageColumns"/>
+		FROM rms_damaged_luggage a
+		<include refid="rmsDamagedLuggageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_damaged_luggage(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			flight_num,
+			name,
+			luggage_name,
+			damaged_condition_code,
+			damaged_condition_name,
+			damaged_part,
+			luggage_price,
+			purchase_price,
+			isreceipt,
+			processing_mode,
+			indemnify,
+			redundance1,
+			redundance2,
+			redundance3,
+			redundance4,
+			redundance5
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{flightNum},
+			#{name},
+			#{luggageName},
+			#{damagedConditionCode},
+			#{damagedConditionName},
+			#{damagedPart},
+			#{luggagePrice},
+			#{purchasePrice},
+			#{isreceipt},
+			#{processingMode},
+			#{indemnify},
+			#{redundance1},
+			#{redundance2},
+			#{redundance3},
+			#{redundance4},
+			#{redundance5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_damaged_luggage SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			flight_num = #{flightNum},
+			name = #{name},
+			luggage_name = #{luggageName},
+			damaged_condition_code = #{damagedConditionCode},
+			damaged_condition_name = #{damagedConditionName},
+			damaged_part = #{damagedPart},
+			luggage_price = #{luggagePrice},
+			purchase_price = #{purchasePrice},
+			isreceipt = #{isreceipt},
+			processing_mode = #{processingMode},
+			indemnify = #{indemnify},
+			redundance1 = #{redundance1},
+			redundance2 = #{redundance2},
+			redundance3 = #{redundance3},
+			redundance4 = #{redundance4},
+			redundance5 = #{redundance5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_damaged_luggage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

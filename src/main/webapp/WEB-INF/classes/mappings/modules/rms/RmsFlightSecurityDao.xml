@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsFlightSecurityDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsFlightSecurityColumns">
+		a.id AS "id",
+		a.check_date AS "checkDate",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_num AS "flightNum",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.nationality AS "nationality",
+		a.id_code AS "idCode",
+		a.no_pass_reason AS "noPassReason",
+		a.screeners AS "screeners",
+		a.no_board_reason AS "noBoardReason",
+		a.public_security_officers AS "publicSecurityOfficers"
+	</sql>
+	
+	<sql id="rmsFlightSecurityJoins">
+	</sql>
+    
+	<select id="get" resultType="RmsFlightSecurity">
+		SELECT 
+			<include refid="rmsFlightSecurityColumns"/>
+		FROM rms_flight_security a
+		<include refid="rmsFlightSecurityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RmsFlightSecurity">
+		SELECT 
+			<include refid="rmsFlightSecurityColumns"/>
+		FROM rms_flight_security a
+		<include refid="rmsFlightSecurityJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.check_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RmsFlightSecurity">
+		SELECT 
+			<include refid="rmsFlightSecurityColumns"/>
+		FROM rms_flight_security a
+		<include refid="rmsFlightSecurityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.check_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_flight_security(
+			id,
+			check_date,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			arrival_airport_code,
+			arrival_airport_name,
+			name,
+			sex,
+			nationality,
+			id_code,
+			no_pass_reason,
+			screeners,
+			no_board_reason,
+			public_security_officers
+		) VALUES (
+			#{id},
+			#{checkDate},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{arrivalAirportCode},
+			#{arrivalAirportName},
+			#{name},
+			#{sex},
+			#{nationality},
+			#{idCode},
+			#{noPassReason},
+			#{screeners},
+			#{noBoardReason},
+			#{publicSecurityOfficers}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_flight_security SET 	
+			check_date = #{checkDate},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_name = #{arrivalAirportName},
+			name = #{name},
+			sex = #{sex},
+			nationality = #{nationality},
+			id_code = #{idCode},
+			no_pass_reason = #{noPassReason},
+			screeners = #{screeners},
+			no_board_reason = #{noBoardReason},
+			public_security_officers = #{publicSecurityOfficers}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rms_flight_security
+		WHERE id = #{id}
+	</update>
+
+	<select id="findListByHistory" resultType="RmsFlightSecurity">
+		SELECT
+		<include refid="rmsFlightSecurityColumns"/>
+		FROM rms_flight_security a
+		<include refid="rmsFlightSecurityJoins"/>
+		<where>
+			<if test="flightNum != null and flightNum != ''">
+				AND UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%')
+			</if>
+			<if test="flightCompanyCode != null and flightCompanyCode != ''">
+				AND a.flight_company_code = #{flightCompanyCode}
+			</if>
+			<if test="addr != null and addr != ''">
+				AND a.arrival_airport_code = #{addr}
+			</if>
+			<if test="planDate_begin != null and planDate_begin != ''">
+				<![CDATA[AND a.check_date >= to_date(#{planDate_begin} ||' 00:00:00','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+			<if test="planDate_end != null and planDate_end != ''">
+				<![CDATA[AND a.check_date <= to_date(#{planDate_end} ||' 23:59:59','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.check_date
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

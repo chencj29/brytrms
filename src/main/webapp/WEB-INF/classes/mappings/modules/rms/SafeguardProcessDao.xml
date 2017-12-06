@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardProcessDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="safeguardProcessColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.safeguard_process_code AS "safeguardProcessCode",
+		a.safeguard_process_name AS "safeguardProcessName",
+		a.safeguard_attr_name AS "safeguardAttrName",
+		a.process_compound_name AS "processCompoundName",
+		a.plan_color AS "planColor",
+		a.actual_color AS "actualColor",
+		a.redundant1 AS "redundant1",
+		a.redundant2 AS "redundant2",
+		a.redundant3 AS "redundant3",
+		a.redundant4 AS "redundant4",
+		a.redundant5 AS "redundant5",
+		a.redundant6 AS "redundant6",
+		a.redundant7 AS "redundant7",
+		a.redundant8 AS "redundant8",
+		a.redundant9 AS "redundant9"
+	</sql>
+	
+	<sql id="safeguardProcessJoins">
+	</sql>
+    
+	<select id="get" resultType="SafeguardProcess">
+		SELECT 
+			<include refid="safeguardProcessColumns"/>
+		FROM rms_safeguard_process a
+		<include refid="safeguardProcessJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeguardProcess">
+		SELECT 
+			<include refid="safeguardProcessColumns"/>
+		FROM rms_safeguard_process a
+		<include refid="safeguardProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListByCodeOrName" resultType="SafeguardProcess">
+		SELECT
+		<include refid="safeguardProcessColumns"/>
+		FROM rms_safeguard_process a
+		<include refid="safeguardProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="safeguardProcessCode != null and safeguardProcessCode != ''">
+				AND a.safeguard_process_code = #{safeguardProcessCode}
+			</if>
+			<if test="safeguardProcessName != null and safeguardProcessName != ''">
+				AND a.safeguard_process_name = #{safeguardProcessName}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="SafeguardProcess">
+		SELECT 
+			<include refid="safeguardProcessColumns"/>
+		FROM rms_safeguard_process a
+		<include refid="safeguardProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getWaitSelectedPorcess" resultType="SafeguardProcess">
+		select
+			<include refid="safeguardProcessColumns"/>
+		from
+			RMS_SAFEGUARD_PROCESS a
+		where a.ID not in (
+			select
+				b.SAFEGUARD_PROCESS_ID
+	  		from
+				RMS_SAFEGUARD_TYPE_TO_PROCESS b
+			where
+				b.SAFEGUARD_TYPE_ID = #{id}
+		)
+	</select>
+
+	<select id="getSelectedPorcess" resultType="SafeguardProcess">
+		select
+			<include refid="safeguardProcessColumns"/>
+		from
+			RMS_SAFEGUARD_PROCESS a join RMS_SAFEGUARD_TYPE_TO_PROCESS b
+			on a.ID=b.SAFEGUARD_PROCESS_ID and b.SAFEGUARD_TYPE_ID = #{id}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_safeguard_process(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			safeguard_process_code,
+			safeguard_process_name,
+			safeguard_attr_name,
+			process_compound_name,
+			plan_color,
+			actual_color,
+			redundant1,
+			redundant2,
+			redundant3,
+			redundant4,
+			redundant5,
+			redundant6,
+			redundant7,
+			redundant8,
+			redundant9
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{safeguardProcessCode},
+			#{safeguardProcessName},
+			#{safeguardAttrName},
+			#{processCompoundName},
+			#{planColor},
+			#{actualColor},
+			#{redundant1},
+			#{redundant2},
+			#{redundant3},
+			#{redundant4},
+			#{redundant5},
+			#{redundant6},
+			#{redundant7},
+			#{redundant8},
+			#{redundant9}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_safeguard_process SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			safeguard_process_code = #{safeguardProcessCode},
+			safeguard_process_name = #{safeguardProcessName},
+			safeguard_attr_name = #{safeguardAttrName},
+			process_compound_name = #{processCompoundName},
+			plan_color = #{planColor},
+			actual_color = #{actualColor},
+			redundant1 = #{redundant1},
+			redundant2 = #{redundant2},
+			redundant3 = #{redundant3},
+			redundant4 = #{redundant4},
+			redundant5 = #{redundant5},
+			redundant6 = #{redundant6},
+			redundant7 = #{redundant7},
+			redundant8 = #{redundant8},
+			redundant9 = #{redundant9}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete rms_safeguard_process WHERE id = #{id}
+	</delete>
+	
+</mapper>

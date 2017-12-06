@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.AirportTerminalDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="airportTerminalColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.terminal_name AS "terminalName",
+		a.terminal_code AS "terminalCode"
+	</sql>
+	
+	<sql id="airportTerminalJoins">
+	</sql>
+    
+	<select id="get" resultType="AirportTerminal">
+		SELECT 
+			<include refid="airportTerminalColumns"/>
+		FROM ams_airport_terminal a
+		<include refid="airportTerminalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AirportTerminal">
+		SELECT 
+			<include refid="airportTerminalColumns"/>
+		FROM ams_airport_terminal a
+		<include refid="airportTerminalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AirportTerminal">
+		SELECT 
+			<include refid="airportTerminalColumns"/>
+		FROM ams_airport_terminal a
+		<include refid="airportTerminalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_airport_terminal(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			terminal_name,
+			terminal_code
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{terminalName},
+			#{terminalCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_airport_terminal SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			terminal_name = #{terminalName},
+			terminal_code = #{terminalCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_airport_terminal SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

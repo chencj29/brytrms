@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.ShareFlightDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="shareFlightColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.master_airline_code AS "masterAirlineCode",
+		a.master_flight_no AS "masterFlightNo",
+		a.master_airline_name AS "masterAirlineName",
+		a.slave_airline_code AS "slaveAirlineCode",
+		a.slave_airline_name AS "slaveAirlineName",
+		a.slave_flight_no AS "slaveFlightNo",
+		a.days_opt AS "daysOpt",
+		a.io_opt_code AS "ioOptCode",
+		a.io_opt_name AS "ioOptName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_name AS "arrivalAirportName"
+	</sql>
+	
+	<sql id="shareFlightJoins">
+	</sql>
+    
+	<select id="get" resultType="ShareFlight">
+		SELECT 
+			<include refid="shareFlightColumns"/>
+		FROM ams_share_flight a
+		<include refid="shareFlightJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByCondition" resultType="ShareFlight">
+		select
+			<include refid="shareFlightColumns"/>
+		from AMS_SHARE_FLIGHT a
+		<where>
+			a.slave_airline_code = #{ slaveAirlineCode }
+			and a.slave_flight_no = #{ slaveFlightNo }
+			and a.io_opt_code = #{ ioOptCode }
+			and a.days_opt like '%'||#{ daysOpt }||'%'
+			<if test="id != null and id != ''">
+			and a.ID != #{id}
+			</if>
+		</where>
+	</select>
+
+	<select id="findByDynamic" resultType="ShareFlight">
+		select
+		<include refid="shareFlightColumns"/>
+		from AMS_SHARE_FLIGHT a
+		<where>
+			a.master_airline_code = #{ masterAirlineCode }
+			and a.master_flight_no = #{ masterFlightNo }
+			and a.days_opt like '%'||#{ daysOpt }||'%'
+		</where>
+	</select>
+
+	<select id="findList" resultType="ShareFlight">
+		SELECT 
+			<include refid="shareFlightColumns"/>
+		FROM ams_share_flight a
+		<include refid="shareFlightJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 航空公司（被共享） LIKE '%'||#{ q }||'%' -->
+            <if test="masterAirlineCode != null and masterAirlineCode != ''">
+            	AND a.master_airline_code like UPPER('%'||#{masterAirlineCode}||'%')
+            </if>
+            <!-- 航班号（被共享） LIKE '%'||#{ q }||'%' -->
+            <if test="masterFlightNo != null and masterFlightNo != ''">
+            	AND a.master_flight_no like UPPER('%'||#{masterFlightNo}||'%')
+            </if>
+            <!-- 航空公司（共享） LIKE '%'||#{ q }||'%' -->
+            <if test="slaveAirlineCode != null and slaveAirlineCode != ''">
+            	AND a.slave_airline_code like UPPER('%'||#{slaveAirlineCode}||'%')
+            </if>
+            <!-- 航班号（共享） LIKE '%'||#{ q }||'%' -->
+            <if test="slaveFlightNo != null and slaveFlightNo != ''">
+            	AND a.slave_flight_no like UPPER('%'||#{slaveFlightNo}||'%')
+            </if>
+            
+            <!-- 起飞地 -->
+            <if test="departureAirportCode != null and departureAirportCode != ''">
+            	AND (a.departure_airport_code like UPPER('%'||#{departureAirportCode}||'%') or a.departure_airport_name like UPPER('%'||#{departureAirportCode}||'%') )
+            </if>
+            
+            <!-- 经停地1 -->
+            <if test="passAirport1Code != null and passAirport1Code != ''">
+            	AND (a.pass_airport_1_code like UPPER('%'||#{passAirport1Code}||'%') or a.pass_airport_1_name like UPPER('%'||#{passAirport1Code}||'%') )
+            </if>
+            
+            <!-- 经停地2 -->
+            <if test="passAirport2Code != null and passAirport2Code != ''">
+            	AND (a.pass_airport_2_code like UPPER('%'||#{passAirport2Code}||'%') or a.pass_airport_2_name like UPPER('%'||#{passAirport2Code}||'%') )
+            </if>
+            
+            <!-- 到达地 -->
+            <if test="arrivalAirportCode != null and arrivalAirportCode != ''">
+            	AND (a.arrival_airport_code like UPPER('%'||#{arrivalAirportCode}||'%') or a.arrival_airport_name like UPPER('%'||#{arrivalAirportCode}||'%') )
+            </if>
+            
+            <!-- 进出港 -->
+            <if test="ioOptCode != null and ioOptCode != ''">
+            	AND a.io_opt_code = UPPER(#{ioOptCode})
+            </if>
+            
+            <!-- 班期 -->
+            <if test="daysOpt != null and daysOpt != ''">
+            	AND a.days_opt like '%'||#{daysOpt}||'%'
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShareFlight">
+		SELECT 
+			<include refid="shareFlightColumns"/>
+		FROM ams_share_flight a
+		<include refid="shareFlightJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findByPeriod" resultType="ShareFlight">
+		SELECT
+		<include refid="shareFlightColumns"/>
+		FROM ams_share_flight a
+		<include refid="shareFlightJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="daysOpt != null and daysOpt != ''">
+				AND a.days_opt like '%'||#{daysOpt}||'%'
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_share_flight(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			master_airline_code,
+			master_flight_no,
+			master_airline_name,
+			slave_airline_code,
+			slave_airline_name,
+			slave_flight_no,
+			days_opt,
+			io_opt_code,
+			io_opt_name,
+			departure_airport_code,
+			departure_airport_name,
+			pass_airport_1_code,
+			pass_airport_1_name,
+			pass_airport_2_code,
+			pass_airport_2_name,
+			arrival_airport_code,
+			arrival_airport_name
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{masterAirlineCode},
+			#{masterFlightNo},
+			#{masterAirlineName},
+			#{slaveAirlineCode},
+			#{slaveAirlineName},
+			#{slaveFlightNo},
+			#{daysOpt},
+			#{ioOptCode},
+			#{ioOptName},
+			#{departureAirportCode},
+			#{departureAirportName},
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirportCode},
+			#{arrivalAirportName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_share_flight SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			master_airline_code = #{masterAirlineCode},
+			master_flight_no = #{masterFlightNo},
+			master_airline_name = #{masterAirlineName},
+			slave_airline_code = #{slaveAirlineCode},
+			slave_airline_name = #{slaveAirlineName},
+			slave_flight_no = #{slaveFlightNo},
+			days_opt = #{daysOpt},
+			io_opt_code = #{ioOptCode},
+			io_opt_name = #{ioOptName},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_name = #{departureAirportName},
+			pass_airport_1_code = #{passAirport1Code},
+			pass_airport_1_name = #{passAirport1Name},
+			pass_airport_2_code = #{passAirport2Code},
+			pass_airport_2_name = #{passAirport2Name},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_name = #{arrivalAirportName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_share_flight SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

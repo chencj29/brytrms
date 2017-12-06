@@ -1,0 +1,29 @@
+<div style="padding:10px 10px" id="table-status">
+    <div style="float:left; width:270px;">
+        <table style="margin-top:10px;margin-right:10px; border-collapse: collapse;" cellpadding="4" border="1" width="100%">
+            <tr>
+                <th>状态列表</th>
+            </tr>
+            {{ each statusList as value i}}
+            <tr data-status-code="{{value.statusNum}}">
+                <td>{{value.statusShort}}</td>
+            </tr>
+            {{ /each }}
+        </table>
+    </div>
+    <div style="margin-top:10px;width: 200px;float: left;margin-left: 10px;">
+        &nbsp;<input type='text' id="flatClearable"/>
+    </div>
+    <div style="width: 200px;float: left;margin: 10px 0 10px 10px">
+        <table style="border-collapse: collapse;" cellpadding="4" border="1" width="100%">
+            <tr>
+                <th>特定业务高亮</th>
+            </tr>
+            {{ each adHocList as v k}}
+            <tr data-status-code="{{k}}">
+                <td>{{v}}</td>
+            </tr>
+            {{ /each }}
+        </table>
+    </div>
+</div>

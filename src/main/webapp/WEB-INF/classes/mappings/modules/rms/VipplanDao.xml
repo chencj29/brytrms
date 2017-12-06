@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.VipplanDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="vipplanColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.inout AS "inout",
+		a.plandate AS "plandate",
+		a.aircorp AS "aircorp",
+		a.fltno AS "fltno",
+		a.arrp AS "arrp",
+		a.groupid AS "groupid",
+		a.vipname AS "vipname",
+		a.vipcorp AS "vipcorp",
+		a.viprank AS "viprank",
+		a.vipid AS "vipid",
+		a.orin AS "orin",
+		a.carid AS "carid",
+		a.vipsex AS "vipsex",
+		a.addr AS "addr",
+		a.passport AS "passport",
+		a.familyaddr AS "familyaddr",
+		a.rsntosz AS "rsntosz",
+		a.togethers AS "togethers",
+		a.needcheck AS "needcheck",
+		a.isvip AS "isvip",
+		a.receplace AS "receplace",
+		a.hallno AS "hallno",
+		a.meetlead AS "meetlead",
+		a.infofrom AS "infofrom",
+		a.workman AS "workman",
+		a.principal AS "principal",
+		a.auditer AS "auditer",
+		a.fax AS "fax",
+		a.tele1 AS "tele1",
+		a.tele2 AS "tele2",
+		a.meetcorp AS "meetcorp",
+		a.esprequire AS "esprequire",
+		a.note AS "note",
+		a.providerid AS "providerid"
+	</sql>
+	
+	<sql id="vipplanJoins">
+	</sql>
+    
+	<select id="get" resultType="Vipplan">
+		SELECT 
+			<include refid="vipplanColumns"/>
+		FROM rms_vipplan a
+		<include refid="vipplanJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Vipplan">
+		SELECT 
+			<include refid="vipplanColumns"/>
+		FROM rms_vipplan a
+		<include refid="vipplanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 数据权限 new -->
+			${sqlMap.dsfn}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findVipList" resultType="Vipplan">
+		SELECT
+		<include refid="vipplanColumns"/>
+		FROM rms_vipplan a
+		<include refid="vipplanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="inout !=null and inout != ''">
+				AND a.inout = #{inout}
+			</if>
+			<if test="plandate !=null and plandate != ''">
+				AND TO_CHAR(a.PLANDATE,'YYYYMMDD') = TO_CHAR(#{plandate},'YYYYMMDD')
+			</if>
+			<if test="aircorp !=null and aircorp != ''">
+				AND a.AIRCORP = #{aircorp}
+			</if>
+			<if test="fltno !=null and fltno != ''">
+				AND a.FLTNO = #{fltno}
+			</if>
+			<if test="_ids != null and _ids != ''">
+				AND a.id IN
+				<foreach item="item" index="index" collection="_ids" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Vipplan">
+		SELECT 
+			<include refid="vipplanColumns"/>
+		FROM rms_vipplan a
+		<include refid="vipplanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_vipplan(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			inout,
+			plandate,
+			aircorp,
+			fltno,
+			arrp,
+			groupid,
+			vipname,
+			vipcorp,
+			viprank,
+			vipid,
+			orin,
+			carid,
+			vipsex,
+			addr,
+			passport,
+			familyaddr,
+			rsntosz,
+			togethers,
+			needcheck,
+			isvip,
+			receplace,
+			hallno,
+			meetlead,
+			infofrom,
+			workman,
+			principal,
+			auditer,
+			fax,
+			tele1,
+			tele2,
+			meetcorp,
+			esprequire,
+			note,
+			providerid
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{inout},
+			#{plandate},
+			#{aircorp},
+			#{fltno},
+			#{arrp},
+			#{groupid},
+			#{vipname},
+			#{vipcorp},
+			#{viprank},
+			#{vipid},
+			#{orin},
+			#{carid},
+			#{vipsex},
+			#{addr},
+			#{passport},
+			#{familyaddr},
+			#{rsntosz},
+			#{togethers},
+			#{needcheck},
+			#{isvip},
+			#{receplace},
+			#{hallno},
+			#{meetlead},
+			#{infofrom},
+			#{workman},
+			#{principal},
+			#{auditer},
+			#{fax},
+			#{tele1},
+			#{tele2},
+			#{meetcorp},
+			#{esprequire},
+			#{note},
+			#{providerid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_vipplan SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			inout = #{inout},
+			plandate = #{plandate},
+			aircorp = #{aircorp},
+			fltno = #{fltno},
+			arrp = #{arrp},
+			groupid = #{groupid},
+			vipname = #{vipname},
+			vipcorp = #{vipcorp},
+			viprank = #{viprank},
+			vipid = #{vipid},
+			orin = #{orin},
+			carid = #{carid},
+			vipsex = #{vipsex},
+			addr = #{addr},
+			passport = #{passport},
+			familyaddr = #{familyaddr},
+			rsntosz = #{rsntosz},
+			togethers = #{togethers},
+			needcheck = #{needcheck},
+			isvip = #{isvip},
+			receplace = #{receplace},
+			hallno = #{hallno},
+			meetlead = #{meetlead},
+			infofrom = #{infofrom},
+			workman = #{workman},
+			principal = #{principal},
+			auditer = #{auditer},
+			fax = #{fax},
+			tele1 = #{tele1},
+			tele2 = #{tele2},
+			meetcorp = #{meetcorp},
+			esprequire = #{esprequire},
+			note = #{note},
+			providerid = #{providerid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_vipplan SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

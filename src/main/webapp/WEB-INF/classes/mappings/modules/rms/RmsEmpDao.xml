@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsEmpDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsEmpColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.dept AS "dept",
+		a.post AS "post",
+		a.emp_name AS "empName",
+		a.sex AS "sex",
+		a.duty AS "duty",
+		a.skill AS "skill",
+		a.aircraft_terminal_code AS "aircraftTerminalCode",
+		a.dept_id AS "deptId",
+		a.post_id AS "postId",
+		a.DUTY_GROUP AS "dutyGroup",
+		a.JOB_NUM AS "jobNum"
+	</sql>
+
+	<sql id="rmsEmpJoins">
+	</sql>
+
+	<select id="get" resultType="RmsEmp">
+		SELECT
+		<include refid="rmsEmpColumns"/>
+		FROM rms_emp a
+		<include refid="rmsEmpJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RmsEmp">
+		SELECT
+		<include refid="rmsEmpColumns"/>
+		FROM rms_emp a
+		<include refid="rmsEmpJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				and a.post_id = #{postId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RmsEmp">
+		SELECT
+		<include refid="rmsEmpColumns"/>
+		FROM rms_emp a
+		<include refid="rmsEmpJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_emp(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			dept,
+			post,
+			emp_name,
+			sex,
+			duty,
+			skill,
+			aircraft_terminal_code,
+			dept_id,
+			post_id,
+			DUTY_GROUP,
+			JOB_NUM
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{dept},
+			#{post},
+			#{empName},
+			#{sex},
+			#{duty},
+			#{skill},
+			#{aircraftTerminalCode},
+			#{deptId},
+			#{postId},
+			#{dutyGroup},
+			#{jobNum}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE rms_emp SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			dept = #{dept},
+			post = #{post},
+			emp_name = #{empName},
+			sex = #{sex},
+			duty = #{duty},
+			skill = #{skill},
+			aircraft_terminal_code = #{aircraftTerminalCode},
+			dept_id = #{deptId},
+			post_id = #{postId},
+			DUTY_GROUP = #{dutyGroup},
+			JOB_NUM = #{jobNum}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from rms_emp WHERE id = #{id}
+	</delete>
+
+	<select id="findEmpByJobNum" resultType="RmsEmp">
+		SELECT
+		<include refid="rmsEmpColumns"/>
+		FROM rms_emp a
+		<include refid="rmsEmpJoins"/>
+		<where>
+			<if test="jobNum != null and jobNum != ''">
+				job_num = #{jobNum}
+			</if>
+		</where>
+	</select>
+
+</mapper>

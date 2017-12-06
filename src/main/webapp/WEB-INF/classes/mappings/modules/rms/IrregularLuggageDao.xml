@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.IrregularLuggageDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="irregularLuggageColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.irregular_luggage_date AS "irregularLuggageDate",
+		a.flight_num AS "flightNum",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.irregular_luggage_type_code AS "irregularLuggageTypeCode",
+		a.irregular_luggage_type_name AS "irregularLuggageTypeName",
+		a.luggage_description AS "luggageDescription",
+		a.irregular_cause AS "irregularCause",
+		a.processing_result AS "processingResult",
+		a.processing_time AS "processingTime",
+		a.redundance1 AS "redundance1",
+		a.redundance2 AS "redundance2",
+		a.redundance3 AS "redundance3",
+		a.redundance4 AS "redundance4",
+		a.redundance5 AS "redundance5"
+	</sql>
+	
+	<sql id="irregularLuggageJoins">
+	</sql>
+    
+	<select id="get" resultType="IrregularLuggage">
+		SELECT 
+			<include refid="irregularLuggageColumns"/>
+		FROM rms_irregular_luggage a
+		<include refid="irregularLuggageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IrregularLuggage">
+		SELECT 
+			<include refid="irregularLuggageColumns"/>
+		FROM rms_irregular_luggage a
+		<include refid="irregularLuggageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IrregularLuggage">
+		SELECT 
+			<include refid="irregularLuggageColumns"/>
+		FROM rms_irregular_luggage a
+		<include refid="irregularLuggageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_irregular_luggage(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			irregular_luggage_date,
+			flight_num,
+			inout_type_code,
+			inout_type_name,
+			irregular_luggage_type_code,
+			irregular_luggage_type_name,
+			luggage_description,
+			irregular_cause,
+			processing_result,
+			processing_time,
+			redundance1,
+			redundance2,
+			redundance3,
+			redundance4,
+			redundance5
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{irregularLuggageDate},
+			#{flightNum},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{irregularLuggageTypeCode},
+			#{irregularLuggageTypeName},
+			#{luggageDescription},
+			#{irregularCause},
+			#{processingResult},
+			#{processingTime},
+			#{redundance1},
+			#{redundance2},
+			#{redundance3},
+			#{redundance4},
+			#{redundance5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_irregular_luggage SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			irregular_luggage_date = #{irregularLuggageDate},
+			flight_num = #{flightNum},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			irregular_luggage_type_code = #{irregularLuggageTypeCode},
+			irregular_luggage_type_name = #{irregularLuggageTypeName},
+			luggage_description = #{luggageDescription},
+			irregular_cause = #{irregularCause},
+			processing_result = #{processingResult},
+			processing_time = #{processingTime},
+			redundance1 = #{redundance1},
+			redundance2 = #{redundance2},
+			redundance3 = #{redundance3},
+			redundance4 = #{redundance4},
+			redundance5 = #{redundance5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_irregular_luggage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

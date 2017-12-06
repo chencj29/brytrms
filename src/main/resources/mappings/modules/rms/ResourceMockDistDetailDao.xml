@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.ResourceMockDistDetailDao">
+
+    <sql id="resourceMockDistDetailColumns">
+		a.id AS "id",
+		a.info_id AS "infoId",
+		a.data_id AS "dataId",
+		a.inte AS "inte",
+		a.intl AS "intl",
+		a.info AS "info",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+
+    <sql id="resourceMockDistDetailJoins">
+    </sql>
+
+    <select id="get" resultType="ResourceMockDistDetail">
+        SELECT
+        <include refid="resourceMockDistDetailColumns"/>
+        FROM rms_resource_mock_dist_detail a
+        <include refid="resourceMockDistDetailJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ResourceMockDistDetail">
+        SELECT
+        <include refid="resourceMockDistDetailColumns"/>
+        FROM rms_resource_mock_dist_detail a
+        <include refid="resourceMockDistDetailJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="ResourceMockDistDetail">
+        SELECT
+        <include refid="resourceMockDistDetailColumns"/>
+        FROM rms_resource_mock_dist_detail a
+        <include refid="resourceMockDistDetailJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_resource_mock_dist_detail(
+			id,
+			info_id,
+			data_id,
+			inte,
+			intl,
+			info,
+			del_flag,
+			remarks,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{infoId},
+			#{dataId},
+			#{inte},
+			#{intl},
+			#{info},
+			#{delFlag},
+			#{remarks},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_resource_mock_dist_detail SET 	
+			info_id = #{infoId},
+			data_id = #{dataId},
+			inte = #{inte},
+			intl = #{intl},
+			info = #{info},
+			remarks = #{remarks},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM rms_resource_mock_dist_detail WHERE id = #{id}
+	</update>
+
+    <select id="findByInfoId" resultType="ResourceMockDistDetail" parameterType="Map">
+        SELECT a.id, a.info_id, a.data_id, p.plan_date, p.aircraft_num, p.aircraft_type_code, a.inte, a.intl, a.info,
+        <if test="resourceType == '机位'">
+            (CASE WHEN p.flight_num IS NOT NULL AND p.flight_num2 IS NOT NULL THEN p.flight_company_code || p.flight_num || '/' || p.flight_company_code2 || p.flight_num2
+            WHEN p.flight_num IS NOT NULL THEN p.flight_company_code || p.flight_num
+            ELSE p.flight_company_code2 || p.flight_num2 END)
+        </if>
+        <if test="resourceType != '机位'">p.flight_company_code || p.flight_num</if>
+        AS flight_dynamic_code FROM rms_resource_mock_dist_detail a LEFT JOIN
+        <if test="resourceType == '机位'">ams_flight_dynamic_pair</if>
+        <if test="resourceType != '机位'">ams_flight_dynamic</if>
+        p ON a.data_id = p.id where a.info_id = #{infoId} AND p.ID IS NOT NULL AND a.del_flag != 1
+    </select>
+
+    <select id="fetchDetailCount" resultType="Long" parameterType="Map">
+        SELECT COUNT(1) FROM rms_resource_mock_dist_detail a LEFT JOIN
+        <if test="resourceType == '机位'">ams_flight_dynamic_pair</if>
+        <if test="resourceType != '机位'">ams_flight_dynamic</if>
+        p ON a.data_id = p.id where a.info_id = #{infoId} AND p.ID IS NOT NULL AND a.del_flag != 1
+    </select>
+
+
+    <delete id="deleteByInfoId">
+        delete from rms_resource_mock_dist_detail where info_id = #{infoId}
+    </delete>
+
+</mapper>

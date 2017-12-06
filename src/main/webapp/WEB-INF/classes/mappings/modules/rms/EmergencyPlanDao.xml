@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.EmergencyPlanDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="emergencyPlanColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.em_plan_code AS "emPlanCode",
+		a.em_plan_name AS "emPlanName",
+		a.em_plan_desc AS "emPlanDesc",
+		a.em_plan_file_path AS "emPlanFilePath"
+	</sql>
+	
+	<sql id="emergencyPlanJoins">
+	</sql>
+    
+	<select id="get" resultType="EmergencyPlan">
+		SELECT 
+			<include refid="emergencyPlanColumns"/>
+		FROM rms_emergency_plan a
+		<include refid="emergencyPlanJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EmergencyPlan">
+		SELECT 
+			<include refid="emergencyPlanColumns"/>
+		FROM rms_emergency_plan a
+		<include refid="emergencyPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EmergencyPlan">
+		SELECT 
+			<include refid="emergencyPlanColumns"/>
+		FROM rms_emergency_plan a
+		<include refid="emergencyPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_emergency_plan(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			em_plan_code,
+			em_plan_name,
+			em_plan_desc,
+			em_plan_file_path
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{emPlanCode},
+			#{emPlanName},
+			#{emPlanDesc},
+			#{emPlanFilePath}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_emergency_plan SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			em_plan_code = #{emPlanCode},
+			em_plan_name = #{emPlanName},
+			em_plan_desc = #{emPlanDesc},
+			em_plan_file_path = #{emPlanFilePath}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_emergency_plan SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

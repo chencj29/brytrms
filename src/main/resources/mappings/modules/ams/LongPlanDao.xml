@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.LongPlanDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="longPlanColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.year AS "year",
+		a.type AS "type",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.FLIGHT_COMPANY_ID AS "flightCompanyId",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_num AS "flightNum",
+		a.AIRCRAFT_TYPE_ID AS "aircraftTypeId",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_name AS "departureAirportName",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.PERIOD AS "period",
+		a.REMARK AS "remark",
+		a.LEGAL AS "legal"
+	</sql>
+	
+	<sql id="longPlanJoins">
+	</sql>
+    
+	<select id="get" resultType="LongPlan">
+		SELECT 
+			<include refid="longPlanColumns"/>
+		FROM ams_long_plan a
+		<include refid="longPlanJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="countLongPlan" resultType="long">
+		SELECT 
+			count(a.id)
+		FROM ams_long_plan a
+		<include refid="longPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 航班号 -->
+            <if test="flightNum != null and flightNum != ''">
+            	AND a.flight_num like UPPER('%'||#{flightNum}||'%')
+            </if>
+            <!-- 机型 -->
+            <if test="aircraftTypeCode != null and aircraftTypeCode != ''">
+                AND a.aircraft_type_code like '%'||#{aircraftTypeCode}||'%'
+            </if>
+			<!-- 航空公司 -->
+            <if test="flightCompanyCode != null and flightCompanyCode != ''">
+            	AND a.flight_company_code like '%'||#{flightCompanyCode}||'%'
+            </if>
+			<!-- 年 -->
+            <if test="year != null and year != ''">
+            	AND a.year = #{year}
+            </if>
+            <!-- 进出港类型 -->
+            <if test="inoutTypeCode != null and inoutTypeCode != ''">
+            	AND a.inout_type_code = #{ inoutTypeCode }
+            </if>
+            <!-- 计划类型 -->
+            <if test="type != null and type != ''">
+            	AND a.type like '%'||#{ type }||'%'
+            </if>
+            <!-- 开始日期 -->
+            <if test="startDate != null and startDate != ''">
+            	AND TO_CHAR(a.start_date, 'yyyy-MM-dd') = TO_CHAR(#{startDate},'yyyy-MM-dd')
+            </if>
+            <!-- 结束日期 -->
+            <if test="endDate != null and endDate != ''">
+            	AND TO_CHAR(a.end_date, 'yyyy-MM-dd') = TO_CHAR(#{endDate},'yyyy-MM-dd')
+            </if>
+            <!-- 班期 -->
+            <if test="period != null and period != ''">
+            	AND a.period like '%'||#{period}||'%'
+            </if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="LongPlan">
+		SELECT 
+			<include refid="longPlanColumns"/>
+		FROM ams_long_plan a
+		<include refid="longPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 航班号 -->
+            <if test="flightNum != null and flightNum != ''">
+            	AND a.flight_num like UPPER('%'||#{flightNum}||'%')
+            </if>
+            <!-- 机型 -->
+            <if test="aircraftTypeCode != null and aircraftTypeCode != ''">
+                AND a.aircraft_type_code like '%'||#{aircraftTypeCode}||'%'
+            </if>
+			<!-- 航空公司 -->
+            <if test="flightCompanyCode != null and flightCompanyCode != ''">
+            	AND a.flight_company_code like '%'||#{flightCompanyCode}||'%'
+            </if>
+			<!-- 年 -->
+            <if test="year != null and year != ''">
+            	AND a.year = #{year}
+            </if>
+            <!-- 进出港类型 -->
+            <if test="inoutTypeCode != null and inoutTypeCode != ''">
+            	AND a.inout_type_code = #{ inoutTypeCode }
+            </if>
+            <!-- 计划类型 -->
+            <if test="type != null and type != ''">
+            	AND a.type like '%'||#{ type }||'%'
+            </if>
+            <!-- 开始日期 -->
+            <if test="startDate != null and startDate != ''">
+            	AND TO_CHAR(a.start_date, 'yyyy-MM-dd') = TO_CHAR(#{startDate},'yyyy-MM-dd')
+            </if>
+            <!-- 结束日期 -->
+            <if test="endDate != null and endDate != ''">
+            	AND TO_CHAR(a.end_date, 'yyyy-MM-dd') = TO_CHAR(#{endDate},'yyyy-MM-dd')
+            </if>
+            <!-- 班期 -->
+            <if test="period != null and period != ''">
+            	AND a.period like '%'||#{period}||'%'
+            </if>
+		</where>
+		ORDER BY a.year DESC, a.create_date DESC
+	</select>
+	
+	<select id="findAllList" resultType="LongPlan">
+		SELECT 
+			<include refid="longPlanColumns"/>
+		FROM ams_long_plan a
+		<include refid="longPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllListByPeroid" resultType="LongPlan">
+		SELECT
+		<include refid="longPlanColumns"/>
+		FROM ams_long_plan a
+		<include refid="longPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and (#{applyDate} BETWEEN a.start_date and a.end_date)
+			and period like '%'||#{period}||'%'
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	
+	<insert id="insert">
+		INSERT INTO ams_long_plan(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			year,
+			type,
+			start_date,
+			end_date,
+			inout_type_code,
+			inout_type_name,
+			FLIGHT_COMPANY_ID,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			AIRCRAFT_TYPE_ID,
+			aircraft_type_code,
+			aircraft_type_name,
+			departure_airport_code,
+			departure_airport_name,
+			arrival_airport_code,
+			arrival_airport_name,
+			departure_plan_time,
+			arrival_plan_time,
+			PERIOD,
+			REMARK,
+			LEGAL
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{year},
+			#{type},
+			#{startDate},
+			#{endDate},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{flightCompanyId},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{aircraftTypeId},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{departureAirportCode},
+			#{departureAirportName},
+			#{arrivalAirportCode},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{period},
+			#{remark},
+			#{legal}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_long_plan SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			year = #{year},
+			type = #{type},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			FLIGHT_COMPANY_ID = #{flightCompanyId},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			AIRCRAFT_TYPE_ID = #{aircraftTypeId},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_name = #{departureAirportName},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_name = #{arrivalAirportName},
+			departure_plan_time = #{departurePlanTime},
+			arrival_plan_time = #{arrivalPlanTime},
+			PERIOD = #{period},
+			REMARK = #{remark},
+			LEGAL = #{legal}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ams_long_plan WHERE id = #{id}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightPlanDetailDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<!-- sql id="flightPlanDetailColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		  a.create_date AS "createDate",
+		  a.update_by AS "updateBy.id",
+		  a.update_date AS "updateDate",
+		  a.remarks AS "remarks",
+		  a.del_flag AS "delFlag",
+		  a.status AS "status",
+		  a.flight_plan_id AS "flightPlan.id",
+		  b.status AS "flightPlan.status",
+		  a.flight_company_id AS "flightCompanyInfo.id",
+		  fc.three_code AS "flightCompanyCode",
+		  fc.chinese_name AS "flightCompanyName",
+		  a.flight_num AS "flightNum",
+		  a.aircraft_num AS "aircraftNum",
+		  a.aircraft_parameters_id AS "aircraftParameters.id",
+		  ap.aircraft_model AS "aircraftTypeCode",
+		  ap.aircraft_sub_model AS "aircraftTypeName",
+		  a.flight_nature_id AS "flightNature.id",
+		  fn.nature_num AS "flightNatureCode",
+		  fn.nature_name AS "flightNatureName",
+		  a.flight_properties_id AS "flightProperties.id",
+		  fp.properties_no AS "flightAttrCode",
+		  fp.properties_name AS "flightAttrName",
+		  a.departure_airport_id AS "departureAirport.id",
+		  a.departure_airport_code AS "departureAirportCode",
+		  a.departure_airport_name AS "departureAirportName",
+		  a.pass_airport_1_id AS "passAirport1.id",
+		  a.pass_airport_1_code AS "passAirport1Code",
+		  a.pass_airport_1_name AS "passAirport1Name",
+		  a.pass_airport_2_id AS "passAirport2.id",
+		  a.pass_airport_2_code AS "passAirport2Code",
+		  a.pass_airport_2_name AS "passAirport2Name",
+		  a.arrival_airport_id AS "arrivalAirport.id",
+		  a.arrival_airport_code AS "arrivalAirportCode",
+		  a.arrival_airport_name AS "arrivalAirportName",
+		  a.departure_plan_time AS "departurePlanTime",
+		  a.arrival_plan_time AS "arrivalPlanTime",
+		  a.inout_type_code AS "inoutTypeCode",
+		  a.inout_type_name AS "inoutTypeName",
+		  a.agent_id AS "serviceProvider.id",
+		  sp.service_provider_no AS "agentCode",
+		  sp.service_provider_name AS "agentName",
+		  a.terminal_id AS "airportTerminal.id",
+		  at.terminal_name AS "terminal"
+	</sql-->
+
+	<sql id="flightPlanDetailColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+	  	a.create_date AS "createDate",
+	  	a.update_by AS "updateBy.id",
+	  	a.update_date AS "updateDate",
+	  	a.remarks AS "remarks",
+	  	a.del_flag AS "delFlag",
+	  	a.status AS "status",
+	  	a.plan_date AS "planDate",
+	  	a.flight_plan_id AS "flightPlan.id",
+	  	a.flight_company_id AS "flightCompanyInfo.id",
+	  	a.flight_company_code AS "flightCompanyCode",
+	  	a.flight_company_name AS "flightCompanyName",
+	  	a.flight_num AS "flightNum",
+	  	a.aircraft_num AS "aircraftNum",
+	  	a.aircraft_parameters_id AS "aircraftParameters.id",
+	  	a.aircraft_type_code AS "aircraftTypeCode",
+	  	a.aircraft_type_name AS "aircraftTypeName",
+	  	a.flight_nature_id AS "flightNature.id",
+	  	a.flight_nature_code AS "flightNatureCode",
+	  	a.flight_nature_name AS "flightNatureName",
+	  	a.flight_properties_id AS "flightProperties.id",
+	  	a.flight_attr_code AS "flightAttrCode",
+	  	a.flight_attr_name AS "flightAttrName",
+	  	a.departure_airport_id AS "departureAirport.id",
+	  	a.departure_airport_code AS "departureAirportCode",
+	  	a.departure_airport_name AS "departureAirportName",
+	  	a.pass_airport_1_id AS "passAirport1.id",
+	  	a.pass_airport_1_code AS "passAirport1Code",
+	  	a.pass_airport_1_name AS "passAirport1Name",
+	  	a.pass_airport_2_id AS "passAirport2.id",
+	  	a.pass_airport_2_code AS "passAirport2Code",
+	  	a.pass_airport_2_name AS "passAirport2Name",
+	  	a.arrival_airport_id AS "arrivalAirport.id",
+	  	a.arrival_airport_code AS "arrivalAirportCode",
+	  	a.arrival_airport_name AS "arrivalAirportName",
+	  	a.departure_plan_time AS "departurePlanTime",
+	  	a.arrival_plan_time AS "arrivalPlanTime",
+	  	a.inout_type_code AS "inoutTypeCode",
+	  	a.inout_type_name AS "inoutTypeName",
+	  	a.agent_id AS "serviceProvider.id",
+	  	a.agent_code AS "agentCode",
+	  	a.agent_name AS "agentName",
+	  	a.terminal_id AS "airportTerminal.id",
+	  	a.terminal AS "terminal"
+	</sql>
+
+	<!-- sql id="flightPlanDetailJoins">
+	   LEFT JOIN ams_flight_plan b ON b.id = a.flight_plan_id
+	   LEFT JOIN AMS_FLIGHT_COMPANY_INFO fc on fc.id = a.flight_company_id
+	   left join AMS_AIRCRAFT_PARAMETERS ap on ap.id = a.aircraft_parameters_id
+	   left join AMS_FLIGHT_NATURE fn on fn.id = a.flight_nature_id
+	   LEFT join AMS_FLIGHT_PROPERTIES fp on fp.id = a.flight_properties_id
+	   left join AMS_SERVICE_PROVIDER sp on sp.id = a.agent_id
+	   left join AMS_AIRPORT_TERMINAL at on at.id = a.terminal_id
+	</sql -->
+
+	<sql id="flightPlanDetailJoins">
+	</sql>
+
+	<select id="get" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 航站楼 LIKE '%'||#{ q }||'%' -->
+			<if test="terminal != null and terminal != ''">
+				AND a.terminal like UPPER('%'||#{terminal}||'%')
+			</if>
+			<!-- 航空公司 -->
+			<if test="flightCompanyCode != null and flightCompanyCode != ''">
+				AND a.flight_company_code like UPPER('%'||#{flightCompanyCode}||'%')
+			</if>
+			<!-- 航空公司 -->
+			<if test="flightCompanyName != null and flightCompanyName != ''">
+				AND a.flight_company_name like UPPER('%'||#{flightCompanyName}||'%')
+			</if>
+			<!-- 航班号 -->
+			<if test="flightNum != null and flightNum != ''">
+				AND a.flight_num like UPPER('%'||#{flightNum}||'%')
+			</if>
+			<!-- 飞机号 -->
+			<if test="aircraftNum != null and aircraftNum != ''">
+				AND UPPER(a.aircraft_num) like UPPER('%'||#{aircraftNum}||'%')
+			</if>
+			<!-- 进出港 -->
+			<if test="inoutTypeCode != null and inoutTypeCode != ''">
+				AND a.inout_type_code = UPPER(#{inoutTypeCode})
+			</if>
+			<!-- 机型 -->
+			<if test="aircraftTypeCode != null and aircraftTypeCode != ''">
+				AND a.aircraft_type_code like '%'||#{aircraftTypeCode}||'%'
+			</if>
+			<!-- 性质 -->
+			<if test="flightNatureCode != null and flightNatureCode != ''">
+				AND (a.flight_nature_code like '%'||#{flightNatureCode}||'%' or a.flight_nature_name like '%'||#{flightNatureCode}||'%')
+			</if>
+			<!-- 属性 -->
+			<if test="flightAttrCode != null and flightAttrCode != ''">
+				AND (a.flight_attr_code like '%'||#{flightAttrCode}||'%' or a.flight_attr_name like '%'||#{flightAttrCode}||'%')
+			</if>
+			<!-- 起飞地 -->
+			<if test="departureAirportCode != null and departureAirportCode != ''">
+				AND (a.departure_airport_code like UPPER('%'||#{departureAirportCode}||'%') or a.departure_airport_name like UPPER('%'||#{departureAirportCode}||'%') )
+			</if>
+			<!-- 经停地1 -->
+			<if test="passAirport1Code != null and passAirport1Code != ''">
+				AND (a.pass_airport_1_code like UPPER('%'||#{passAirport1Code}||'%') or a.pass_airport_1_name like UPPER('%'||#{passAirport1Code}||'%') )
+			</if>
+			<!-- 经停地2 -->
+			<if test="passAirport2Code != null and passAirport2Code != ''">
+				AND (a.pass_airport_2_code like UPPER('%'||#{passAirport2Code}||'%') or a.pass_airport_2_name like UPPER('%'||#{passAirport2Code}||'%') )
+			</if>
+			<!-- 到达地 -->
+			<if test="arrivalAirportCode != null and arrivalAirportCode != ''">
+				AND (a.arrival_airport_code like UPPER('%'||#{arrivalAirportCode}||'%') or a.arrival_airport_name like UPPER('%'||#{arrivalAirportCode}||'%') )
+			</if>
+			<!-- 计起 -->
+			<if test="departurePlanTime != null and departurePlanTime != ''">
+				AND TO_CHAR(a.departure_plan_time,'HH:mm') = TO_CHAR(#{departurePlanTime},'HH:mm')
+			</if>
+			<!-- 计达 -->
+			<if test="arrivalPlanTime != null and arrivalPlanTime != ''">
+				AND TO_CHAR(a.arrival_plan_time,'HH:mm') = TO_CHAR(#{arrivalPlanTime},'HH:mm')
+			</if>
+			<if test="flightPlan != null and flightPlan.id != null and flightPlan.id != ''">
+				AND a.flight_plan_id = #{flightPlan.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND TO_CHAR(a.create_date,'YYYYMMDD') = TO_CHAR(#{createDate},'YYYYMMDD')
+			</if>
+			<if test="planDate != null and planDate !=''">
+				AND TO_CHAR(a.plan_date,'YYYYMMDD') = TO_CHAR(#{planDate},'YYYYMMDD')
+			</if>
+			<if test="flightNatureName != null and flightNatureName !=''">
+				AND a.flight_nature_name like '%'||#{flightNatureName}||'%'
+			</if>
+			<if test="flightAttrName != null and flightAttrName !=''">
+				AND a.flight_attr_name like '%'||#{flightAttrName}||'%'
+			</if>
+		</where>
+
+		<!-- 数据范围过滤 new -->
+		${sqlMap.dsfn}
+
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListForInit" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND STATUS IN (2,3)
+			<!-- 航站楼 LIKE '%'||#{ q }||'%' -->
+			<if test="terminal != null and terminal != ''">
+				AND a.terminal like UPPER('%'||#{terminal}||'%')
+			</if>
+			<!-- 航空公司 -->
+			<if test="flightCompanyCode != null and flightCompanyCode != ''">
+				AND a.flight_company_code like UPPER('%'||#{flightCompanyCode}||'%')
+			</if>
+			<!-- 航空公司 -->
+			<if test="flightCompanyName != null and flightCompanyName != ''">
+				AND a.flight_company_name like UPPER('%'||#{flightCompanyName}||'%')
+			</if>
+			<!-- 航班号 -->
+			<if test="flightNum != null and flightNum != ''">
+				AND a.flight_num like UPPER('%'||#{flightNum}||'%')
+			</if>
+			<!-- 飞机号 -->
+			<if test="aircraftNum != null and aircraftNum != ''">
+				AND UPPER(a.aircraft_num) like UPPER('%'||#{aircraftNum}||'%')
+			</if>
+			<!-- 进出港 -->
+			<if test="inoutTypeCode != null and inoutTypeCode != ''">
+				AND a.inout_type_code = UPPER(#{inoutTypeCode})
+			</if>
+			<!-- 机型 -->
+			<if test="aircraftTypeCode != null and aircraftTypeCode != ''">
+				AND a.aircraft_type_code like '%'||#{aircraftTypeCode}||'%'
+			</if>
+			<!-- 性质 -->
+			<if test="flightNatureCode != null and flightNatureCode != ''">
+				AND (a.flight_nature_code like '%'||#{flightNatureCode}||'%' or a.flight_nature_name like '%'||#{flightNatureCode}||'%')
+			</if>
+			<!-- 属性 -->
+			<if test="flightAttrCode != null and flightAttrCode != ''">
+				AND (a.flight_attr_code like '%'||#{flightAttrCode}||'%' or a.flight_attr_name like '%'||#{flightAttrCode}||'%')
+			</if>
+			<!-- 起飞地 -->
+			<if test="departureAirportCode != null and departureAirportCode != ''">
+				AND (a.departure_airport_code like UPPER('%'||#{departureAirportCode}||'%') or a.departure_airport_name like UPPER('%'||#{departureAirportCode}||'%') )
+			</if>
+			<!-- 经停地1 -->
+			<if test="passAirport1Code != null and passAirport1Code != ''">
+				AND (a.pass_airport_1_code like UPPER('%'||#{passAirport1Code}||'%') or a.pass_airport_1_name like UPPER('%'||#{passAirport1Code}||'%') )
+			</if>
+			<!-- 经停地2 -->
+			<if test="passAirport2Code != null and passAirport2Code != ''">
+				AND (a.pass_airport_2_code like UPPER('%'||#{passAirport2Code}||'%') or a.pass_airport_2_name like UPPER('%'||#{passAirport2Code}||'%') )
+			</if>
+			<!-- 到达地 -->
+			<if test="arrivalAirportCode != null and arrivalAirportCode != ''">
+				AND (a.arrival_airport_code like UPPER('%'||#{arrivalAirportCode}||'%') or a.arrival_airport_name like UPPER('%'||#{arrivalAirportCode}||'%') )
+			</if>
+			<!-- 计起 -->
+			<if test="departurePlanTime != null and departurePlanTime != ''">
+				AND TO_CHAR(a.departure_plan_time,'HH:mm') = TO_CHAR(#{departurePlanTime},'HH:mm')
+			</if>
+			<!-- 计达 -->
+			<if test="arrivalPlanTime != null and arrivalPlanTime != ''">
+				AND TO_CHAR(a.arrival_plan_time,'HH:mm') = TO_CHAR(#{arrivalPlanTime},'HH:mm')
+			</if>
+			<if test="flightPlan != null and flightPlan.id != null and flightPlan.id != ''">
+				AND a.flight_plan_id = #{flightPlan.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND TO_CHAR(a.create_date,'YYYYMMDD') = TO_CHAR(#{createDate},'YYYYMMDD')
+			</if>
+			<if test="planDate != null and planDate !=''">
+				AND TO_CHAR(a.plan_date,'YYYYMMDD') = TO_CHAR(#{planDate},'YYYYMMDD')
+			</if>
+			<if test="flightNatureName != null and flightNatureName !=''">
+				AND a.flight_nature_name like '%'||#{flightNatureName}||'%'
+			</if>
+			<if test="flightAttrName != null and flightAttrName !=''">
+				AND a.flight_attr_name like '%'||#{flightAttrName}||'%'
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_plan_detail(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			status,
+			plan_date,
+			flight_plan_id,
+			flight_company_id,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			aircraft_num,
+			aircraft_parameters_id,
+			aircraft_type_code,
+			aircraft_type_name,
+			flight_nature_id,
+			flight_nature_code,
+			flight_nature_name,
+			flight_properties_id,
+			flight_attr_code,
+			flight_attr_name,
+			departure_airport_id,
+			departure_airport_code,
+			departure_airport_name,
+			pass_airport_1_id,
+			pass_airport_1_code,
+			pass_airport_1_name,
+			pass_airport_2_id,
+			pass_airport_2_code,
+			pass_airport_2_name,
+			arrival_airport_id,
+			arrival_airport_code,
+			arrival_airport_name,
+			departure_plan_time,
+			arrival_plan_time,
+			inout_type_code,
+			inout_type_name,
+			agent_id,
+			agent_code,
+			agent_name,
+			terminal_id,
+			terminal
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{status},
+			#{planDate},
+			#{flightPlan.id},
+			#{flightCompanyInfo.id},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{aircraftNum},
+			#{aircraftParameters.id},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{flightNature.id},
+			#{flightNatureCode},
+			#{flightNatureName},
+			#{flightProperties.id},
+			#{flightAttrCode},
+			#{flightAttrName},
+			#{departureAirport.id},
+			#{departureAirportCode},
+			#{departureAirportName},
+			#{passAirport1.id},
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2.id},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirport.id},
+			#{arrivalAirportCode},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{serviceProvider.id},
+			#{agentCode},
+			#{agentName},
+			#{airportTerminal.id},
+			#{terminal}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_plan_detail SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			status = #{status},
+			plan_date = #{planDate},
+			flight_plan_id = #{flightPlan.id},
+			flight_company_id = #{flightCompanyInfo.id},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			aircraft_num = #{aircraftNum},
+			aircraft_parameters_id = #{aircraftParameters.id},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			flight_nature_id = #{flightNature.id},
+			flight_nature_code = #{flightNatureCode},
+			flight_nature_name = #{flightNatureName},
+			flight_properties_id = #{flightProperties.id},
+			flight_attr_code = #{flightAttrCode},
+			flight_attr_name = #{flightAttrName},
+			departure_airport_id = #{departureAirport.id},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_name = #{departureAirportName},
+			pass_airport_1_id = #{passAirport1.id},
+			pass_airport_1_code = #{passAirport1Code},
+			pass_airport_1_name = #{passAirport1Name},
+			pass_airport_2_id = #{passAirport2.id},
+			pass_airport_2_code = #{passAirport2Code},
+			pass_airport_2_name = #{passAirport2Name},
+			arrival_airport_id = #{arrivalAirport.id},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_name = #{arrivalAirportName},
+			departure_plan_time = #{departurePlanTime},
+			arrival_plan_time = #{arrivalPlanTime},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			agent_id = #{serviceProvider.id},
+			agent_code = #{agentCode},
+			agent_name = #{agentName},
+			terminal_id = #{airportTerminal.id},
+			terminal = #{terminal}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from ams_flight_plan_detail
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE flight_plan_id = #{flightPlan.id}
+			</otherwise>
+		</choose>
+	</delete>
+
+	<select id="findListByNullFlightNo" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.aircraft_num IS NULL
+			AND a.flight_plan_id = #{flightPlan.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	<!--findListByNull-->
+	<select id="findListByNull" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND
+			(
+			a.terminal IS NULL OR a.plan_date IS NULL OR a.flight_company_code IS NULL OR a.flight_num IS NULL OR a.flight_nature_code IS NULL
+			OR a.flight_attr_code IS NULL OR a.departure_airport_code IS NULL OR a.arrival_airport_code IS NULL OR a.agent_code IS NULL
+			OR a.departure_plan_time IS NULL or a.arrival_plan_time IS NULL OR a.agent_code IS NULL
+			)
+			AND a.flight_plan_id = #{flightPlan.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<update id="setAircraftNum">
+		UPDATE ams_flight_plan_detail SET
+		aircraft_num = #{aircraftNum}
+		WHERE id IN
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="findInOutMulti" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT *
+		FROM   (SELECT d.aircraft_num,
+					   Count(d.id) inout
+				FROM   ams_flight_plan_detail d
+				WHERE  To_char(d.plan_date, 'YYYY-MM-DD') = #{planDate}
+					   AND d.INOUT_TYPE_CODE = '1'
+				GROUP  BY d.aircraft_num) t
+		WHERE  t.inout >= 0
+	</select>
+
+	<select id="findListByInOut" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.INOUT_TYPE_CODE = #{inoutTypeCode}
+			AND a.AIRCRAFT_NUM = #{aircraftNum}
+			<if test="flightPlan != null and flightPlan.id != null and flightPlan.id != ''">
+				AND a.flight_plan_id = #{flightPlan.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--select a.FLIGHT_COMPANY_CODE,a.AIRCRAFT_NUM,a.FLIGHT_NATURE_CODE,a.INOUT_TYPE_CODE from AMS_FLIGHT_PLAN_DETAIL a
+	WHERE a.FLIGHT_PLAN_ID='8c1b56ee-e46d-407b-9ca7-8fa5f7ea1e4a'
+	GROUP BY a.FLIGHT_COMPANY_CODE,a.AIRCRAFT_NUM,a.FLIGHT_NATURE_CODE,a.INOUT_TYPE_CODE
+	HAVING count(a.AIRCRAFT_NUM) > 1;-->
+	<select id="findAbnormalList" resultType="FlightPlanDetail">
+		SELECT
+		a.FLIGHT_COMPANY_CODE as "flightCompanyCode",
+		a.AIRCRAFT_NUM as "aircraftNum",
+		a.FLIGHT_NATURE_CODE as "flightNatureCode",
+		a.INOUT_TYPE_CODE as "inoutTypeCode",
+		FROM ams_flight_plan_detail a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.FLIGHT_PLAN_ID=#{flightPlan.id}
+		</where>
+		GROUP BY a.FLIGHT_COMPANY_CODE,a.AIRCRAFT_NUM,a.FLIGHT_NATURE_CODE,a.INOUT_TYPE_CODE
+		HAVING count(a.AIRCRAFT_NUM) > 1;
+	</select>
+
+	<select id="findListByIds" resultType="FlightPlanDetail">
+		SELECT
+		<include refid="flightPlanDetailColumns"/>
+		FROM ams_flight_plan_detail a
+		<include refid="flightPlanDetailJoins"/>
+		<where>
+			a.del_flag = 0
+			<if test="flightPlan != null and flightPlan.id != null and flightPlan.id != ''">
+				AND a.flight_plan_id = #{flightPlan.id}
+			</if>
+			<if test="inoutTypeCode != null and inoutTypeCode != ''">
+				AND a.inout_type_code = #{inoutTypeCode}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND TO_CHAR(a.create_date,'YYYYMMDD') = TO_CHAR(#{createDate},'YYYYMMDD')
+			</if>
+			<if test="flightPlan != null and flightPlan.status != null and flightPlan.status != ''">
+				AND b.status = #{flightPlan.status}
+			</if>
+			<if test="ids != null and ids != ''">
+				AND a.id IN
+				<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<update id="audit">
+		UPDATE ams_flight_plan_detail SET
+		status = #{status}
+		<where>
+			<if test="flightPlan != null and flightPlan.id != null and flightPlan.id != ''">
+				AND flight_plan_id = #{flightPlan.id}
+			</if>
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+		</where>
+	</update>
+</mapper>

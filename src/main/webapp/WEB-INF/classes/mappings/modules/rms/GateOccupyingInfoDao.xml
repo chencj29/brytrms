@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.GateOccupyingInfoDao">
+    <sql id="gateOccupyingInfoColumns">
+		a.id AS "id",
+		a.flight_dynamic_id AS "flightDynamicId",
+		a.flight_dynamic_code AS "flightDynamicCode",
+		a.expected_gate_num AS "expectedGateNum",
+		a.actual_gate_num AS "actualGateNum",
+		a.start_time AS "startTime",
+		a.over_time AS "overTime",
+		a.leave AS "leave",
+		a.leave_time AS "leaveTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="gateOccupyingInfoJoins">
+    </sql>
+
+    <select id="get" resultType="GateOccupyingInfo">
+        SELECT
+        <include refid="gateOccupyingInfoColumns"/>
+        FROM rms_gate_occupying_info a
+        <include refid="gateOccupyingInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+
+    <select id="getByFlightDynamicId" resultType="GateOccupyingInfo">
+        SELECT
+        <include refid="gateOccupyingInfoColumns"/>
+        FROM rms_gate_occupying_info a
+        where a.FLIGHT_DYNAMIC_ID = #{flightDynamicId}
+    </select>
+
+    <select id="findList" resultType="GateOccupyingInfo">
+        SELECT
+        <include refid="gateOccupyingInfoColumns"/>
+        FROM rms_gate_occupying_info a
+        <include refid="gateOccupyingInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="GateOccupyingInfo">
+        SELECT
+        <include refid="gateOccupyingInfoColumns"/>
+        FROM rms_gate_occupying_info a
+        <include refid="gateOccupyingInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_gate_occupying_info(
+			id,
+			flight_dynamic_id,
+			flight_dynamic_code,
+			expected_gate_num,
+			actual_gate_num,
+			start_time,
+			over_time,
+			leave,
+			leave_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{flightDynamicId},
+			#{flightDynamicCode},
+			#{expectedGateNum},
+			#{actualGateNum},
+			#{startTime},
+			#{overTime},
+			#{leave},
+			#{leaveTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_gate_occupying_info SET 	
+			flight_dynamic_id = #{flightDynamicId},
+			flight_dynamic_code = #{flightDynamicCode},
+			expected_gate_num = #{expectedGateNum},
+			actual_gate_num = #{actualGateNum},
+			start_time = #{startTime},
+			over_time = #{overTime},
+			leave = #{leave},
+			leave_time = #{leaveTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+        delete from rms_gate_occupying_info where id = #{id}
+	</delete>
+
+    <select id="fetchOciDatas" parameterType="list" resultType="GateOccupyingInfo">
+        select
+        <include refid="gateOccupyingInfoColumns"/>
+        FROM rms_gate_occupying_info a where a.flight_dynamic_id in (
+        <foreach collection="list" item="pairId" separator=",">
+            #{pairId}
+        </foreach>
+        )
+    </select>
+
+	<select id="batchDelete">
+		DELETE FROM rms_gate_occupying_info
+		WHERE id in
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rule-set>
+  <import-parameter-library path="jcr:/滑槽/系统参数.pl.xml"/>
+  <import-variable-library path="jcr:/滑槽/系统变量.vl.xml"/>
+  <import-constant-library path="jcr:/滑槽/系统常量.cl.xml"/>
+  <import-action-library path="jcr:/滑槽/系统动作.al.xml"/>
+  <rule name="国内航班" salience="10">
+    <if>
+      <and>
+        <atom op="Equals">
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method">
+            <parameter name="航班动态" type="Object">
+              <value var-category="航班动态信息" type="VariableCategory"/>
+            </parameter>
+          </left>
+          <value content="国内航班" type="Input"/>
+        </atom>
+      </and>
+    </if>
+    <then>
+      <var-assign var-category="滑槽占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable">
+        <value content="1" type="Input"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="inteSlideCoastCode" var-label="滑槽编号(国内)" datatype="String" type="variable">
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableSlideCoastByNature" method-label="获取滑槽" type="Method">
+          <parameter name="资源类型" type="String">
+            <value const-category="资源属性" const="1" const-label="国内航段资源" type="Constant"/>
+          </parameter>
+        </value>
+      </var-assign>
+    </then>
+    <else/>
+  </rule>
+  <rule name="国际航班" salience="10">
+    <if>
+      <and>
+        <atom op="Equals">
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method">
+            <parameter name="航班动态" type="Object">
+              <value var-category="航班动态信息" type="VariableCategory"/>
+            </parameter>
+          </left>
+          <value content="国际航班" type="Input"/>
+        </atom>
+      </and>
+    </if>
+    <then>
+      <var-assign var-category="滑槽占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable">
+        <value content="2" type="Input"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="intlSlideCoastCode" var-label="滑槽编号(国际)" datatype="String" type="variable">
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableSlideCoastByNature" method-label="获取滑槽" type="Method">
+          <parameter name="资源类型" type="String">
+            <value const-category="资源属性" const="2" const-label="国际航段资源" type="Constant"/>
+          </parameter>
+        </value>
+      </var-assign>
+    </then>
+    <else/>
+  </rule>
+  <rule name="混合航班" salience="10">
+    <if>
+      <and>
+        <atom op="Equals">
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method">
+            <parameter name="航班动态" type="Object">
+              <value var-category="航班动态信息" type="VariableCategory"/>
+            </parameter>
+          </left>
+          <value content="混合航班" type="Input"/>
+        </atom>
+      </and>
+    </if>
+    <then>
+      <var-assign var-category="滑槽占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable">
+        <value content="3" type="Input"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="expectedSlideCoastNum" var-label="预计占用滑槽个数" datatype="Integer" type="variable">
+        <value content="2" type="Input"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="inteSlideCoastCode" var-label="滑槽编号(国内)" datatype="String" type="variable">
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableSlideCoastByNature" method-label="获取滑槽" type="Method">
+          <parameter name="资源类型" type="String">
+            <value const-category="资源属性" const="1" const-label="国内航段资源" type="Constant"/>
+          </parameter>
+        </value>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="intlSlideCoastCode" var-label="滑槽编号(国际)" datatype="String" type="variable">
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableSlideCoastByNature" method-label="获取滑槽" type="Method">
+          <parameter name="资源类型" type="String">
+            <value const-category="资源属性" const="2" const-label="国际航段资源" type="Constant"/>
+          </parameter>
+        </value>
+      </var-assign>
+    </then>
+    <else/>
+  </rule>
+  <rule name="常规赋值" salience="11">
+    <if>
+      <and>
+        <atom op="NotNull">
+          <left var-category="航班动态信息" var="id" var-label="id" datatype="String" type="variable"/>
+        </atom>
+      </and>
+    </if>
+    <then>
+      <var-assign var-category="滑槽占用信息" var="expectedSlideCoastNum" var-label="预计占用滑槽个数" datatype="Integer" type="variable">
+        <value content="1" type="Input"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="flightDynamicCode" var-label="航班号" datatype="String" type="variable">
+        <value var-category="航班动态信息" var="flightNum" var-label="航班号" datatype="String" type="Variable"/>
+      </var-assign>
+      <var-assign var-category="滑槽占用信息" var="flightDynamicId" var-label="航班动态ID" datatype="String" type="variable">
+        <value var-category="航班动态信息" var="id" var-label="id" datatype="String" type="Variable"/>
+      </var-assign>
+    </then>
+    <else/>
+  </rule>
+</rule-set>

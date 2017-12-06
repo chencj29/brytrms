@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightNatureDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightNatureColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.nature_num AS "natureNum",
+		a.nature_name AS "natureName",
+		a.english_name AS "englishName",
+		a.sita AS "sita",
+		a.aftn AS "aftn"
+	</sql>
+
+	<sql id="flightNatureJoins">
+	</sql>
+
+	<select id="get" resultType="FlightNature">
+		SELECT
+		<include refid="flightNatureColumns"/>
+		FROM ams_flight_nature a
+		<include refid="flightNatureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getBy" resultType="FlightNature">
+		SELECT
+		<include refid="flightNatureColumns"/>
+		FROM ams_flight_nature a
+		<include refid="flightNatureJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="englishName != null and englishName != ''">
+				AND a.english_name = #{englishName}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="FlightNature">
+		SELECT
+		<include refid="flightNatureColumns"/>
+		FROM ams_flight_nature a
+		<include refid="flightNatureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightNature">
+		SELECT
+		<include refid="flightNatureColumns"/>
+		FROM ams_flight_nature a
+		<include refid="flightNatureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findByCondition" resultType="FlightNature">
+		SELECT
+		<include refid="flightNatureColumns"/>
+		FROM ams_flight_nature a
+		<include refid="flightNatureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.sita = #{ sita }
+			and rownum = 1
+		</where>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_nature(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			nature_num,
+			nature_name,
+			english_name,
+			sita,
+			aftn
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{natureNum},
+			#{natureName},
+			#{englishName},
+			#{sita},
+			#{aftn}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_nature SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			nature_num = #{natureNum},
+			nature_name = #{natureName},
+			english_name = #{englishName},
+			sita = #{sita},
+			aftn = #{aftn}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE ams_flight_nature SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

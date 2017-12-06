@@ -1,0 +1,216 @@
+/*base*/
+.btn-info {
+    background-color: #3fb7f7;
+}
+.btn_mr5{
+    margin-right: 5px;
+}
+body {
+    font-family: Microsoft YaHei, arial;
+    font-size: 14px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: Microsoft YaHei, arial;
+    -webkit-font-smoothing: antialiased;
+}
+
+.pageheader {
+    position: relative;
+}
+
+.pageheader .breadcrumbs {
+    display: inline-block;
+    vertical-align: top;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.pageheader .breadcrumbs ol.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+}
+
+.pageheader .breadcrumbs ol.breadcrumb > li {
+    font-size: 12px;
+    font-weight: 500;
+    color: #45484a;
+}
+
+.pageheader .breadcrumbs ol.breadcrumb > li.active {
+    color: #45484a;
+}
+
+.pageheader .breadcrumbs ol.breadcrumb > li > a {
+    color: #0e8fd4;
+}
+
+.pageheader .breadcrumbs ol.breadcrumb > li + li:before {
+    content: "\f105";
+    font-family: "FontAwesome";
+    color: #0e8fd4;
+}
+
+/*right wrap*/
+#wrap #content {
+    color: #000;
+    padding-bottom: 0;
+    padding-left: 265px;
+    padding-right: 25px;
+    height: 100%;
+    width: 100%;
+    background-color: #ededed;
+}
+
+#wrap #content .main {
+    margin: 10px 0;
+}
+
+.pageheader h2 {
+    display: inline-block;
+    color: #3fb7f7;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+/*table-1*/
+body #content .tile .tile-header.transparent {
+    background-color: transparent;
+    border-bottom: 1px solid #ffffff;
+    margin-bottom: 15px;
+    color: #7a7a7a;
+}
+
+body #content .tile .tile-header.transparent h4 {
+    margin: 0;
+}
+
+body #content .tile .tile-header.transparent .controls a {
+    color: #7a7a7a;
+}
+
+body #content .tile .tile-header.transparent .controls a:hover {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/*table*/
+body #content .tile .tile-header.color.transparent-black,
+body #content .tile .tile-widget.color.transparent-black,
+body #content .tile .tile-body.color.transparent-black,
+body #content .tile .tile-footer.color.transparent-black,
+body #content .tile .tile-left-side.color.transparent-black,
+body #content .tile .tile-right-side.color.transparent-black {
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+}
+
+body #content .tile .tile-header.color,
+body #content .tile .tile-widget.color,
+body #content .tile .tile-body.color,
+body #content .tile .tile-footer.color,
+body #content .tile .tile-left-side.color,
+body #content .tile .tile-right-side.color {
+    color: #323232;
+    border:1px solid #dcdcdc;
+}
+
+/*table-2*/
+body #content .tile .tile-header {
+    padding: 10px 15px;
+    position: relative;
+}
+
+body #content .tile .tile-header h1,
+body #content .tile .tile-header h2,
+body #content .tile .tile-header h3 {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+body #content .tile table.table-custom > thead > tr > th,
+body #content .tile table.table-custom > thead > tr > td,
+body #content .inbox table.table-custom > thead > tr > th,
+body #content .inbox table.table-custom > thead > tr > td {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-bottom: 0;
+    color: rgba(113, 113, 113, 0.7);
+    position: relative;
+    padding-left: 0;
+    padding-bottom: 0;
+    min-width: 35px;
+    line-height: 26px;
+    -webkit-font-smoothing: antialiased;
+}
+.jc_flight_font {
+    position: absolute;
+    top: 33px;
+}
+.chosen-container {
+    left: 56px;
+}
+/*btn*/
+.jc_flight_btn_audit {
+    position: absolute;
+    top: 20px;
+    left: 58%;
+}
+.jc_flight_btn_release {
+    position: absolute;
+    top: 20px;
+    left:72%;
+}
+
+
+
+/*airlineInfo-popupBox航空公司信息管理-弹出框*/
+.airlineInfo-popupBox {
+    width:650px;
+}
+.airlineInfo-popupBox .row {
+    padding: 5px 0;
+}
+.airlineInfo-popupBox .form-horizontal label {
+    font-weight: normal;
+}
+.airlineInfo-popupBox .label-font {
+    width: 17.6%;
+}
+.airlineInfo-popupBox .label-font-content {
+    width:80%;
+}
+@media screen and (max-width: 767px) {
+    .airlineInfo-popupBox {
+        width:300px;
+    }
+    .airlineInfo-popupBox .label-font-content,
+    .airlineInfo-popupBox .label-font {
+        width:auto;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+}
+
+
+
+/*left-nav左侧导航*/
+body .navbar .navbar-nav.side-nav {
+    background: #45484a;
+}
+body .navbar .navbar-nav.side-nav.collapsed.open {
+    background: transparent url(../images/wrap-left-bg.jpg) repeat-y scroll 0 0;
+}
+body .navbar .navbar-nav.side-nav.collapsed > li.navigation > ul > li {
+    background: #45484a;
+}
+
+

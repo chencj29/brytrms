@@ -1,0 +1,19 @@
+<form id="resourceDistForm" style="padding:15px;">
+    <input type="hidden" name="id" value="{{flightPanPairId}}"/>
+    <table cellpadding="5" width="100%">
+        <tbody>
+        <tr>
+            <td>请选择机位：</td>
+            <td><select id="selGate" style="width:320px;" name="placeNum" multiple="multiple">
+                {{ each list as stand }}
+                    {{ if stand.available === '1' }}
+                        <option value="{{stand.text}}" {{ if placeNumberArray.includes(stand.text) }} selected="selected" {{/if }}>
+                            {{stand.text}}
+                        </option>
+                    {{ /if }}
+                {{ /each }}
+            </select></td>
+        </tr>
+        </tbody>
+    </table>
+</form>

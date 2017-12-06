@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsCarouselDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="rmsCarouselColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.airport_terminal_code AS "airportTerminalCode",
+		a.airport_terminal_name AS "airportTerminalName",
+		a.carousel_num AS "carouselNum",
+		a.carousel_nature AS "carouselNature",
+		a.carousel_type_code AS "carouselTypeCode",
+		a.carousel_type_name AS "carouselTypeName",
+		a.order_index as "orderIndex"
+	</sql>
+
+    <sql id="rmsCarouselJoins">
+    </sql>
+
+    <select id="get" resultType="RmsCarousel">
+        SELECT
+        <include refid="rmsCarouselColumns"/>
+        FROM rms_carousel a
+        <include refid="rmsCarouselJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getByCode" resultType="RmsCarousel">
+        SELECT
+        <include refid="rmsCarouselColumns"/>
+        FROM rms_carousel a
+        <include refid="rmsCarouselJoins"/>
+        WHERE a.carousel_num = #{carouselCode} AND DEL_FLAG = 0
+    </select>
+
+
+    <select id="findList" resultType="RmsCarousel">
+        SELECT
+        <include refid="rmsCarouselColumns"/>
+        FROM rms_carousel a
+        <include refid="rmsCarouselJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="RmsCarousel">
+        SELECT
+        <include refid="rmsCarouselColumns"/>
+        FROM rms_carousel a
+        <include refid="rmsCarouselJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_carousel(
+			id, create_by, create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			airport_terminal_code,
+			airport_terminal_name,
+			carousel_num,
+			carousel_nature,
+			carousel_type_code,
+			carousel_type_name, order_index
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{airportTerminalCode},
+			#{airportTerminalName},
+			#{carouselNum},
+			#{carouselNature},
+			#{carouselTypeCode},
+			#{carouselTypeName}, #{orderIndex}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_carousel SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			airport_terminal_code = #{airportTerminalCode},
+			airport_terminal_name = #{airportTerminalName},
+			carousel_num = #{carouselNum},
+			carousel_nature = #{carouselNature},
+			carousel_type_code = #{carouselTypeCode},
+			carousel_type_name = #{carouselTypeName},
+			order_index = #{orderIndex}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_carousel SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
+	</update>
+
+    <select id="findByCarouselNum" parameterType="java.util.List" resultType="RmsCarousel">
+        SELECT
+        <include refid="rmsCarouselColumns"/>
+        FROM RMS_CAROUSEL a WHERE carousel_num IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND del_flag = 0
+    </select>
+    
+    <select id="findAvailableCarouselByNature" resultType="RmsCarousel">
+        SELECT <include refid="rmsCarouselColumns"/> FROM RMS_CAROUSEL a WHERE CAROUSEL_NATURE = #{nature} AND DEL_FLAG = 0
+    </select>
+
+</mapper>

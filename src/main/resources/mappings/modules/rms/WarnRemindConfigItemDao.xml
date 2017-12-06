@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.WarnRemindConfigItemDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="warnRemindConfigItemColumns">
+		a.id AS "id",
+		a.config_id AS "config.id",
+		a.field_name AS "fieldName",
+		a.field_code AS "fieldCode",
+		a.condition_name AS "conditionName",
+		a.condition_code AS "conditionCode",
+		a.threshold_value AS "thresholdValue",
+		a.item_priority AS "itemPriority",
+		a.item_available AS "itemAvailable",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="warnRemindConfigItemJoins">
+		LEFT JOIN warn_remind_config b ON b.id = a.config_id
+	</sql>
+
+    <select id="get" resultType="WarnRemindConfigItem">
+        SELECT
+        <include refid="warnRemindConfigItemColumns"/>
+        FROM warn_remind_config_item a
+        <include refid="warnRemindConfigItemJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="WarnRemindConfigItem">
+        SELECT
+        <include refid="warnRemindConfigItemColumns"/>
+        FROM warn_remind_config_item a
+        <include refid="warnRemindConfigItemJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="config != null and config.id != null and config.id != ''">
+                AND a.config_id = #{config.id}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="WarnRemindConfigItem">
+        SELECT
+        <include refid="warnRemindConfigItemColumns"/>
+        FROM warn_remind_config_item a
+        <include refid="warnRemindConfigItemJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO warn_remind_config_item(
+			id,
+			config_id,
+			field_name,
+			field_code,
+			condition_name,
+			condition_code,
+			threshold_value,
+			item_priority,
+			item_available,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{config.id},
+			#{fieldName},
+			#{fieldCode},
+			#{conditionName},
+			#{conditionCode},
+			#{thresholdValue},
+			#{itemPriority},
+			#{itemAvailable},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE warn_remind_config_item SET 	
+			config_id = #{config.id},
+			field_name = #{fieldName},
+			field_code = #{fieldCode},
+			condition_name = #{conditionName},
+			condition_code = #{conditionCode},
+			threshold_value = #{thresholdValue},
+			item_priority = #{itemPriority},
+			item_available = #{itemAvailable},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+        UPDATE warn_remind_config_item SET
+        del_flag = #{DEL_FLAG_DELETE}
+        <choose>
+            <when test="id !=null and id != ''">
+                WHERE id = #{id}
+            </when>
+            <otherwise>
+                WHERE config_id = #{config.id}
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="deletePhysical" parameterType="String">
+		DELETE FROM WARN_REMIND_CONFIG_ITEM WHERE CONFIG_ID = #{configId}
+	</delete>
+
+</mapper>

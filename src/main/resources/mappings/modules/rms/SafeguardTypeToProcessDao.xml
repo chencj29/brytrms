@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardTypeToProcessDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="safeguardTypeToProcessColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.safeguard_type_id AS "safeguardTypeId",
+		a.safeguard_process_id AS "safeguardProcessId",
+		a.start_dep_fb AS "startDepFb",
+		a.start_dep_range AS "startDepRange",
+		a.start_arr_fb AS "startArrFb",
+		a.start_arr_range AS "startArrRange",
+		a.start_pro_id AS "startProId",
+		a.start_pro_name AS "startProName",
+		a.start_pro_fb AS "startProFb",
+		a.start_pro_range AS "startProRange",
+		a.end_dep_fb AS "endDepFb",
+		a.end_dep_range AS "endDepRange",
+		a.end_arr_fb AS "endArrFb",
+		a.end_arr_range AS "endArrRange",
+		a.end_pro_id AS "endProId",
+		a.end_pro_name AS "endProName",
+		a.end_pro_fb AS "endProFb",
+		a.end_pro_range AS "endProRange",
+		a.absolute_range AS "absoluteRange",
+		a.percent_range AS "percentRange",
+		a.redundant1 AS "redundant1",
+		a.redundant2 AS "redundant2",
+		a.redundant3 AS "redundant3",
+		a.redundant4 AS "redundant4",
+		a.redundant5 AS "redundant5",
+		a.redundant6 AS "redundant6",
+		a.redundant7 AS "redundant7",
+		a.redundant8 AS "redundant8",
+		a.redundant9 AS "redundant9",
+		a.redundant10 AS "redundant10",
+		a.sort AS "sort",
+		a.SELECTED_STATUS as "selectedStatus"
+	</sql>
+
+	<sql id="stpVO">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.safeguard_type_id AS "safeguardTypeId",
+		a.safeguard_process_id AS "safeguardProcessId",
+		a.start_dep_fb AS "startDepFb",
+		a.start_dep_range AS "startDepRange",
+		a.start_arr_fb AS "startArrFb",
+		a.start_arr_range AS "startArrRange",
+		a.start_pro_id AS "startProId",
+		a.start_pro_name AS "startProName",
+		a.start_pro_fb AS "startProFb",
+		a.start_pro_range AS "startProRange",
+		a.end_dep_fb AS "endDepFb",
+		a.end_dep_range AS "endDepRange",
+		a.end_arr_fb AS "endArrFb",
+		a.end_arr_range AS "endArrRange",
+		a.end_pro_id AS "endProId",
+		a.end_pro_name AS "endProName",
+		a.end_pro_fb AS "endProFb",
+		a.end_pro_range AS "endProRange",
+		a.absolute_range AS "absoluteRange",
+		a.percent_range AS "percentRange",
+		a.redundant1 AS "redundant1",
+		a.redundant2 AS "redundant2",
+		a.redundant3 AS "redundant3",
+		a.redundant4 AS "redundant4",
+		a.redundant5 AS "redundant5",
+		a.redundant6 AS "redundant6",
+		a.redundant7 AS "redundant7",
+		a.redundant8 AS "redundant8",
+		a.redundant9 AS "redundant9",
+		a.redundant10 AS "redundant10",
+		a.sort AS "sort",
+		a.SELECTED_STATUS as "selectedStatus",
+		b.SAFEGUARD_TYPE_CODE as safeguardTypeCode,
+		b.SAFEGUARD_TYPE_NAME as safeguardTypeName,
+		c.SAFEGUARD_PROCESS_CODE as safeguardProcessCode,
+		c.SAFEGUARD_PROCESS_NAME as safeguardProcessName,
+		c.process_compound_name AS processCompoundName
+	</sql>
+	
+	<sql id="safeguardTypeToProcessJoins">
+	</sql>
+    
+	<select id="get" resultType="SafeguardTypeToProcess">
+		SELECT 
+			<include refid="safeguardTypeToProcessColumns"/>
+		FROM rms_safeguard_type_to_process a
+		<include refid="safeguardTypeToProcessJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeguardTypeToProcess">
+		SELECT 
+			<include refid="safeguardTypeToProcessColumns"/>
+		FROM rms_safeguard_type_to_process a
+		<include refid="safeguardTypeToProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findStpVOList" resultType="StpVO">
+		SELECT
+			<include refid="stpVO"/>
+		FROM
+			RMS_SAFEGUARD_TYPE_TO_PROCESS a JOIN RMS_SAFEGUARD_TYPE b ON a.SAFEGUARD_TYPE_ID = b.ID
+			join RMS_SAFEGUARD_PROCESS c on a.SAFEGUARD_PROCESS_ID=c.ID
+		WHERE
+			a.SAFEGUARD_TYPE_ID = #{safeguardTypeId}
+		ORDER BY a.sort
+	</select>
+	
+	<select id="findAllList" resultType="SafeguardTypeToProcess">
+		SELECT 
+			<include refid="safeguardTypeToProcessColumns"/>
+		FROM rms_safeguard_type_to_process a
+		<include refid="safeguardTypeToProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_safeguard_type_to_process(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			safeguard_type_id,
+			safeguard_process_id,
+			start_dep_fb,
+			start_dep_range,
+			start_arr_fb,
+			start_arr_range,
+			start_pro_id,
+			start_pro_name,
+			start_pro_fb,
+			start_pro_range,
+			end_dep_fb,
+			end_dep_range,
+			end_arr_fb,
+			end_arr_range,
+			end_pro_id,
+			end_pro_name,
+			end_pro_fb,
+			end_pro_range,
+			absolute_range,
+			percent_range,
+			redundant1,
+			redundant2,
+			redundant3,
+			redundant4,
+			redundant5,
+			redundant6,
+			redundant7,
+			redundant8,
+			redundant9,
+			redundant10,
+			sort,
+			SELECTED_STATUS
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{safeguardTypeId},
+			#{safeguardProcessId},
+			#{startDepFb},
+			#{startDepRange},
+			#{startArrFb},
+			#{startArrRange},
+			#{startProId},
+			#{startProName},
+			#{startProFb},
+			#{startProRange},
+			#{endDepFb},
+			#{endDepRange},
+			#{endArrFb},
+			#{endArrRange},
+			#{endProId},
+			#{endProName},
+			#{endProFb},
+			#{endProRange},
+			#{absoluteRange},
+			#{percentRange},
+			#{redundant1},
+			#{redundant2},
+			#{redundant3},
+			#{redundant4},
+			#{redundant5},
+			#{redundant6},
+			#{redundant7},
+			#{redundant8},
+			#{redundant9},
+			#{redundant10},
+			#{sort},
+			#{selectedStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_safeguard_type_to_process SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			safeguard_type_id = #{safeguardTypeId},
+			safeguard_process_id = #{safeguardProcessId},
+			start_dep_fb = #{startDepFb},
+			start_dep_range = #{startDepRange},
+			start_arr_fb = #{startArrFb},
+			start_arr_range = #{startArrRange},
+			start_pro_id = #{startProId},
+			start_pro_name = #{startProName},
+			start_pro_fb = #{startProFb},
+			start_pro_range = #{startProRange},
+			end_dep_fb = #{endDepFb},
+			end_dep_range = #{endDepRange},
+			end_arr_fb = #{endArrFb},
+			end_arr_range = #{endArrRange},
+			end_pro_id = #{endProId},
+			end_pro_name = #{endProName},
+			end_pro_fb = #{endProFb},
+			end_pro_range = #{endProRange},
+			absolute_range = #{absoluteRange},
+			percent_range = #{percentRange},
+			redundant1 = #{redundant1},
+			redundant2 = #{redundant2},
+			redundant3 = #{redundant3},
+			redundant4 = #{redundant4},
+			redundant5 = #{redundant5},
+			redundant6 = #{redundant6},
+			redundant7 = #{redundant7},
+			redundant8 = #{redundant8},
+			redundant9 = #{redundant9},
+			redundant10 = #{redundant10},
+			sort = #{sort},
+			SELECTED_STATUS = #{selectedStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM rms_safeguard_type_to_process WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteByRelate">
+		DELETE FROM rms_safeguard_type_to_process
+		where safeguard_type_id = #{safeguardTypeId} and safeguard_process_id = #{safeguardProcessId}
+	</delete>
+
+	<update id="updateClearParams">
+		UPDATE rms_safeguard_type_to_process SET
+			start_dep_fb = NULL ,
+			start_dep_range = NULL ,
+			start_arr_fb = NULL ,
+			start_arr_range = NULL ,
+			start_pro_id = NULL ,
+			start_pro_name = NULL ,
+			start_pro_fb = NULL ,
+			start_pro_range = NULL ,
+			end_dep_fb = NULL ,
+			end_dep_range = NULL ,
+			end_arr_fb = NULL ,
+			end_arr_range = NULL ,
+			end_pro_id = NULL ,
+			end_pro_name = NULL ,
+			end_pro_fb = NULL ,
+			end_pro_range = NULL ,
+			absolute_range = NULL ,
+			percent_range = NULL
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateSort">
+		UPDATE rms_safeguard_type_to_process
+		SET sort=#{sort}
+		WHERE safeguard_type_id = #{typeId}
+		AND safeguard_process_id = #{processId}
+	</update>
+	
+</mapper>

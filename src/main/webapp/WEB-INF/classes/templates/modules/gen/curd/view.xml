@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>view</name>
+	<filePath>src/main/webapp/WEB-INF/views/${moduleName}/${className}</filePath>
+	<fileName>${className}.jsp</fileName>
+	<content><![CDATA[
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<head>
+    <title>${functionNameSimple}</title>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'">
+    		<#list table.columnList as c>
+    			<#if (c_index==7)>
+        <table class="easyui-datagrid" title="${functionNameSimple}" id="datagrid" sortName="${c.javaFieldId}" sortOrder="asc">
+         		</#if>
+         	</#list>
+            <thead>
+            <tr>
+				<#list table.columnList as c>
+					<#if c.javaFieldId=="id">
+			   	<th field="${c.javaFieldId}" width="100" hidden="true" sortable="false" order="false">${c.comments}</th>
+			   		</#if>
+			   		<#if (c_index>6)>
+			   			<#if c.javaFieldId!="id">
+				<th field="${c.javaFieldId}" width="100" align="center"<#if c.showType == "radiobox"> formatter="globalFormat"</#if> sortable="true">${c.comments}</th>
+						</#if>
+			  		</#if>
+				</#list>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+	<div data-options="region:'south'" style="height:180px;">
+        <form action="${r"${ctx}"}/${moduleName}/${className}/save" id="modifyForm">
+            <input type="hidden" name="id">
+            <table width="100%" class="formtable">
+            	<#list table.columnList as c>
+				   <#if (c_index>6)>
+				   		<#if (c_index-6)%4==1 || c_index-6==0>
+                <tr>
+                		</#if>
+                    <td>${c.comments}：</td>
+                    <td>
+							<#if c.showType == "input">
+						<input type="text" name="${c.javaFieldId}" class="easyui-textbox easyui-validatebox"
+							<#if c.dataLength != "0"> data-options=""</#if>
+						>
+							<#elseif c.showType == "radiobox">
+								<#if c.javaFieldId?index_of("Nature")!=-1>
+						<input type="radio" name="${c.javaFieldId}" value="1" checked >&nbsp;国内
+						<input type="radio" name="${c.javaFieldId}" value="2" >&nbsp;国际 <%--
+						<input type="radio" name="${c.javaFieldId}" value="3" >&nbsp;混合 --%>
+								<#elseif c.javaFieldId?index_of("Type")!=-1 || c.javaFieldId?index_of("Status")!=-1>
+						<input type="radio" name="${c.javaFieldId}" value="1" checked >&nbsp;可用
+						<input type="radio" name="${c.javaFieldId}" value="0" >&nbsp;不可用
+								<#else>
+						<input type="radio" name="${c.javaFieldId}" value="1" checked >&nbsp;是
+						<input type="radio" name="${c.javaFieldId}" value="0" >&nbsp;不是
+								</#if>
+							<#elseif c.showType == "select">
+						<select class="easyui-validatebox" id="${c.javaFieldId}" name="${c.javaFieldId}" style="width:130px;"
+								data-options="">
+						</select>
+							<#elseif c.showType == "dateselect">
+						<input name="${c.javaFieldId}" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate <#if c.isNull != "1">required</#if>"
+							value="<fmt:formatDate value="${"$"}{${className}.${c.javaFieldId}}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+							onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+							<#elseif c.showType == "textarea">
+						<form:textarea path="${c.javaFieldId}" htmlEscape="false" rows="4"<#if c.dataLength != "0"> data-options="required:true,maxlength='${c.dataLength}'"</#if> class="textarea easyui-validatebox"/>
+							</#if>
+					</td>
+                    	<#if (c_index-6)%4==0 || !c_has_next>
+                </tr>
+                		</#if>
+					</#if>
+				</#list>
+            </table>
+            <div style="text-align: center; margin-top:15px; margin-right:15px;">
+                <a class="easyui-linkbutton" id="btnSave" data-options="iconCls:'icon-ok'" style="width:80px">保存</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    var moduleContext = "${className}";
+<#assign x=0/>
+<#list table.columnList as c>
+<#if (c_index>6) && c.showType == "radiobox">
+	<#if x==0 >
+    // 拿到字典Map, key = tableName, value = columnName
+           var dict = dictMap([{key: "", value: "nature"},{key: "", value: "yes_no"},{key: "", value: "ed_status"}]),
+    // 构建字典与列字段的映射关系
+    // key = tableName + columnName | value = 当前表格中需要转换的fieldCode
+            mapping = {
+	</#if><#assign x=x+1 />
+            		<#if c.javaFieldId?index_of("Type")!=-1 || c.javaFieldId?index_of("Status")!=-1>
+            	"@ed_status": ["${c.javaFieldId}"],
+            		<#elseif c.javaFieldId?index_of("Nature")!=-1>
+            	"@nature":["${c.javaFieldId}"],
+            		<#else>
+            	"@yes_no": ["${c.javaFieldId}"],
+            	</#if>
+</#if>
+					<#if x!=0 && !c_has_next>
+            };
+            		</#if>
+</#list>
+    /**
+     * 过滤列声明接口(必须，可空)
+     */
+    var specialFilteringColumnDefinition = [];
+    <shiro:hasPermission name="${permissionPrefix}:edit">flagDgEdit=true;</shiro:hasPermission>
+    <shiro:hasPermission name="${permissionPrefix}:insert">flagDgInsert=true;</shiro:hasPermission>
+    <shiro:hasPermission name="${permissionPrefix}:del">flagDgDel=true;</shiro:hasPermission>
+
+     $(function () {
+<#list table.columnList as c><#if (c_index>6) && c.showType == "select">
+        //拿到${c.comments}数据
+        $("#${c.javaFieldId}").combobox({
+            url: ctx + '/rms/airportTerminal/jsonData',
+            valueField: 'terminalName',
+            textField: 'terminalName',
+            panelHeight: 'auto',
+            panelMaxHeight: '200'
+        });
+</#if></#list>
+    });
+
+	/*
+	//自定义验证规则。例如，定义一个 minLength 验证类 验证长度
+    $.extend($.fn.validatebox.defaults.rules, {
+		minLength: {
+			validator: function(value, param){
+				return value.length >= param[0];
+			},
+			message: 'Please enter at least {0} characters.'
+		}
+	});*/
+</script>
+
+<script src="${r"${ctxAssets}"}/scripts/metadata-dev/garims.EasyUI.DataGrid.js"></script>
+</body>]]>
+	</content>
+</template>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.ProgressPostPermissionDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="progressPostPermissionColumns">
+		a.id AS "id",
+		a.progress_id AS "progressId",
+		a.post_id AS "postId"
+	</sql>
+
+    <sql id="progressPostPermissionJoins">
+
+    </sql>
+
+    <select id="get" resultType="ProgressPostPermission">
+        SELECT
+        <include refid="progressPostPermissionColumns"/>
+        FROM rms_progress_perm a
+        <include refid="progressPostPermissionJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ProgressPostPermission">
+        SELECT
+        <include refid="progressPostPermissionColumns"/>
+        FROM rms_progress_perm a
+        <include refid="progressPostPermissionJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findPrivileges" parameterType="string" resultType="ProgressPostPrivilegeWrapper">
+        SELECT
+            perm.ID,
+            progress.ID AS progressId,
+            progress.SAFEGUARD_PROCESS_NAME AS progressName,
+            progress.SAFEGUARD_PROCESS_CODE as progressCode,
+            progress.SAFEGUARD_ATTR_NAME as progressAttr,
+            CASE
+                WHEN perm.ID IS NULL THEN 0
+                ELSE 1
+            END AS PRIVILEGE
+        FROM
+            RMS_PROGRESS_PERM perm
+        RIGHT JOIN RMS_SAFEGUARD_PROCESS progress ON
+            perm.PROGRESS_ID = progress.ID AND perm.POST_ID = #{postId}
+        ORDER BY progress.CREATE_DATE desc
+    </select>
+
+    <select id="listPrivileges" parameterType="string" resultType="String">
+       select PROGRESS_ID from RMS_PROGRESS_PERM where post_id = #{postId}
+    </select>
+
+    <select id="findAllList" resultType="ProgressPostPermission">
+        SELECT
+        <include refid="progressPostPermissionColumns"/>
+        FROM rms_progress_perm a
+        <include refid="progressPostPermissionJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_progress_perm(
+			id,
+			progress_id,
+			post_id
+		) VALUES (
+			#{id},
+			#{progressId},
+			#{postId}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_progress_perm SET 	
+			progress_id = #{progressId},
+			post_id = #{postId}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="deleteByPostId" parameterType="string">
+        DELETE FROM rms_progress_perm where POST_ID = #{postId}
+    </delete>
+
+    <update id="delete">
+		DELETE FROM rms_progress_perm
+		WHERE id = #{id}
+	</update>
+
+</mapper>

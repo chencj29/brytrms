@@ -1,0 +1,265 @@
+<div class="inlineTableFormLayer" name="itemFormContainer" data-selector="#itemTable_wrapper div.row:first">
+    <div class="addLong-drop-down" style="height: auto;max-height: none;overflow: inherit;">
+        <form role="form" class="form form-horizontal" id="itemForm" action="./item-save-timer">
+            <input type="hidden" name="configType" id="iphConfigType" value="{{item.config.type}}"/>
+            <input type="hidden" name="configId" id="iphConfigId" value="{{item.config.id}}"/>
+            <input type="hidden" name="monitorClass" id="iphMonitorClass" value="{{item.config.class}}"/>
+            <div id="timerElementContainer">
+                {{ if item.datas.length !== 0}}
+                {{ each item.datas as data index}}
+                {{ if index !== 0 }}
+                <hr style="margin-top: 5px; margin-bottom: 5px; border: 0; border-top: 1px solid #FFF;"/>
+                {{ /if }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-horizontal">
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">监控字段:</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="timerFields" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择监控字段">
+                                    <option value=""></option>
+                                    {{each item.fields as value key}}
+                                    <option value="{{key}}"
+                                            {{ if data.fieldCode=== key}}
+                                                selected="selected"
+                                            {{ /if}}
+                                    >{{value}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">比较方式</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="selOpts" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择比较方式">
+                                    <option value=""></option>
+                                    {{each item.operations as value key}}
+                                    <option value="{{key}}"
+                                            {{ if data.conditionCode=== key}}
+                                            selected="selected"
+                                            {{ /if}}
+                                    >{{value}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">预警阀值:</label>
+                            </div>
+
+                            {{ if index === 0 }}
+                            <div class="col-md-2">
+                                <input name="iptThresholdValue" type="text" class="form-control" style="width:100%;" data-validation-engine="validate[required]"
+                                       data-errormessage-value-missing="请填写预警阀值" value="{{data.thresholdValue}}"/>
+                            </div>
+                            {{ else }}
+                            <div class="col-md-2">
+                                <input name="iptThresholdValue" type="text" class="form-control" style="width:85%!important;" data-validation-engine="validate[required]"
+                                       data-errormessage-value-missing="请填写预警阀值" value="{{data.thresholdValue}}">
+                                <a href="javascript:void(0);" name="btnRemoveEl" style="line-height: 28px; text-decoration: none; height: 28px; display: inline-block;">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            {{ /if }}
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{ else }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-horizontal">
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">监控字段:</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="timerFields" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择监控字段">
+                                    <option value=""></option>
+                                    {{each item.fields as value key}}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">比较方式</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="selOpts" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择比较方式">
+                                    <option value=""></option>
+                                    {{each item.operations as value key}}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <label class="control-label">预警阀值:</label>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <input name="iptThresholdValue" type="text" class="form-control" style="width:100%;" data-validation-engine="validate[required]"
+                                       data-errormessage-value-missing="请填写预警阀值"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">
+                        <button class="btn btn-primary" id="btnTimerAdd">继续添加</button>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-primary" id="btnTimerSave">保存</button>
+                        &nbsp;&nbsp;
+                        <a href="javascript:void(0);" id="btnTimerCollapse">收起</a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#itemForm").validationEngine({showOneMessage: true, scroll: false, binded: false, maxErrorsPerField: 1});
+
+        var configType = $("#iphConfigType").val(), configId = $("#iphConfigId").val(),
+                itemsData = $utils.ajaxLoadFragments('./item-list?config_id=' + configId);
+
+        $("select[name=timerFields]").select2({allowClear: true, placeholder: '请选择监控字段'});
+        $("select[name=selOpts]").select2({allowClear: true, placeholder: '请选择比较方式'});
+
+
+        $("#btnTimerSave").click(function (e) {
+            e.preventDefault();
+            var _form = $("#itemForm");
+            if (_form.validationEngine('validate')) {
+                var fieldArray = $.map($("select[name=timerFields]"), function (el) {
+                    return $(el).select2('data');
+                }), conditionArray = $.map($("select[name=selOpts]"), function (el) {
+                    return $(el).select2('data');
+                }), thresholdValueArray = $.map($("input[name=iptThresholdValue]"), function (el) {
+                    return $(el).val();
+                });
+
+                var fieldPair = _.object(_.pluck(fieldArray, "id"), _.pluck(fieldArray, "text"));
+                var optsPair = _.object(_.pluck(conditionArray, "id"), _.pluck(conditionArray, "text"));
+
+                var duplicatedData = _.omit(_.countBy(_.pluck(fieldArray, "id")), function (value, key, object) {
+                    return value === 1;
+                });
+
+
+                var buffer = [];
+                _.each(_.keys(duplicatedData), function (key) {
+                    buffer.$push("字段名称：").$push(fieldPair[key]).$push("， 重复次数：").$push(duplicatedData[key]).$push("次<br/>")
+                });
+
+
+                if (buffer.length) {
+                    layer.open({
+                        title: '监控字段重复设置提示', icon: 0, content: buffer.join("").concat("</br>请调整！"),
+                        shift: 2
+                    });
+                    buffer.$clear();
+                    return false;
+                }
+
+                var params = [], fieldKeys = _.keys(fieldPair), optsKeys = _.pluck(conditionArray, "id");
+
+                for (var i = 0, len = fieldKeys.length; i < len; i++) {
+                    var fieldCode = fieldKeys[i], conditionCode = optsKeys[i], thresholdValue = thresholdValueArray[i];
+                    params.$push({
+                        fieldCode: fieldCode, fieldName: fieldPair[fieldCode],
+                        conditionCode: conditionCode, conditionName: optsPair[conditionCode],
+                        thresholdValue: thresholdValue
+                    });
+                }
+
+                if (!_.isEmpty(params)) {
+                    $.post('./item-save-timer', {
+                        configId: $("#iphConfigId").val(), class: $("#iphMonitorClass").val(),
+                        configType: $("#iphConfigType").val(), data: JSON.stringify(params)
+                    }, function (data) {
+                        if (data.code === 1) {
+                            layer.msg('添加成功！');
+                            $("#btnTimerCollapse").trigger('click');
+                            itemTable.ajax.reload();
+                        } else {
+                            layer.alert('添加失败：' + data.message);
+                        }
+                    });
+                }
+            }
+        });
+
+        $("#btnTimerCollapse").click(function (e) {
+            e.preventDefault();
+            $($(".inlineTableFormLayer").data('selector')).next().remove();
+        });
+
+        $("#btnTimerAdd").click(function (e) {
+            e.preventDefault();
+            var $beAdded = $(template('timerFormElTemplate')({}));
+            $beAdded.find('select[name=timerFields]').select2({allowClear: true, placeholder: '请选择监控字段'});
+            $beAdded.find('select[name=selOpts]').select2({allowClear: true, placeholder: '请选择比较方式'});
+            $beAdded.appendTo($("#timerElementContainer"));
+
+            return false;
+        });
+
+
+        $("body").on('click', "a[name=btnRemoveEl]", function (e) {
+            e.preventDefault();
+
+            //remove Hr
+            $(this).parent().parent().parent().parent().prev().remove();
+            // remove the row
+            $(this).parent().parent().parent().parent().remove();
+
+            return false;
+
+        });
+    });
+</script>
+
+<script type="text/html" id="timerFormElTemplate">
+    <hr style="margin-top: 5px; margin-bottom: 5px; border: 0; border-top: 1px solid #FFF;"/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-horizontal">
+                <div class="col-md-2 text-center">
+                    <label class="control-label">监控字段:</label>
+                </div>
+                <div class="col-md-2">
+                    <select name="timerFields" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择监控字段">
+                        <option value=""></option>
+                        {{each item.fields as value key}}
+                        <option value="{{key}}">{{value}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="col-md-2 text-center">
+                    <label class="control-label">比较方式:</label>
+                </div>
+                <div class="col-md-2">
+                    <select name="selOpts" class="form-control" style="width:100%;" data-validation-engine="validate[required]" data-errormessage-value-missing="请选择比较方式">
+                        <option value=""></option>
+                        {{each item.operations as value key}}
+                        <option value="{{key}}">{{value}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="col-md-2 text-center">
+                    <label class="control-label">预警阀值:</label>
+                </div>
+                <div class="col-md-2">
+                    <input name="iptThresholdValue" type="text" class="form-control" style="width:85%!important;" data-validation-engine="validate[required]" data-errormessage-value-missing="请填写预警阀值">
+                    <a href="javascript:void(0);" name="btnRemoveEl" style="line-height: 28px; text-decoration: none; height: 28px; display: inline-block;">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

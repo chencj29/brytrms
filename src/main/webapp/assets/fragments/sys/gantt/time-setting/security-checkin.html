@@ -1,0 +1,38 @@
+<form id="actualTimeForm" method="post">
+    <input type="hidden" name="flightDynamicId" value="{{flightDynamicId}}">
+    <input type="hidden" name="flightDynamicNature" value="{{nature}}">
+    <table cellpadding="5" width="100%">
+        <tr>
+            <td colspan="3" style="font-size: 16px;padding-left: 16px;">计划日期：{{planDate}} &nbsp&nbsp机号：{{aircraftNum}}<br/>
+                航班号及机型：{{flightCode}}<br/>
+                计划开始时间：{{departurePlanTime}}<br/>
+                计划结束时间：{{arrivalPlanTime}}
+                <hr/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right"><label>实际开始时间：</label></td>
+            <td>
+                <input type="text"
+                       name="inteActualStartTime"
+                       id="iptInteActualStartTime"
+                       class="Wdate"
+                       onClick="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss', readOnly:true, maxDate: '#F{$dp.$D(\'iptInteActualOverTime\')}'})"
+                       style="width: 200px;height: 25px; line-height: 25px;"
+                       value="{{inteStart}}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right"><label>实际结束时间：</label></td>
+            <td>
+                <input type="text"
+                       name="inteActualOverTime"
+                       id="iptInteActualOverTime"
+                       class="Wdate"
+                       onClick="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss', readOnly:true, minDate: '#F{$dp.$D(\'iptInteActualStartTime\')}'})"
+                       style="width: 200px;height: 25px; line-height: 25px;"
+                       value="{{inteOver}}"/>
+            </td>
+        </tr>
+    </table>
+</form>

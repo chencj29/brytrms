@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.AirstandAirparametersDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="airstandAirparametersColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.aircraft_stand_num AS "aircraftStandNum",
+		a.aircraft_stand_id AS "aircraftStandId",
+		a.aircraft_model AS "aircraftModel",
+		a.aircraft_id AS "aircraftId"
+	</sql>
+
+    <sql id="airstandAirparametersJoins">
+    </sql>
+
+    <select id="get" resultType="AirstandAirparameters">
+        SELECT
+        <include refid="airstandAirparametersColumns"/>
+        FROM rms_airstand_airparameters a
+        <include refid="airstandAirparametersJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="AirstandAirparameters">
+        SELECT
+        <include refid="airstandAirparametersColumns"/>
+        FROM rms_airstand_airparameters a
+        <include refid="airstandAirparametersJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="AirstandAirparameters">
+        SELECT
+        <include refid="airstandAirparametersColumns"/>
+        FROM rms_airstand_airparameters a
+        <include refid="airstandAirparametersJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_airstand_airparameters(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			aircraft_stand_num,
+			aircraft_stand_id,
+			aircraft_model,
+			aircraft_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{aircraftStandNum},
+			#{aircraftStandId},
+			#{aircraftModel},
+			#{aircraftId}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_airstand_airparameters SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			aircraft_stand_num = #{aircraftStandNum},
+			aircraft_stand_id = #{aircraftStandId},
+			aircraft_model = #{aircraftModel},
+			aircraft_id = #{aircraftId}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_airstand_airparameters SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <select id="findByAircraftModel" parameterType="String" resultType="AirstandAirparameters">
+        select
+        <include refid="airstandAirparametersColumns"/>
+        FROM rms_airstand_airparameters a
+        where a.aircraft_model = #{aircraftModel} AND del_flag = 0
+    </select>
+
+</mapper>

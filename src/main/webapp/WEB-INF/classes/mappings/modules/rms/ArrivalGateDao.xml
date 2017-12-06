@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.ArrivalGateDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="arrivalGateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.arrival_gate_num AS "arrivalGateNum",
+		a.arrival_gate_nature AS "arrivalGateNature",
+		a.arrival_gate_status AS "arrivalGateStatus",
+		a.aircraft_terminal_code AS "aircraftTerminalCode",
+		a.order_index as "orderIndex"
+	</sql>
+
+    <sql id="arrivalGateJoins">
+    </sql>
+
+    <select id="get" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM rms_arrival_gate a
+        <include refid="arrivalGateJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM rms_arrival_gate a
+        <include refid="arrivalGateJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM rms_arrival_gate a
+        <include refid="arrivalGateJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_arrival_gate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			arrival_gate_num,
+			arrival_gate_nature,
+			arrival_gate_status,
+			aircraft_terminal_code,
+			order_index
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{arrivalGateNum},
+			#{arrivalGateNature},
+			#{arrivalGateStatus},
+			#{aircraftTerminalCode},
+			#{orderIndex}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_arrival_gate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			arrival_gate_num = #{arrivalGateNum},
+			arrival_gate_nature = #{arrivalGateNature},
+			arrival_gate_status = #{arrivalGateStatus},
+			aircraft_terminal_code = #{aircraftTerminalCode},
+			order_index = #{orderIndex}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_arrival_gate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <select id="findByArrivalGateNum" parameterType="java.util.List" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM rms_arrival_gate a WHERE arrival_gate_num IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND del_flag = 0
+    </select>
+
+    <select id="getByCode" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM rms_arrival_gate a
+        <include refid="arrivalGateJoins"/>
+        WHERE a.arrival_gate_num = #{arrivalGateCode} AND DEL_FLAG = 0
+    </select>
+
+    <select id="findAvailableArrivalGateByNature" resultType="ArrivalGate">
+        SELECT
+        <include refid="arrivalGateColumns"/>
+        FROM RMS_ARRIVAL_GATE a WHERE a.arrival_gate_nature = #{nature} AND a.DEL_FLAG = '0'
+    </select>
+</mapper>

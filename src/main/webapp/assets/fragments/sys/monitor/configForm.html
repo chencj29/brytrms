@@ -1,0 +1,297 @@
+<div class="inlineTableFormLayer" name="configFormContainer" data-selector="#configTable_wrapper div.row:first">
+    <div class="addLong-drop-down" style="height: auto;max-height: none;overflow: inherit;">
+        <form role="form" class="form form-horizontal" id="configForm" action="./save">
+            <input type="hidden" name="id" id="iphConfigId" value="{{config.id}}"/>
+            <input type="hidden" name="configType" id="iphConfigType" value="{{config.configType}}"/>
+            <input type="hidden" name="monitorClass" id="iphMonitorClass" value="{{config.monitorClass}}"/>
+            <input type="hidden" name="actionService" id="iphActionService" value="{{config.actionService}}"/>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="form-group col-sm-4 col-md-4">
+                                <label class="col-md-4 control-label" for="ipConfigName">监控名称</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="configName" id="ipConfigName" placeholder="请填写监控名称"
+                                           data-validation-engine="validate[required,maxSize[50]]" value="{{config.configName}}"
+                                           data-errormessage-value-missing="请填写监控名称"/>
+                                </div>
+                            </div>
+                            {{ if type == 'new' }}
+                            <div class="form-group col-sm-4 col-md-4">
+                                <label class="col-md-4 control-label" for="selConfigType">监控类型</label>
+                                <div class="col-md-8">
+                                    <select id="selConfigType" class="form-control" style="width:100%;"
+                                            data-validation-engine="validate[required]" data-errormessage-value-missing="请选择监控类型">
+                                        <option value=""></option>
+                                        <option value="EVENT">提醒</option>
+                                        <option value="TIMER">预警</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4 col-md-4">
+                                <label class="col-md-4 control-label" for="selRemindDetail">提醒详情</label>
+                                <div class="col-md-8">
+                                    <select id="selRemindDetail" class="form-control" style="width:100%;"
+                                            data-validation-engine="validate[required]" data-errormessage-value-missing="请选择提醒详情">
+                                        <option value=""></option>
+                                        <option value="INSERT">新增</option>
+                                        <option value="UPDATE">变更</option>
+                                        <option value="DELETE">删除</option>
+                                    </select>
+                                </div>
+                            </div>
+                            {{ /if }}
+                        </div>
+                        {{ if type == 'new' }}
+                        <div class="row">
+                            <div class="form-group col-sm-4 col-md-4">
+                                <label class="col-md-4 control-label" for="ipMonitorClass">监控实体</label>
+                                <div class="col-md-8">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" id="ipMonitorClass" class="form-control" readonly="readonly"
+                                               placeholder="请选择监控实体" data-validation-engine="validate[required]"
+                                               data-errormessage-value-missing="请选择监控实体" value="{{monitorClassName}}"/>
+                                        <span class="input-group-btn" style="width:1%">
+                                            <button id="btnChooseMonitorClass" class="btn btn-default btn-xs">&nbsp;选择&nbsp;</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4 col-md-4">
+                                <label class="col-md-4 control-label" for="ipActionService">执行动作</label>
+                                <div class="col-md-8">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" id="ipActionService" readonly="readonly"
+                                               placeholder="请选择执行动作" data-validation-engine="validate[required]"
+                                               data-errormessage-value-missing="请选择执行动作" value="{{actionServiceName}}"
+                                               style="cursor:pointer;"/>
+                                        <span class="input-group-btn" style="width: 1%">
+                                            <button id="btnChooseActionService" class="btn btn-default btn-xs">&nbsp;选择&nbsp;</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4 col-md-4"></div>
+                        </div>
+                        {{ /if }}
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-12">
+                                <label class="col-md-2 label-message control-label">消息模板</label>
+                                <div class="col-md-10 label-message-content">
+                                    <textarea name="messageTpl" id="ipMessageTpl" class="form-control" style="width:100%"
+                                              data-validation-engine="validate[required]"
+                                              data-errormessage-value-missing="请填写消息模板">{{config.messageTpl}}</textarea>
+                                    <div class="tipsContainer">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p class="text-center">
+                                <button class="btn btn-primary" id="btnSave">保存</button>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0);" id="btnCollapse">收起</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/html" id="monitorClassesPanel">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+            <th style='text-align: center' width="20%">&nbsp;-&nbsp;</th>
+            <th style='text-align: center'>名称</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {{each monitorClasses as value key}}
+        <tr>
+            <td align="center">
+                <input type="radio" name="rbMonitorClass" style="cursor: pointer;" value="{{key}}">
+                <!--{{if config.monitorClass=== key}} checked='checked' {{/if}}-->
+            </td>
+            <td>{{value.desc}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/html" id="actionServicesPanel">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+            <th style='text-align: center' width="20%">&nbsp;-&nbsp;</th>
+            <th style='text-align: center'>名称</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {{each actionServices as value key}}
+        <tr>
+            <td align="center">
+                <input type="radio" name="rbMonitorClass" style="cursor: pointer;" value="{{key}}">
+            </td>
+            <td>{{value[0]}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/html" id="tplTips4EventND">
+    <div class="help-block" style="color:#F00;">
+        <div>新增、删除类型消息模板可以使用以下动态变量：</div>
+        <code>&#123;&#123;clazzDesc&#125;&#125;&nbsp;-&nbsp;监控实体名称</code>
+    </div>
+</script>
+
+<script type="text/html" id="tplTips4EventUpdate">
+    <div class="help-block" style="color:#F00;">
+        <div>变更类型消息模板可以使用以下动态变量：</div>
+        <code>&#123;&#123;clazzDesc&#125;&#125;&nbsp;-&nbsp;监控实体名称</code>
+        <code>&#123;&#123;tipFieldDesc&#125;&#125;&nbsp;-&nbsp;主字段名称</code>
+        <code>&#123;&#123;tipFieldValue&#125;&#125;&nbsp;-&nbsp;主字段内容</code>
+        <code>&#123;&#123;changeList&#125;&#125;&nbsp;-&nbsp;变更列表</code>
+    </div>
+</script>
+
+<script type="text/html" id="tplTips4Timer">
+    <div class="help-block" style="color:#F00;">
+        <div>预警类型消息模板可以使用以下动态变量：</div>
+        <code>&#123;&#123;clazzDesc&#125;&#125;&nbsp;-&nbsp;监控实体名称</code>
+        <code>&#123;&#123;tipFieldDesc&#125;&#125;&nbsp;-&nbsp;主字段名称</code>
+        <code>&#123;&#123;tipFieldValue&#125;&#125;&nbsp;-&nbsp;主字段内容</code>
+    </div>
+</script>
+
+<script>
+    $(function () {
+        var $iphConfigType = $("#iphConfigType"), iphMonitorClass = $("#iphMonitorClass"), iphActionService = $("#iphActionService"),
+                _configType = $iphConfigType.val();
+
+
+        $("#selConfigType").select2({ placeholder: "请选择监控类型" }).on('select2:select', function (e) {
+            $("#selRemindDetail").val('').change();
+            if (e.params.data.id === 'TIMER') {
+                $iphConfigType.val('TIMER');
+                $("#selRemindDetail").prop("disabled", true);
+                $(".tipsContainer").empty().append(template("tplTips4Timer")({}));
+            } else {
+                $("#selRemindDetail").prop("disabled", false);
+                $(".tipsContainer").empty();
+            }
+        });
+
+        $("#selRemindDetail").select2({ placeholder: "请选择提醒类型" }).on('select2:select', function (e) {
+            $iphConfigType.val(e.params.data.id);
+            if(e.params.data.text === '变更')
+                $(".tipsContainer").empty().append(template('tplTips4EventUpdate')({}));
+            else
+                $(".tipsContainer").empty().append(template('tplTips4EventND')({}));
+        });
+
+
+        $("#selRemindDetail").prop("disabled", true);
+
+        if (_configType != '') {
+            if (_configType == 'TIMER') {
+                $(".tipsContainer").empty().append(template("tplTips4Timer")({}));
+                $("#selConfigType").val(_configType).change();
+                $("#selRemindDetail").prop("disabled", true);
+            } else {
+                if(_configType === 'UPDATE')
+                    $(".tipsContainer").empty().append(template('tplTips4EventUpdate')({}));
+                else
+                    $(".tipsContainer").empty().append(template('tplTips4EventND')({}));
+                $("#selConfigType").val('EVENT').change();
+                $("#selRemindDetail").prop("disabled", false);
+                $("#selRemindDetail").val(_configType).change();
+            }
+        }
+
+        $("#btnSave").click(function () {
+            if ($("#configForm").validationEngine('validate')) {
+                var _form = $("#configForm");
+                $.post(_form.attr('action'), _form.serialize(), function (data) {
+                    if (data && data.code == 1) {
+                        layer.msg('添加成功');
+                        configTable.ajax.reload();
+                        _form[0].reset();
+                    } else {
+                        layer.msg('添加失败, ' + data.msg);
+                    }
+                });
+            }
+            return false;
+        });
+
+        $("#btnCollapse").click(function (e) {
+            e.preventDefault();
+            $($(".inlineTableFormLayer").data('selector')).next().remove();
+        });
+
+        $("#btnChooseMonitorClass").click(function (e) {
+            e.preventDefault();
+            layer.open({
+                title: "选择监控实体", type: 1, closeBtn: 1, shift: 1, shadeClose: false, shade: [0.3], area: ['400px', '300px'],
+                content: template('monitorClassesPanel', {
+                    datas: $utils._loadFragments({
+                        url: './monitor-list', method: 'post', dataType: 'json'
+                    }), currentVal: $("#iphMonitorClass").val()
+                }), btn: ['选择', '取消'], yes: function (index, layero) {
+                    var $checkedData = $("input[name=rbMonitorClass]:checked");
+                    if ($checkedData.length == 0) {
+                        layer.msg('请勾选一条记录再点击「选择」按钮!');
+                        return false;
+                    }
+
+                    iphMonitorClass.val($checkedData.val());
+                    $("#ipMonitorClass").val($checkedData.parent().next().text());
+                    layer.close(index);
+                }, cancel: function (index) {
+                    layer.close(index);
+                }
+            });
+        });
+
+        $("#btnChooseActionService").click(function (e) {
+            e.preventDefault();
+            layer.open({
+                title: "选择执行动作", type: 1, closeBtn: 1, shift: 1,
+                shadeClose: false, shade: [0.3], area: ['400px', '300px'],
+                content: template('actionServicesPanel', {
+                    datas: $utils._loadFragments({
+                        url: './service-list', method: 'post', dataType: 'json'
+                    }), currentVal: $("#iphActionService").val()
+                }), btn: ['选择', '取消'], yes: function (index, layero) {
+                    var $checkedData = $("input[name=rbMonitorClass]:checked");
+                    if ($checkedData.length == 0) {
+                        layer.msg('请勾选一条记录再点击「选择」按钮!');
+                        return false;
+                    }
+
+                    iphActionService.val($checkedData.val());
+                    $("#ipActionService").val($checkedData.parent().next().text());
+                    layer.close(index);
+                }, cancel: function (index) {
+                    layer.close(index);
+                }
+            });
+        });
+
+        $("#configForm").validationEngine({
+            showOneMessage: true,
+            promptPosition: 'bottomLeft'
+        });
+    });
+</script>

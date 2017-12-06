@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user-permission>
+    <user-permission username="sys_default_user">
+        <project-config project="机位" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="候机厅" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="安检口" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="滑槽" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="行李转盘" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="登机口" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="到港门" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+        <project-config project="值机柜台" read-project="true"
+                        read-package="true" write-package="true"
+                        read-variable-file="true" write-variable-file="true"
+                        read-parameter-file="true" write-parameter-file="true"
+                        read-constant-file="true" write-constant-file="true"
+                        read-action-file="true" write-action-file="true"
+                        read-rule-file="true" write-rule-file="true"
+                        read-scorecard-file="true" write-scorecard-file="true"
+                        read-decision-table-file="true" write-decision-table-file="true"
+                        read-decision-tree-file="true" write-decision-tree-file="true"
+                        read-flow-file="true" write-flow-file="true"
+        />
+    </user-permission>
+    <user-permission username="testadd">
+        <project-config project="机位" read-project="true"
+                        read-package="true" write-package="false"
+                        read-variable-file="false" write-variable-file="false"
+                        read-parameter-file="false" write-parameter-file="false"
+                        read-constant-file="false" write-constant-file="false"
+                        read-action-file="false" write-action-file="false"
+                        read-rule-file="false" write-rule-file="false"
+                        read-scorecard-file="false" write-scorecard-file="false"
+                        read-decision-table-file="false" write-decision-table-file="false"
+                        read-decision-tree-file="false" write-decision-tree-file="false"
+                        read-flow-file="false" write-flow-file="false"
+        />
+    </user-permission>
+    <user-permission username="jr_zs"></user-permission>
+    <user-permission username="jr_ww1"></user-permission>
+    <user-permission username="jr_hgm"></user-permission>
+    <user-permission username="jr_hjx"></user-permission>
+    <user-permission username="test_a1"></user-permission>
+    <user-permission username="test_a2"></user-permission>
+    <user-permission username="sd_admin"></user-permission>
+    <user-permission username="sd_zhb"></user-permission>
+    <user-permission username="sd_scb"></user-permission>
+    <user-permission username="sd_jsb"></user-permission>
+    <user-permission username="sd_yfb"></user-permission>
+    <user-permission username="fml2016"></user-permission>
+    <user-permission username="jn_admin"></user-permission>
+    <user-permission username="999"></user-permission>
+    <user-permission username="jn_zhb"></user-permission>
+    <user-permission username="jn_scb"></user-permission>
+    <user-permission username="jn_jsb"></user-permission>
+    <user-permission username="lc_admin"></user-permission>
+    <user-permission username="lx_admin"></user-permission>
+    <user-permission username="gx_admin"></user-permission>
+</user-permission>

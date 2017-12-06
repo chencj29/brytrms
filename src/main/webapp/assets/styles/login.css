@@ -1,0 +1,69 @@
+/*login*/
+
+/*wrap*/
+.login-bg {
+    width:390px;
+    height: 100%;
+    display:table;
+    min-height: 600px;
+    overflow-y: auto;
+    padding-top: 0%;
+    margin:0 auto;
+}
+
+/*flightControlLogin-wrap*/
+.flightControlLogin-wrap {
+    width: 390px;
+    height: 342px;
+    display: table-cell;
+    vertical-align: middle;
+    position: absolute;
+    top: 0%;
+    margin-top: 10%;
+}
+
+.flightControlLogin-title {
+    color: #376b9c;
+    font-size: 22px;
+    text-align: center;
+}
+
+/*flightControlLogin-main*/
+.flightControlLogin-form .form-control {
+    height: 38px;
+}
+
+.flightControlLogin-main {
+    width: 100%;
+    color: #7a7a7a;
+    background-color: #e1ecf4;
+    padding: 10px 44px 20px 44px;
+    margin-top: 20px;
+}
+
+.flightControlLogin-form-label {
+    position: absolute;
+    color: #c2c2c2;
+    margin-top: 9px;
+    margin-left: 12px
+}
+
+.flightControlLogin-form-text {
+    padding-left: 30px;
+}
+
+.flightControlLogin-captcha-label {
+    width: 48%;
+    height: 38px;
+}
+
+.flightControlLogin-captcha-label img {
+    width: 100%;
+    height: 38px;
+}
+
+.flightControlLogin-form-captchaText {
+    width: 48%;
+    display: inline-block;
+    float: right;
+}

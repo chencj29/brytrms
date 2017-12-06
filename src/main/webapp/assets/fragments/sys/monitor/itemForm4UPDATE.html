@@ -1,0 +1,88 @@
+<div class="inlineTableFormLayer" name="itemFormContainer" data-selector="#itemTable_wrapper div.row:first">
+    <div class="addLong-drop-down" style="height: auto;max-height: none;overflow: inherit;">
+        <form role="form" class="form form-horizontal" id="itemForm" action="./item-save">
+            <input type="hidden" name="configType" id="iphConfigType" value="{{item.config.type}}"/>
+            <input type="hidden" name="configId" id="iphConfigId" value="{{item.config.id}}"/>
+            <input type="hidden" name="monitorClass" id="iphMonitorClass" value="{{item.config.class}}"/>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-horizontal">
+
+                        <div class="col-md-2 text-center">
+                            <label for="selFields" class="control-label">监控字段:</label>
+                        </div>
+                        <div class="col-md-10">
+                            <select id="selFields" class="form-control" style="width:100%;" multiple="multiple">
+                                {{each item.fields as value key}}
+                                <option value="{{key}}">{{value}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">
+                        <button class="btn btn-primary" id="btnUpdateSave">保存</button>
+                        &nbsp;&nbsp;
+                        <a href="javascript:void(0);" id="btnUpdateCollapse">收起</a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        var configType = $("#iphConfigType").val(), configId = $("#iphConfigId").val(), itemsData = $utils.ajaxLoadFragments('./item-list?config_id=' + configId), existVals = _.sortBy(_.pluck(itemsData.data, 'fieldCode'));
+
+        var $selFields = $("#selFields").select2({placeholder: "请选择监控字段"});
+
+        if (itemsData.totalRecords != 0) {
+            //将已经存在的数据设置到select2选择框中
+            $selFields.val(_.pluck(itemsData.data, 'fieldCode')).trigger('change');
+        }
+
+
+        $("#btnUpdateSave").click(function (e) {
+            e.preventDefault();
+
+            var selectedData = $("#selFields").select2('data');
+
+            if (_.isEmpty(selectedData)) {
+                layer.alert('请选择要监控的字段！', {icon: 2});
+                return false;
+            }
+
+            if (_.isEqual(_.sortBy(_.pluck(selectedData, "id")), existVals)) {
+                $("#btnUpdateCollapse").trigger('click');
+                layer.msg('没有发现数据变动！');
+                return false;
+            }
+
+            $.post("./item-save", {
+                names: _.pluck(selectedData, "id"), values: _.pluck(selectedData, "text"),
+                configId: $("#iphConfigId").val(), class: $("#iphMonitorClass").val(),
+                configType: $("#iphConfigType").val()
+            }, function (data) {
+                if (data && data.code == 1) {
+                    layer.msg('添加成功！');
+                    itemTable.ajax.reload();
+                    $("#btnUpdateCollapse").trigger('click');
+                    existVals = _.sortBy(_.pluck(selectedData, "id"));
+                } else {
+                    layer.msg('添加失败：' + data.message);
+                }
+            });
+
+            return false;
+        });
+
+        $("#btnUpdateCollapse").click(function (e) {
+            e.preventDefault();
+            $($("div[name=itemFormContainer]").data('selector')).next().remove();
+            return false;
+        });
+    });
+</script>

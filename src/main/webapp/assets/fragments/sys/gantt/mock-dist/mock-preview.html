@@ -1,0 +1,41 @@
+<style type="text/css">
+    html, body {
+        font-size: 12px !important;
+    }
+
+    fieldset {
+        border: 1px solid #CCC;
+        margin: auto 1px;
+    }
+
+</style>
+<div class="easyui-layout" style="width:100%">
+    <div data-options="region:'center'" style="height:295px">
+        <table id="previewgrid">
+            <thead>
+            <tr>
+                <th field="id" width="100" align="center" hidden="true">主键</th>
+                <th field="planDate" width="80" align="center" formatter="mockPlanDateFmt">计划日期</th>
+                <th field="aircraftNum" width="80" align="center">机号</th>
+                <th field="aircraftTypeCode" width="80" align="center">机型</th>
+                <th field="flightDynamicCode" width="120" align="center">航班号</th>
+                {{ if resourceType == '机位' }}
+                <th field="inte" width="80" align="center">机位</th>
+                {{ /if }}
+                {{ if resourceType != '机位' }}
+                <th field="inte" width="80" align="center">国内航段</th>
+                <th field="intl" width="80" align="center">国际航段</th>
+                {{ /if }}
+                <th field="info" width="150" align="center">备注</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region: 'south', height: 100, hideCollapsedContent: false, collapsed: false, maximizable: false" title="图形展示" id="graphic-panel">
+        <div class="gantt" style="height: 65px; width:100%; overflow: hidden; position: absolute;">
+            hello world
+        </div>
+    </div>
+</div>
+
+

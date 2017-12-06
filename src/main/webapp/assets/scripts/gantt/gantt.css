@@ -1,0 +1,240 @@
+.gantt-warning {
+    background-color: yellow !important;
+    color: #0000ff !important;
+}
+
+.gantt-collision {
+    /*background-color: red !important;*/
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+.gantt-content {
+    position: absolute;
+    float: left;
+    width: 100%;
+}
+
+.gantt-left-panel {
+    overflow: hidden;
+    position: absolute;
+    z-index: 99;
+}
+
+.gantt-left-panel div {
+    border: 1px solid #DCDDDE;
+    border-bottom: none;
+    text-align: center;
+    font-size: 12px;
+    padding: 0px 10px;
+}
+
+.gantt-left-panel div:first-child + div {
+    border-top: none;
+}
+
+.gantt-left-panel div:first-child + div + div {
+    border-top: none;
+}
+
+.gantt-left-panel div:last-child {
+    border: 1px solid #DCDDDE;
+}
+
+.gantt-content .ganttHeader .gantt-date div:first-child {
+    border-left: none !important;
+}
+
+.gantt-content .ganttHeader .gantt-hours-wrapper div:first-child {
+    border-left: none !important;
+}
+
+.gantt-content .innerDetail .outerDiv:not(:first-child) .rowDiv div:first-child {
+    border-left: none !important;
+}
+
+.gantt-content .innerDetail .outerDiv:last-child .rowDiv div:last-child {
+    border-right: none;
+}
+
+.gantt-content .innerDetail {
+    float: left;
+}
+
+.gantt-content .innerDetail .outerDiv .rowDiv:nth-of-type(odd) {
+    background-color: #F6F7F8;
+}
+
+.gantt-content .innerDetail .outerDiv {
+    float: left;
+}
+
+.rowDiv:nth-child(odd) {
+    background: url(gantt-grid-gray.gif) repeat;
+    clear: both;
+}
+
+.rowDiv:nth-child(even) {
+    background: url(gantt-grid.gif) repeat;
+    clear: both;
+}
+
+.outerDiv .rowDiv:last-child {
+    border-bottom: 1px solid #DCDDDE;
+}
+
+.rowDiv div {
+    float: left;
+    border-top: 1px solid #DCDDDE;
+    border-right: 1px solid #DCDDDE;
+
+}
+
+.rowDiv div:last-child {
+    border-right: 1px solid #DCDDDE;
+}
+
+.rowDiv:last-child div {
+    border-bottom: 1px solid #DCDDDE;
+}
+
+.ganttHeader .gantt-date div {
+    text-align: center;
+    font-size: 12px;
+    float: left;
+}
+
+.ganttHeader .gantt-date div:first-child {
+    border: 1px solid #DCDDDE;
+}
+
+.ganttHeader .gantt-date div:last-child {
+    border-right: none;
+}
+
+.ganttHeader .gantt-date div + div {
+    border: 1px solid #DCDDDE;
+    border-left: none;
+}
+
+.ganttHeader .gantt-hours {
+    float: left;
+    text-align: center;
+    border-right: 1px solid #DCDDDE;
+    font-size: 12px;
+}
+
+.ganttHeader .gantt-minutes {
+    float: left;
+    border-top: 1px solid #DCDDDE;
+    border-right: 1px solid #DCDDDE;
+    text-align: center;
+    font-size: 12px;
+}
+
+.gantt-content .innerDetail .airplane-wrapper {
+    position: absolute;
+}
+
+.gantt-content .innerDetail .timeline-wrapper {
+    position: absolute;
+}
+
+.gantt-content .innerDetail .timeline-wrapper > div {
+    background-color: red;
+    text-align: center;
+    color: #FFF;
+    font-size: 14px;
+    position: absolute;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 1px 1px 2px red;
+    width: 2px;
+    top: 0px;
+    z-index: 991;
+    min-width: 2px;
+}
+
+.gantt-content .innerDetail .airplane-wrapper > div {
+    background-color: #3EB7F7;
+    text-align: center;
+    color: #FFF;
+    font-size: 10px;
+    position: absolute;
+    cursor: move;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px #888888;
+    height: 25px !important;
+    line-height: 25px !important;
+    margin-top: 2.2px !important;
+}
+
+.gantt-tips {
+    width: 200px;
+    height: 300px;
+    border-radius: 8px;
+}
+
+.gantt-tips .layui-layer-content {
+    width: 200px;
+    height: 300px;
+    border-radius: 8px;
+    padding: 15px 15px;
+    background-color: #FEFFFF;
+    box-shadow: 2px 2px 5px #888888;
+    border: 1px solid #EBEBEB;
+    font-size: 12px;
+    color: #000;
+}
+
+.gantt-tips .layui-layer-content > div:not(:first-child) {
+    margin-top: 15px;
+}
+
+.gantt-tips .layui-layer-content a {
+    text-decoration: none;
+}
+
+.gantt-tips .layui-layer-content a:hover {
+    text-decoration: none;
+}
+
+/*jquery ui style 4 resizable*/
+.ui-resizable-e {
+    cursor: e-resize;
+    width: 7px;
+    right: -5px;
+    top: 0;
+    height: 100%;
+}
+
+.ui-resizable-handle {
+    position: absolute;
+    font-size: 0.1px;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.blink {
+    transition: all 1s ease-in-out;
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 1.8s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-timing-function: ease-in-out;
+}

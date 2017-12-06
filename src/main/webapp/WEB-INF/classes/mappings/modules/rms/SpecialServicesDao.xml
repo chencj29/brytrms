@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SpecialServicesDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="specialServicesColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.passenger_date AS "passengerDate",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_num AS "flightNum",
+		a.place AS "place",
+		a.passenger_name AS "passengerName",
+		a.passenger_age AS "passengerAge",
+		a.pick_up_name AS "pickUpName",
+		a.pick_up_phone AS "pickUpPhone",
+		a.pick_up_address AS "pickUpAddress",
+		a.waiter_code AS "waiterCode",
+		a.waiter_name AS "waiterName",
+		a.operator_code AS "operatorCode",
+		a.operator_name AS "operatorName",
+		a.redundance1 AS "redundance1",
+		a.redundance2 AS "redundance2",
+		a.redundance3 AS "redundance3",
+		a.redundance4 AS "redundance4",
+		a.redundance5 AS "redundance5"
+	</sql>
+	
+	<sql id="specialServicesJoins">
+	</sql>
+    
+	<select id="get" resultType="SpecialServices">
+		SELECT 
+			<include refid="specialServicesColumns"/>
+		FROM rms_special_services a
+		<include refid="specialServicesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SpecialServices">
+		SELECT 
+			<include refid="specialServicesColumns"/>
+		FROM rms_special_services a
+		<include refid="specialServicesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 数据权限 new -->
+			${sqlMap.dsfn}
+			<if test="flightNum != null and flightNum != ''">
+				AND flight_num =  #{flightNum}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SpecialServices">
+		SELECT 
+			<include refid="specialServicesColumns"/>
+		FROM rms_special_services a
+		<include refid="specialServicesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_special_services(
+			id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remarks,
+			del_flag,
+			passenger_date,
+			flight_company_code,
+			flight_company_name,
+			flight_num,
+			place,
+			passenger_name,
+			passenger_age,
+			pick_up_name,
+			pick_up_phone,
+			pick_up_address,
+			waiter_code,
+			waiter_name,
+			operator_code,
+			operator_name,
+			redundance1,
+			redundance2,
+			redundance3,
+			redundance4,
+			redundance5
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createTime},
+			#{updateBy.id},
+			#{updateTime},
+			#{remarks},
+			#{delFlag},
+			#{passengerDate},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightNum},
+			#{place},
+			#{passengerName},
+			#{passengerAge},
+			#{pickUpName},
+			#{pickUpPhone},
+			#{pickUpAddress},
+			#{waiterCode},
+			#{waiterName},
+			#{operatorCode},
+			#{operatorName},
+			#{redundance1},
+			#{redundance2},
+			#{redundance3},
+			#{redundance4},
+			#{redundance5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_special_services SET 	
+			create_time = #{createTime},
+			update_by = #{updateBy.id},
+			update_time = #{updateTime},
+			remarks = #{remarks},
+			passenger_date = #{passengerDate},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_num = #{flightNum},
+			place = #{place},
+			passenger_name = #{passengerName},
+			passenger_age = #{passengerAge},
+			pick_up_name = #{pickUpName},
+			pick_up_phone = #{pickUpPhone},
+			pick_up_address = #{pickUpAddress},
+			waiter_code = #{waiterCode},
+			waiter_name = #{waiterName},
+			operator_code = #{operatorCode},
+			operator_name = #{operatorName},
+			redundance1 = #{redundance1},
+			redundance2 = #{redundance2},
+			redundance3 = #{redundance3},
+			redundance4 = #{redundance4},
+			redundance5 = #{redundance5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE rms_special_services SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getSpecialServicesList" resultType="SpecialServices">
+		SELECT
+		<include refid="specialServicesColumns"/>
+		FROM rms_special_services a
+		<include refid="specialServicesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+				AND a.flight_num =  #{flightNum}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

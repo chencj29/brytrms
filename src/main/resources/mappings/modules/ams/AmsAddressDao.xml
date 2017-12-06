@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.AmsAddressDao">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache" readOnly="true"/>
+    <sql id="amsAddressColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.three_code AS "threeCode",
+		a.four_code AS "fourCode",
+		a.ch_name AS "chName",
+		a.en_name AS "enName",
+		a.fm_name AS "fmName",
+		a.ch_shortname AS "chShortname",
+		a.foreignornot AS "foreignornot",
+		a.memberornot AS "memberornot",
+		a.foreign_name AS "foreignName",
+		a.member_name AS "memberName"
+	</sql>
+
+    <sql id="amsAddressJoins">
+    </sql>
+
+    <select id="get" resultType="AmsAddress">
+        SELECT
+        <include refid="amsAddressColumns"/>
+        FROM ams_address a
+        <include refid="amsAddressJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getByThreeCode" resultType="AmsAddress">
+        SELECT
+        <include refid="amsAddressColumns"/>
+        FROM
+        ams_address a
+        <include refid="amsAddressJoins"/>
+        WHERE a.THREE_CODE = #{ threeCode } and a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+
+    <select id="findList" resultType="AmsAddress">
+        SELECT
+        <include refid="amsAddressColumns"/>
+        FROM ams_address a
+        <include refid="amsAddressJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="AmsAddress">
+        SELECT
+        <include refid="amsAddressColumns"/>
+        FROM ams_address a
+        <include refid="amsAddressJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findTypeCode" resultType="map" parameterType="AutoCompleteParams">
+        SELECT
+        <include refid="amsAddressColumns"/>
+        FROM ams_address a
+        <where>
+            a.three_code LIKE '%'||#{ q }||'%'
+        </where>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO ams_address(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			three_code,
+			four_code,
+			ch_name,
+			en_name,
+			fm_name,
+			ch_shortname,
+			foreignornot,
+			memberornot,
+			foreign_name,
+			member_name
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{threeCode},
+			#{fourCode},
+			#{chName},
+			#{enName},
+			#{fmName},
+			#{chShortname},
+			#{foreignornot},
+			#{memberornot},
+			#{foreignName},
+			#{memberName}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE ams_address SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			three_code = #{threeCode},
+			four_code = #{fourCode},
+			ch_name = #{chName},
+			en_name = #{enName},
+			fm_name = #{fmName},
+			ch_shortname = #{chShortname},
+			foreignornot = #{foreignornot},
+			memberornot = #{memberornot},
+			foreign_name = #{foreignName},
+			member_name = #{memberName}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE ams_address SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

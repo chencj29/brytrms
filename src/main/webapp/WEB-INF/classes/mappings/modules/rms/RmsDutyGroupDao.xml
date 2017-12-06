@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsDutyGroupDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsDutyGroupColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.post_id AS "postId",
+		a.post_name AS "postName",
+		a.group_name AS "groupName",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.period AS "period",
+		a.worker_count AS "workerCount"
+	</sql>
+
+	<sql id="rmsDutyGroupJoins">
+	</sql>
+
+	<select id="get" resultType="RmsDutyGroup">
+		SELECT
+		<include refid="rmsDutyGroupColumns"/>
+		FROM rms_duty_group a
+		<include refid="rmsDutyGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RmsDutyGroup">
+		SELECT
+		<include refid="rmsDutyGroupColumns"/>
+		FROM rms_duty_group a
+		<include refid="rmsDutyGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				AND a.post_id = #{postId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RmsDutyGroup">
+		SELECT
+		<include refid="rmsDutyGroupColumns"/>
+		FROM rms_duty_group a
+		<include refid="rmsDutyGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				AND a.post_id = #{postId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_duty_group(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			post_id,
+			post_name,
+			group_name,
+			start_time,
+			end_time,
+			period,
+			worker_count
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{postId},
+			#{postName},
+			#{groupName},
+			#{startTime},
+			#{endTime},
+			#{period},
+			#{workerCount}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE rms_duty_group SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			post_id = #{postId},
+			post_name = #{postName},
+			group_name = #{groupName},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			period = #{period},
+			worker_count = #{workerCount}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE rms_duty_group SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findDuplicateDutyGroup" resultType="java.lang.Integer">
+		SELECT count(*) FROM RMS_DUTY_GROUP
+		WHERE ((to_date(#{startDate},'hh24:mi:ss') &lt;= to_date(START_TIME,'hh24:mi:ss') AND to_date(#{endDate},'hh24:mi:ss') &gt; to_date(START_TIME,'hh24:mi:ss'))
+		OR
+		(to_date(#{startDate},'hh24:mi:ss') &lt;= to_date(START_TIME,'hh24:mi:ss') AND to_date(#{endDate},'hh24:mi:ss') &gt;= to_date(END_TIME,'hh24:mi:ss'))
+		OR
+		(to_date(#{startDate},'hh24:mi:ss') &gt; to_date(START_TIME,'hh24:mi:ss') AND to_date(#{endDate},'hh24:mi:ss') &lt; to_date(END_TIME,'hh24:mi:ss'))
+		OR
+		(to_date(#{startDate},'hh24:mi:ss') &lt; to_date(END_TIME,'hh24:mi:ss') AND to_date(#{endDate},'hh24:mi:ss') &gt;= to_date(END_TIME,'hh24:mi:ss'))
+		)
+		AND post_id = #{postId}
+	</select>
+
+</mapper>

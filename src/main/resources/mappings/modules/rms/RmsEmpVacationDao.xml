@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.RmsEmpVacationDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="rmsEmpVacationColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.dept_id AS "deptId",
+		a.dept_name AS "deptName",
+		a.post_id AS "postId",
+		a.post_name AS "postName",
+		a.emp_name AS "empName",
+		a.job_num AS "jobNum",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.vacation_tpye AS "vacationTpye",
+		a.vacation_reason AS "vacationReason",
+		a.comments AS "comments"
+	</sql>
+
+	<sql id="rmsEmpVacationColumns2">
+		a.dept_id AS "deptId",
+		a.dept_name AS "deptName",
+		a.post_id AS "postId",
+		a.post_name AS "postName",
+		a.emp_name AS "empName",
+		a.job_num AS "jobNum",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.vacation_tpye AS "vacationTpye",
+		a.vacation_reason AS "vacationReason",
+		a.comments AS "comments"
+	</sql>
+
+	<sql id="rmsEmpVacationJoins">
+	</sql>
+
+	<select id="get" resultType="RmsEmpVacation">
+		SELECT
+		<include refid="rmsEmpVacationColumns"/>
+		FROM rms_emp_vacation a
+		<include refid="rmsEmpVacationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RmsEmpVacation">
+		SELECT
+		<include refid="rmsEmpVacationColumns"/>
+		FROM rms_emp_vacation a
+		<include refid="rmsEmpVacationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="postId != null and postId != ''">
+				AND post_id = #{postId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RmsEmpVacation">
+		SELECT
+		<include refid="rmsEmpVacationColumns"/>
+		FROM rms_emp_vacation a
+		<include refid="rmsEmpVacationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_emp_vacation(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			dept_id,
+			dept_name,
+			post_id,
+			post_name,
+			emp_name,
+			job_num,
+			start_time,
+			end_time,
+			vacation_tpye,
+			vacation_reason,
+			comments
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{deptId},
+			#{deptName},
+			#{postId},
+			#{postName},
+			#{empName},
+			#{jobNum},
+			#{startTime},
+			#{endTime},
+			#{vacationTpye},
+			#{vacationReason},
+			#{comments}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE rms_emp_vacation SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			dept_id = #{deptId},
+			dept_name = #{deptName},
+			post_id = #{postId},
+			post_name = #{postName},
+			emp_name = #{empName},
+			job_num = #{jobNum},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			vacation_tpye = #{vacationTpye},
+			vacation_reason = #{vacationReason},
+			comments = #{comments}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE rms_emp_vacation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<sql id="rmsEmpColumns">
+		e.id AS "id",
+		e.create_by AS "createBy.id",
+		e.create_date AS "createDate",
+		e.update_by AS "updateBy.id",
+		e.update_date AS "updateDate",
+		e.remarks AS "remarks",
+		e.del_flag AS "delFlag",
+		e.dept AS "dept",
+		e.post AS "post",
+		e.emp_name AS "empName",
+		e.sex AS "sex",
+		e.duty AS "duty",
+		e.skill AS "skill",
+		e.aircraft_terminal_code AS "aircraftTerminalCode",
+		e.dept_id AS "deptId",
+		e.post_id AS "postId",
+		e.DUTY_GROUP AS "dutyGroup",
+		e.JOB_NUM AS "jobNum"
+	</sql>
+
+	<select id="findEmpWrapperByPostId" resultType="EmpWrapper">
+		SELECT
+		e.id AS "id",
+		e.create_by AS "createBy.id",
+		e.create_date AS "createDate",
+		e.update_by AS "updateBy.id",
+		e.update_date AS "updateDate",
+		e.remarks AS "remarks",
+		e.del_flag AS "delFlag",
+		e.dept AS "dept",
+		e.post AS "post",
+		e.emp_name AS "empName",
+		e.sex AS "sex",
+		e.duty AS "duty",
+		e.skill AS "skill",
+		e.aircraft_terminal_code AS "aircraftTerminalCode",
+		e.dept_id AS "deptId",
+		e.post_id AS "postId",
+		e.DUTY_GROUP AS "dutyGroup",
+		e.JOB_NUM AS "jobNum"
+		FROM RMS_EMP e
+		WHERE e.del_flag = 0 AND e.post_id = #{postId}
+	</select>
+
+	<select id="findVacationByDateAndEmpIds" resultType="RmsEmpVacation">
+		SELECT
+		<include refid="rmsEmpVacationColumns"/>
+		FROM rms_emp_vacation a
+		<include refid="rmsEmpVacationJoins"/>
+		<where>
+			a.del_flag = 0
+			<if test="jobNum != null and jobNum != ''">
+				AND a.job_num = #{jobNum}
+			</if>
+			<if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND a.start_time &gt;= #{startDate} AND a.end_time &lt;= #{endDate}
+			</if>
+		</where>
+		ORDER BY a.update_date DESC
+	</select>
+
+</mapper>

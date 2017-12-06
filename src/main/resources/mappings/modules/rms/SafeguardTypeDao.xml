@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardTypeDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="safeguardTypeColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.safeguard_type_code AS "safeguardTypeCode",
+		a.safeguard_type_name AS "safeguardTypeName",
+		a.parent_safeguard_code AS "parentSafeguardCode",
+		a.parent_safeguard_name AS "parentSafeguardName",
+		a.type AS "type",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.aircraft_code AS "aircraftCode",
+		a.aircraft_id AS "aircraftId",
+		a.redundant1 AS "redundant1",
+		a.redundant2 AS "redundant2",
+		a.redundant3 AS "redundant3",
+		a.redundant4 AS "redundant4",
+		a.redundant5 AS "redundant5",
+		a.redundant6 AS "redundant6",
+		a.redundant7 AS "redundant7",
+		a.redundant8 AS "redundant8",
+		a.redundant9 AS "redundant9"
+	</sql>
+	
+	<sql id="safeguardTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="SafeguardType">
+		SELECT 
+			<include refid="safeguardTypeColumns"/>
+		FROM rms_safeguard_type a
+		<include refid="safeguardTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeguardType">
+		SELECT 
+			<include refid="safeguardTypeColumns"/>
+		FROM rms_safeguard_type a
+		<include refid="safeguardTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.parent_safeguard_code = #{parentSafeguardCode}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SafeguardType">
+		SELECT 
+			<include refid="safeguardTypeColumns"/>
+		FROM rms_safeguard_type a
+		<include refid="safeguardTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findByParentCode" resultType="SafeguardType">
+		SELECT
+		<include refid="safeguardTypeColumns"/>
+		FROM rms_safeguard_type a
+		<include refid="safeguardTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		  	and a.PARENT_SAFEGUARD_CODE = #{parentSafeguardCode}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rms_safeguard_type(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			safeguard_type_code,
+			safeguard_type_name,
+			parent_safeguard_code,
+			parent_safeguard_name,
+			type,
+			flight_company_code,
+			flight_company_name,
+			aircraft_code,
+			aircraft_id,
+			redundant1,
+			redundant2,
+			redundant3,
+			redundant4,
+			redundant5,
+			redundant6,
+			redundant7,
+			redundant8,
+			redundant9
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{safeguardTypeCode},
+			#{safeguardTypeName},
+			#{parentSafeguardCode},
+			#{parentSafeguardName},
+			#{type},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{aircraftCode},
+			#{aircraftId},
+			#{redundant1},
+			#{redundant2},
+			#{redundant3},
+			#{redundant4},
+			#{redundant5},
+			#{redundant6},
+			#{redundant7},
+			#{redundant8},
+			#{redundant9}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rms_safeguard_type SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			safeguard_type_code = #{safeguardTypeCode},
+			safeguard_type_name = #{safeguardTypeName},
+			parent_safeguard_code = #{parentSafeguardCode},
+			parent_safeguard_name = #{parentSafeguardName},
+			type = #{type},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			aircraft_code = #{aircraftCode},
+			aircraft_id = #{aircraftId},
+			redundant1 = #{redundant1},
+			redundant2 = #{redundant2},
+			redundant3 = #{redundant3},
+			redundant4 = #{redundant4},
+			redundant5 = #{redundant5},
+			redundant6 = #{redundant6},
+			redundant7 = #{redundant7},
+			redundant8 = #{redundant8},
+			redundant9 = #{redundant9}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE from rms_safeguard_type WHERE id = #{id}
+	</delete>
+
+	<select id="getSubList" resultType="SafeguardType">
+		SELECT
+		<include refid="safeguardTypeColumns"/>
+		FROM rms_safeguard_type a
+		<include refid="safeguardTypeJoins"/>
+		<where>
+			a.del_flag = 0
+			and a.type = 2
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY safeguard_type_code
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

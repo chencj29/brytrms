@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SecurityServiceInfoDao">
+
+    <sql id="securityServiceInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_dynamic_ic AS "flightDynamicIc",
+		a.service_info AS "serviceInfo"
+	</sql>
+
+    <sql id="flightPlanPairColumns">
+		b.flight_dynimic_id AS "flightDynimicId",
+		b.flight_num AS "flightNum",
+		b.place_num AS "placeNum",
+		b.flight_company_id AS "flightCompanyId",
+		b.flight_company_code AS "flightCompanyCode",
+		b.flight_company_name AS "flightCompanyName",
+		b.share_flight_num AS "shareFlightNum",
+		b.flight_nature_code AS "flightNatureCode",
+		b.flight_nature_name AS "flightNatureName",
+		b.inout_type_code AS "inoutTypeCode",
+		b.inout_type_name AS "inoutTypeName",
+		b.inout_status_code AS "inoutStatusCode",
+		b.inout_status_name AS "inoutStatusName",
+		b.departure_airport_code AS "departureAirportCode",
+		b.departure_airport_three AS "departureAirportThree",
+		b.departure_airport_name AS "departureAirportName",
+		b.pass_airport_1_code AS "passAirport1Code",
+		b.pass_airport_1_name AS "passAirport1Name",
+		b.pass_airport_2_code AS "passAirport2Code",
+		b.pass_airport_2_name AS "passAirport2Name",
+		b.arrival_airport_code AS "arrivalAirportCode",
+		b.arrival_airport_three AS "arrivalAirportThree",
+		b.arrival_airport_name AS "arrivalAirportName",
+		b.departure_plan_time AS "departurePlanTime",
+		b.arrival_plan_time AS "arrivalPlanTime",
+		b.etd AS "etd",
+		b.eta AS "eta",
+		b.atd AS "atd",
+		b.ata AS "ata",
+		b.travel_time AS "travelTime",
+		b.carousel_num AS "carouselNum",
+		b.delay_resons_code AS "delayResonsCode",
+		b.delay_resons_name AS "delayResonsName",
+		b.delay_resons_remark AS "delayResonsRemark",
+		b.gate_code AS "gateCode",
+		b.gate_name AS "gateName",
+		b.boarding_start_time AS "boardingStartTime",
+		b.boarding_end_time AS "boardingEndTime",
+		b.checkin_island_code AS "checkinIslandCode",
+		b.checkin_island_name AS "checkinIslandName",
+		b.checkin_counter_code AS "checkinCounterCode",
+		b.checkin_counter_name AS "checkinCounterName",
+		b.checkin_start_time AS "checkinStartTime",
+		b.checkin_end_time AS "checkinEndTime",
+		b.delay_time_pend AS "delayTimePend",
+		b.status AS "status",
+		b.status_name AS "statusName",
+		b.flight_properties_id AS "flightPropertiesId",
+		b.flight_attr_code AS "flightAttrCode",
+		b.flight_attr_name AS "flightAttrName",
+		b.plan_day_of_week AS "planDayOfWeek",
+		b.alternate_remarks AS "alterNateRemarks",
+		b.delay_resons_area_code AS "delayResonsAreaCode",
+		b.delay_resons_area_name AS "delayResonsAreaName",
+		b.alternate_area_code AS "alterNateAreaCode",
+		b.alternate_area_name AS "alterNateAreaName",
+		b.cancel_flight_resons AS "cancelFlightResons",
+		b.is_extra_flight AS "isExtraFlight",
+		b.extra_flight_time_pend AS "extraFlightTimePend",
+		b.urge_board_time AS "urgeBoardTime",
+		b.plan_boarding_starttime AS "planBoardingStarttime",
+		b.plan_boarding_endtime AS "planBoardingEndtime",
+		b.guest_time AS "guestTime",
+		b.terminal_id AS "terminalId",
+		b.terminal AS "terminal",
+		b.turn_back_time AS "turnBackTime",
+		b.flight_dynimic_id2 AS "flightDynimicId2",
+		b.flight_num2 AS "flightNum2",
+		b.place_num2 AS "placeNum2",
+		b.flight_company_id2 AS "flightCompanyId2",
+		b.flight_company_code2 AS "flightCompanyCode2",
+		b.flight_company_name2 AS "flightCompanyName2",
+		b.share_flight_num2 AS "shareFlightNum2",
+		b.flight_nature_code2 AS "flightNatureCode2",
+		b.flight_nature_name2 AS "flightNatureName2",
+		b.inout_type_code2 AS "inoutTypeCode2",
+		b.inout_type_name2 AS "inoutTypeName2",
+		b.inout_status_code2 AS "inoutStatusCode2",
+		b.inout_status_name2 AS "inoutStatusName2",
+		b.departure_airport_code2 AS "departureAirportCode2",
+		b.departure_airport_three2 AS "departureAirportThree2",
+		b.departure_airport_name2 AS "departureAirportName2",
+		b.pass_airport_1_code2 AS "passAirport1Code2",
+		b.pass_airport_1_name2 AS "passAirport1Name2",
+		b.pass_airport_2_code2 AS "passAirport2Code2",
+		b.pass_airport_2_name2 AS "passAirport2Name2",
+		b.arrival_airport_code2 AS "arrivalAirportCode2",
+		b.arrival_airport_three2 AS "arrivalAirportThree2",
+		b.arrival_airport_name2 AS "arrivalAirportName2",
+		b.departure_plan_time2 AS "departurePlanTime2",
+		b.arrival_plan_time2 AS "arrivalPlanTime2",
+		b.etd2 AS "etd2",
+		b.eta2 AS "eta2",
+		b.atd2 AS "atd2",
+		b.ata2 AS "ata2",
+		b.travel_time2 AS "travelTime2",
+		b.carousel_num2 AS "carouselNum2",
+		b.delay_resons_code2 AS "delayResonsCode2",
+		b.delay_resons_name2 AS "delayResonsName2",
+		b.delay_resons_remark2 AS "delayResonsRemark2",
+		b.gate_code2 AS "gateCode2",
+		b.gate_name2 AS "gateName2",
+		b.boarding_start_time2 AS "boardingStartTime2",
+		b.boarding_end_time2 AS "boardingEndTime2",
+		b.checkin_island_code2 AS "checkinIslandCode2",
+		b.checkin_island_name2 AS "checkinIslandName2",
+		b.checkin_counter_code2 AS "checkinCounterCode2",
+		b.checkin_counter_name2 AS "checkinCounterName2",
+		b.checkin_start_time2 AS "checkinStartTime2",
+		b.checkin_end_time2 AS "checkinEndTime2",
+		b.delay_time_pend2 AS "delayTimePend2",
+		b.status2 AS "status2",
+		b.status_name2 AS "statusName2",
+		b.flight_properties_id2 AS "flightPropertiesId2",
+		b.flight_attr_code2 AS "flightAttrCode2",
+		b.flight_attr_name2 AS "flightAttrName2",
+		b.plan_day_of_week2 AS "planDayOfWeek2",
+		b.alternate_remarks2 AS "alterNateRemarks2",
+		b.delay_resons_area_code2 AS "delayResonsAreaCode2",
+		b.delay_resons_area_name2 AS "delayResonsAreaName2",
+		b.alternate_area_code2 AS "alterNateAreaCode2",
+		b.alternate_area_name2 AS "alterNateAreaName2",
+		b.cancel_flight_resons2 AS "cancelFlightResons2",
+		b.is_extra_flight2 AS "isExtraFlight2",
+		b.extra_flight_time_pend2 AS "extraFlightTimePend2",
+		b.urge_board_time2 AS "urgeBoardTime2",
+		b.plan_boarding_starttime2 AS "planBoardingStarttime2",
+		b.plan_boarding_endtime2 AS "planBoardingEndtime2",
+		b.guest_time2 AS "guestTime2",
+		b.terminal_id2 AS "terminalId2",
+		b.terminal2 AS "terminal2",
+		b.turn_back_time2 AS "turnBackTime2",
+		b.create_by AS "createBy.id",
+		b.create_date AS "createDate",
+		b.update_by AS "updateBy.id",
+		b.update_date AS "updateDate",
+		b.remarks AS "remarks",
+		b.del_flag AS "delFlag",
+		b.plan_date AS "planDate",
+		b.agent_code AS "agentCode",
+		b.agent_name AS "agentName",
+		b.aircraft_num AS "aircraftNum",
+		b.aircraft_type_code AS "aircraftTypeCode",
+		b.aircraft_type_name AS "aircraftTypeName",
+		b.safecuard_type_code AS "safecuardTypeCode",
+		b.safecuard_type_name AS "safecuardTypeName",
+		b.travel_line AS "travelLine",
+
+		b.delay_status as "delayStatus",
+		b.cancel_flight_status as "cancelFlightStatus",
+		b.ext1 as "ext1",
+		b.ext2 as "ext2",
+		b.ext3 as "ext3",
+		b.ext4 as "ext4",
+		b.ext5 as "ext5",
+		b.ext6 as "ext6",
+		b.ext7 as "ext7",
+		b.ext8 as "ext8",
+		b.ext9 as "ext9",
+		b.ext10 as "ext10",
+		b.ext11 AS "ext11",
+		b.ext12 AS "ext12",
+		b.ext13 AS "ext13",
+		b.ext14 AS "ext14",
+		b.ext15 AS "ext15",
+		b.ext16 AS "ext16",
+		b.ext17 AS "ext17",
+		b.ext18 AS "ext18",
+		b.ext19 AS "ext19",
+		b.ext20 AS "ext20",
+		b.ext21 AS "ext21",
+		b.ext22 AS "ext22",
+		b.ext23 AS "ext23",
+		b.ext24 AS "ext24",
+		b.ext25 AS "ext25",
+		b.delay_status2 as "delayStatus2",
+		b.cancel_flight_status2 as "cancelFlightStatus2",
+	</sql>
+
+    <sql id="securityServiceInfoJoins">
+    </sql>
+
+    <sql id="OciColumns">
+		boarding.inte_boarding_gate_code AS "inteBoardingGateCode",
+		boarding.intl_boarding_gate_code AS "intlBoardingGateCode",
+		departure.inte_departure_hall_code AS "inteDepartureHallCode",
+		departure.intl_departure_hall_code AS "intlDepartureHallCode",
+	</sql>
+
+    <sql id="OciJoins">
+		LEFT JOIN rms_boarding_gate_oci boarding ON boarding.flight_dynamic_id = b.flight_dynimic_id2
+		LEFT JOIN rms_departure_hall_oci departure ON departure.flight_dynamic_id = b.flight_dynimic_id2
+	</sql>
+
+    <select id="get" resultType="SecurityServiceInfo">
+        SELECT
+        <include refid="securityServiceInfoColumns"/>
+        FROM rms_security_service_info a
+        <include refid="securityServiceInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findListWapper" resultType="SecurityPairWrapper">
+        SELECT
+        <include refid="flightPlanPairColumns"/>
+        <include refid="OciColumns"/>
+        <include refid="securityServiceInfoColumns"/>
+        FROM ams_flight_dynamic_pair b LEFT JOIN rms_security_service_info a
+        ON (a.flight_dynamic_ic = b.flight_dynimic_id or a.flight_dynamic_ic = b.flight_dynimic_id2)
+        <include refid="OciJoins"/>
+        <where>
+            <if test="flightDynamicIc != null and flightDynamicIc != ''">
+                AND b.flight_dynamic_ic = #{flightDynamicIc}
+            </if>
+            <if test="serviceInfo != null and serviceInfo != ''">
+                AND b.service_info = #{serviceInfo}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY case when b.flight_dynimic_id is NOT NULL then b.arrival_plan_time else b.departure_plan_time2
+                end
+            </otherwise>
+        </choose>
+    </select>
+
+	<select id="findListWapperByHistory" resultType="SecurityPairWrapper">
+		SELECT
+		<include refid="flightPlanPairColumns"/>
+		<include refid="OciColumns"/>
+		<include refid="securityServiceInfoColumns"/>
+		FROM ams_flight_dynamic_pair b LEFT JOIN rms_security_service_info a
+		ON (a.flight_dynamic_ic = b.flight_dynimic_id or a.flight_dynamic_ic = b.flight_dynimic_id2)
+		<include refid="OciJoins"/>
+		<where>
+			${sqlMap.dsfn}
+			<if test="planDate != null and planDate != ''">
+				AND TO_CHAR(b.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+			</if>
+			<if test="flightCompanyCode != null and flightCompanyCode != ''">
+				AND (a.flight_company_code = #{flightCompanyCode} OR a.flight_company_code2 = #{flightCompanyCode} )
+			</if>
+			<if test="flightNum != null and flightNum != ''">
+				AND (UPPER(b.flight_num) like UPPER('%'||#{flightNum}||'%') OR UPPER(b.flight_num2) like UPPER('%'||#{flightNum}||'%'))
+			</if>
+			<if test="flightNatureCode != null and flightNatureCode != ''">
+				AND (b.flight_Nature_code = #{flightNatureCode} OR b.flight_Nature_code2 = #{flightNatureCode})
+			</if>
+			<if test="flightAttrCode != null and flightAttrCode != ''">
+				AND (b.flight_attr_code = #{flightAttrCode} OR b.flight_attr_code2 = #{flightAttrCode})
+			</if>
+			<if test="addr != null and addr != ''">
+				AND (b.departure_airport_code = #{addr} OR b.pass_airport_1_code = #{addr} OR b.pass_airport_2_code = #{addr} OR b.arrival_airport_code = #{addr}
+				OR b.departure_airport_code2 = #{addr} OR b.pass_airport_1_code2 = #{addr} OR b.pass_airport_2_code2 = #{addr} OR b.arrival_airport_code2 = #{addr})
+			</if>
+			<if test="planDate_begin != null and planDate_begin != ''">
+				<![CDATA[AND b.plan_date >= to_date(#{planDate_begin} ||' 00:00:00','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+			<if test="planDate_end != null and planDate_end != ''">
+				<![CDATA[AND b.plan_date <= to_date(#{planDate_end} ||' 23:59:59','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY case when b.flight_dynimic_id is NOT NULL then b.arrival_plan_time else b.departure_plan_time2
+				end
+			</otherwise>
+		</choose>
+	</select>
+
+    <select id="findAllList" resultType="SecurityServiceInfo">
+        SELECT
+        <include refid="securityServiceInfoColumns"/>
+        FROM rms_security_service_info a
+        <include refid="securityServiceInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findByFlightDynamicIc" resultType="SecurityServiceInfo">
+        SELECT
+        <include refid="securityServiceInfoColumns"/>
+        FROM rms_security_service_info a
+        WHERE a.flight_dynamic_ic = #{flightDynamicIc}
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_security_service_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_dynamic_ic,
+			service_info
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightDynamicIc},
+			#{serviceInfo}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_security_service_info SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_dynamic_ic = #{flightDynamicIc},
+			service_info = #{serviceInfo}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_security_service_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

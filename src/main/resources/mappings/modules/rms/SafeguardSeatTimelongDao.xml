@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardSeatTimelongDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="safeguardSeatTimelongColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.safeguard_type_code AS "safeguardTypeCode",
+		a.safeguard_type_name AS "safeguardTypeName",
+		a.safeguard_process_code AS "safeguardProcessCode",
+		a.safeguard_process_name AS "safeguardProcessName",
+		a.seat_num AS "seatNum",
+		a.safeguard_process_from AS "safeguardProcessFrom",
+		a.safeguard_process_to AS "safeguardProcessTo",
+		a.safeguard_type_id AS "safeguardType.id",
+		a.safeguard_process_id AS "safeguardProcess.id",
+		a.process_compound_name AS "processCompoundName"
+	</sql>
+
+	<sql id="safeguardSeatTimelongJoins">
+	</sql>
+
+	<select id="get" resultType="SafeguardSeatTimelong">
+		SELECT
+		<include refid="safeguardSeatTimelongColumns"/>
+		FROM rms_safeguard_seat_timelong a
+		<include refid="safeguardSeatTimelongJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="SafeguardSeatTimelong">
+		SELECT
+		<include refid="safeguardSeatTimelongColumns"/>
+		FROM rms_safeguard_seat_timelong a
+		<include refid="safeguardSeatTimelongJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SafeguardSeatTimelong">
+		SELECT
+		<include refid="safeguardSeatTimelongColumns"/>
+		FROM rms_safeguard_seat_timelong a
+		<include refid="safeguardSeatTimelongJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO rms_safeguard_seat_timelong(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			safeguard_type_code,
+			safeguard_type_name,
+			safeguard_process_code,
+			safeguard_process_name,
+			seat_num,
+			safeguard_process_from,
+			safeguard_process_to,
+			safeguard_type_id,
+			safeguard_process_id,
+			process_compound_name
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{safeguardTypeCode},
+			#{safeguardTypeName},
+			#{safeguardProcessCode},
+			#{safeguardProcessName},
+			#{seatNum},
+			#{safeguardProcessFrom},
+			#{safeguardProcessTo},
+			#{safeguardType.id},
+			#{safeguardProcess.id},
+			#{processCompoundName}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE rms_safeguard_seat_timelong SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			safeguard_type_code = #{safeguardTypeCode},
+			safeguard_type_name = #{safeguardTypeName},
+			safeguard_process_code = #{safeguardProcessCode},
+			safeguard_process_name = #{safeguardProcessName},
+			seat_num = #{seatNum},
+			safeguard_process_from = #{safeguardProcessFrom},
+			safeguard_process_to = #{safeguardProcessTo},
+			safeguard_type_id = #{safeguardType.id},
+			safeguard_process_id = #{safeguardProcess.id},
+			process_compound_name = #{processCompoundName}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE rms_safeguard_seat_timelong SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteByTypeProcess">
+		DELETE FROM rms_safeguard_seat_timelong
+		WHERE safeguard_type_id = #{safeguardType.id}
+		AND seat_num = #{seatNum}
+	</delete>
+
+	<select id="queryListBySeatSafeguardTypeCode" resultType="SafeguardSeatTimelong">
+		SELECT
+		<include refid="safeguardSeatTimelongColumns"/>
+		FROM RMS_SAFEGUARD_SEAT_TIMELONG a
+		WHERE a.seat_num = #{seatNum}
+		AND a.safeguard_type_code = #{safeguardTypeCode}
+	</select>
+
+
+</mapper>

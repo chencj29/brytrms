@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rule-set> 
+  <import-parameter-library path="jcr:/到港门/系统参数.pl.xml"/>  
+  <import-variable-library path="jcr:/到港门/系统变量.vl.xml"/>  
+  <import-constant-library path="jcr:/到港门/系统常量.cl.xml"/>  
+  <import-action-library path="jcr:/到港门/系统动作.al.xml"/>  
+  <rule name="国内航班" salience="10"> 
+    <if> 
+      <and> 
+        <atom op="Equals"> 
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method"> 
+            <parameter name="航班动态" type="Object"> 
+              <value var-category="航班动态信息" type="VariableCategory"/> 
+            </parameter> 
+          </left>  
+          <value content="国内航班" type="Input"/> 
+        </atom> 
+      </and> 
+    </if>  
+    <then> 
+      <var-assign var-category="到港门占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable"> 
+        <value content="1" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="expectedArrivalGateNum" var-label="预计占用到港门个数" datatype="Integer" type="variable"> 
+        <value content="1" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="inteArrivalGateCode" var-label="到港门编号(国内)" datatype="String" type="variable"> 
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableArrivalGateByNature" method-label="获取到港门" type="Method"> 
+          <parameter name="资源类型" type="String"> 
+            <value const-category="资源属性" const="1" const-label="国内航段资源" type="Constant"/> 
+          </parameter> 
+        </value> 
+      </var-assign> 
+    </then> 
+  </rule>  
+  <rule name="国际航班" salience="10"> 
+    <if> 
+      <and> 
+        <atom op="Equals"> 
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method"> 
+            <parameter name="航班动态" type="Object"> 
+              <value var-category="航班动态信息" type="VariableCategory"/> 
+            </parameter> 
+          </left>  
+          <value content="国际航班" type="Input"/> 
+        </atom> 
+      </and> 
+    </if>  
+    <then> 
+      <var-assign var-category="到港门占用信息" var="expectedArrivalGateNum" var-label="预计占用到港门个数" datatype="Integer" type="variable"> 
+        <value content="1" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable"> 
+        <value content="2" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="intlArrivalGateCode" var-label="到港门编号(国际)" datatype="String" type="variable"> 
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableArrivalGateByNature" method-label="获取到港门" type="Method"> 
+          <parameter name="资源类型" type="String"> 
+            <value const-category="资源属性" const="2" const-label="国际航段资源" type="Constant"/> 
+          </parameter> 
+        </value> 
+      </var-assign> 
+    </then> 
+  </rule>  
+  <rule name="混合航班" salience="10"> 
+    <if> 
+      <and> 
+        <atom op="Equals"> 
+          <left bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getFlightAttrName" method-label="获取航班属性" type="method"> 
+            <parameter name="航班动态" type="Object"> 
+              <value var-category="航班动态信息" type="VariableCategory"/> 
+            </parameter> 
+          </left>  
+          <value content="混合航班" type="Input"/> 
+        </atom> 
+      </and> 
+    </if>  
+    <then> 
+      <var-assign var-category="到港门占用信息" var="flightDynamicNature" var-label="航班属性(1 - 国内, 2 - 国际, 3 - 混合)" datatype="String" type="variable"> 
+        <value content="3" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="expectedArrivalGateNum" var-label="预计占用到港门个数" datatype="Integer" type="variable"> 
+        <value content="2" type="Input"/> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="inteArrivalGateCode" var-label="到港门编号(国内)" datatype="String" type="variable"> 
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableArrivalGateByNature" method-label="获取到港门" type="Method"> 
+          <parameter name="资源类型" type="String"> 
+            <value const-category="资源属性" const="1" const-label="国内航段资源" type="Constant"/> 
+          </parameter> 
+        </value> 
+      </var-assign>  
+      <var-assign var-category="到港门占用信息" var="intlArrivalGateCode" var-label="到港门编号(国际)" datatype="String" type="variable"> 
+        <value bean-name="resourceDistributionMethods" bean-label="资源分配方法集" method-name="getAvailableArrivalGateByNature" method-label="获取到港门" type="Method"> 
+          <parameter name="资源类型" type="String"> 
+            <value const-category="资源属性" const="2" const-label="国际航段资源" type="Constant"/> 
+          </parameter> 
+        </value> 
+      </var-assign> 
+    </then> 
+  </rule> 
+</rule-set>

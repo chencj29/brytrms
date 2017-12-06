@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightCompanySubInfoDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightCompanySubInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_company_info_id AS "flightCompanyInfoId",
+		a.sub_code AS "subCode",
+		a.three_code AS "threeCode",
+		a.chinese_name AS "chineseName",
+		a.english_name AS "englishName",
+		a.isbase AS "isbase"
+	</sql>
+
+	<sql id="flightCompanySubInfoColumns_EXT">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_company_info_id AS "flightCompanyInfoId",
+		a.sub_code AS "subCode",
+		a.three_code AS "threeCode",
+		a.chinese_name AS "chineseName",
+		a.english_name AS "englishName",
+		a.isbase AS "isbase",
+		b.chinese_name AS "flightCompanyInfoName"
+	</sql>
+	
+	<sql id="flightCompanySubInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FlightCompanySubInfo">
+		SELECT 
+			<include refid="flightCompanySubInfoColumns"/>
+		FROM ams_flight_company_sub_info a
+		<include refid="flightCompanySubInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlightCompanySubInfo">
+		SELECT 
+			<include refid="flightCompanySubInfoColumns"/>
+		FROM ams_flight_company_sub_info a
+		<include refid="flightCompanySubInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="flightCompanyInfoId != null and flightCompanyInfoId != ''">
+				AND a.flight_company_info_id = #{flightCompanyInfoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findList_EXT" resultType="FlightCompanySubInfo">
+		SELECT
+		<include refid="flightCompanySubInfoColumns_EXT"/>
+		FROM ams_flight_company_sub_info a LEFT JOIN ams_flight_company_info b ON a.flight_company_info_id = b.id
+		<include refid="flightCompanySubInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightCompanySubInfo">
+		SELECT 
+			<include refid="flightCompanySubInfoColumns"/>
+		FROM ams_flight_company_sub_info a
+		<include refid="flightCompanySubInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_flight_company_sub_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_company_info_id,
+			sub_code,
+			three_code,
+			chinese_name,
+			english_name,
+			isbase
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightCompanyInfoId},
+			#{subCode},
+			#{threeCode},
+			#{chineseName},
+			#{englishName},
+			#{isbase}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_flight_company_sub_info SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_company_info_id = #{flightCompanyInfoId},
+			sub_code = #{subCode},
+			three_code = #{threeCode},
+			chinese_name = #{chineseName},
+			english_name = #{englishName},
+			isbase = #{isbase}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_flight_company_sub_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAllSub">
+		UPDATE ams_flight_company_sub_info SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE flight_company_info_id = #{flightCompanyInfoId}
+	</update>
+	
+</mapper>

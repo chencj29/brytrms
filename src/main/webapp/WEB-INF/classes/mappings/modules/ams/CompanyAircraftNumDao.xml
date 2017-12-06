@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.CompanyAircraftNumDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="companyAircraftNumColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.flight_company_sub_code AS "flightCompanySubCode",
+		a.flight_company_sub_name AS "flightCompanySubName",
+		a.aircraft_parameters_id AS "aircraftParametersId",
+		a.aircraft_model AS "aircraftModel",
+		a.aircraft_main_model AS "aircraftMainModel",
+		a.aircraft_sub_model AS "aircraftSubModel",
+		a.maxnum_takeoff_weight AS "maxnumTakeoffWeight",
+		a.maxnum_playload AS "maxnumPlayload",
+		a.maxnum_seat AS "maxnumSeat",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.aircraft_num AS "aircraftNum"
+	</sql>
+	
+	<sql id="companyAircraftNumJoins">
+	</sql>
+    
+	<select id="get" resultType="CompanyAircraftNum">
+		SELECT 
+			<include refid="companyAircraftNumColumns"/>
+		FROM ams_company_aircraft_num a
+		<include refid="companyAircraftNumJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="queryByFlightDynamicCodeAndAircraftNum" resultType="CompanyAircraftNum">
+		SELECT
+			<include refid="companyAircraftNumColumns"/>
+		FROM ams_company_aircraft_num a
+			<include refid="companyAircraftNumJoins"/>
+		WHERE a.flight_company_code = #{param1} AND a.aircraft_num = #{param2}
+	</select>
+
+	<select id="findList" resultType="CompanyAircraftNum">
+		SELECT 
+			<include refid="companyAircraftNumColumns"/>
+		FROM ams_company_aircraft_num a
+		<include refid="companyAircraftNumJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CompanyAircraftNum">
+		SELECT 
+			<include refid="companyAircraftNumColumns"/>
+		FROM ams_company_aircraft_num a
+		<include refid="companyAircraftNumJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ams_company_aircraft_num(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_company_code,
+			flight_company_name,
+			flight_company_sub_code,
+			flight_company_sub_name,
+			aircraft_parameters_id,
+			aircraft_model,
+			aircraft_main_model,
+			aircraft_sub_model,
+			maxnum_takeoff_weight,
+			maxnum_playload,
+			maxnum_seat,
+			aircraft_type_code,
+			aircraft_type_name,
+			aircraft_num
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{flightCompanySubCode},
+			#{flightCompanySubName},
+			#{aircraftParametersId},
+			#{aircraftModel},
+			#{aircraftMainModel},
+			#{aircraftSubModel},
+			#{maxnumTakeoffWeight},
+			#{maxnumPlayload},
+			#{maxnumSeat},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{aircraftNum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ams_company_aircraft_num SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			flight_company_sub_code = #{flightCompanySubCode},
+			flight_company_sub_name = #{flightCompanySubName},
+			aircraft_parameters_id = #{aircraftParametersId},
+			aircraft_model = #{aircraftModel},
+			aircraft_main_model = #{aircraftMainModel},
+			aircraft_sub_model = #{aircraftSubModel},
+			maxnum_takeoff_weight = #{maxnumTakeoffWeight},
+			maxnum_playload = #{maxnumPlayload},
+			maxnum_seat = #{maxnumSeat},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			aircraft_num = #{aircraftNum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ams_company_aircraft_num SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

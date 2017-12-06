@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.SafeguardDurationDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="safeguardDurationColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.safeguard_type_id AS "safeguardTypeId",
+		a.safeguard_type_code AS "safeguardTypeCode",
+		a.safeguard_type_name AS "safeguardTypeName",
+		a.min_seating AS "minSeating",
+		a.max_seating AS "maxSeating",
+		a.time_length AS "timeLength",
+		a.redundant1 AS "redundant1",
+		a.redundant2 AS "redundant2",
+		a.redundant3 AS "redundant3",
+		a.redundant4 AS "redundant4",
+		a.redundant5 AS "redundant5",
+		a.redundant6 AS "redundant6",
+		a.redundant7 AS "redundant7",
+		a.redundant8 AS "redundant8",
+		a.redundant9 AS "redundant9"
+	</sql>
+
+    <sql id="safeguardDurationJoins">
+    </sql>
+
+    <select id="get" resultType="SafeguardDuration">
+        SELECT
+        <include refid="safeguardDurationColumns"/>
+        FROM rms_safeguard_duration a
+        <include refid="safeguardDurationJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="SafeguardDuration">
+        SELECT
+        <include refid="safeguardDurationColumns"/>
+        FROM rms_safeguard_duration a
+        <include refid="safeguardDurationJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            and a.safeguard_type_id = #{safeguardTypeId}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="SafeguardDuration">
+        SELECT
+        <include refid="safeguardDurationColumns"/>
+        FROM rms_safeguard_duration a
+        <include refid="safeguardDurationJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_safeguard_duration(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			safeguard_type_id,
+			safeguard_type_code,
+			safeguard_type_name,
+			min_seating,
+			max_seating,
+			time_length,
+			redundant1,
+			redundant2,
+			redundant3,
+			redundant4,
+			redundant5,
+			redundant6,
+			redundant7,
+			redundant8,
+			redundant9
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{safeguardTypeId},
+			#{safeguardTypeCode},
+			#{safeguardTypeName},
+			#{minSeating},
+			#{maxSeating},
+			#{timeLength},
+			#{redundant1},
+			#{redundant2},
+			#{redundant3},
+			#{redundant4},
+			#{redundant5},
+			#{redundant6},
+			#{redundant7},
+			#{redundant8},
+			#{redundant9}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_safeguard_duration SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			safeguard_type_id = #{safeguardTypeId},
+			safeguard_type_code = #{safeguardTypeCode},
+			safeguard_type_name = #{safeguardTypeName},
+			min_seating = #{minSeating},
+			max_seating = #{maxSeating},
+			time_length = #{timeLength},
+			redundant1 = #{redundant1},
+			redundant2 = #{redundant2},
+			redundant3 = #{redundant3},
+			redundant4 = #{redundant4},
+			redundant5 = #{redundant5},
+			redundant6 = #{redundant6},
+			redundant7 = #{redundant7},
+			redundant8 = #{redundant8},
+			redundant9 = #{redundant9}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+		DELETE rms_safeguard_duration WHERE id = #{id}
+	</delete>
+
+    <select id="getLongTime" resultType="Long">
+		select to_number(time_length) from rms_safeguard_duration WHERE
+		ROWNUM = 1 AND safeguard_type_code = #{safeguardTypeCode} AND max_seating = #{maxSeating}
+	</select>
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.ResourceMockDistInfoDao">
+
+    <sql id="resourceMockDistInfoColumns">
+		a.id AS "id",
+		a.mock_start_date AS "mockStartDate",
+		a.package_name AS "packageName",
+		a.package_code AS "packageCode",
+		a.filter_disted_res AS "filterDistedRes",
+		a.resource_type AS "resourceType",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.omit_oci_datas AS "omitOciDatas",
+		a.mock_over_date AS "mockOverDate"
+	</sql>
+
+    <sql id="resourceMockDistInfoJoins">
+    </sql>
+
+    <select id="get" resultType="ResourceMockDistInfo">
+        SELECT
+        <include refid="resourceMockDistInfoColumns"/>
+        FROM rms_resource_mock_dist_info a
+        <include refid="resourceMockDistInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ResourceMockDistInfo">
+        SELECT
+        <include refid="resourceMockDistInfoColumns"/>
+        FROM rms_resource_mock_dist_info a
+        <include refid="resourceMockDistInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="ResourceMockDistInfo">
+        SELECT
+        <include refid="resourceMockDistInfoColumns"/>
+        FROM rms_resource_mock_dist_info a
+        <include refid="resourceMockDistInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_resource_mock_dist_info(
+			id,
+			mock_start_date,
+			package_name,
+			package_code,
+			filter_disted_res,
+			resource_type,
+			del_flag,
+			remarks,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			omit_oci_datas,
+			mock_over_date
+		) VALUES (
+			#{id},
+			#{mockStartDate},
+			#{packageName},
+			#{packageCode},
+			#{filterDistedRes},
+			#{resourceType},
+			#{delFlag},
+			#{remarks},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{omitOciDatas},
+			#{mockOverDate}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_resource_mock_dist_info SET 	
+			mock_start_date = #{mockStartDate},
+			package_name = #{packageName},
+			package_code = #{packageCode},
+			filter_disted_res = #{filterDistedRes},
+			resource_type = #{resourceType},
+			remarks = #{remarks},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			omit_oci_datas = #{omitOciDatas},
+			mock_over_date = #{mockOverDate}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM rms_resource_mock_dist_info WHERE id = #{id}
+	</update>
+
+    <select id="listByUser" parameterType="map" resultType="ResourceMockDistInfo">
+        SELECT
+        <include refid="resourceMockDistInfoColumns"/>
+        FROM rms_resource_mock_dist_info a
+        where a.del_flag = 0 and a.create_By = #{userId} AND resource_type = #{resourceType} order by create_date desc
+    </select>
+</mapper>

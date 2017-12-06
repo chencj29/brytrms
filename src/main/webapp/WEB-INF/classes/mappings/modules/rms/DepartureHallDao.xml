@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rms.dao.DepartureHallDao">
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+    <sql id="departureHallColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.departure_hall_num AS "departureHallNum",
+		a.departure_hall_status AS "departureHallStatus",
+		a.departure_hall_nature AS "departureHallNature",
+		a.aircraft_terminal_code AS "aircraftTerminalCode",
+		a.order_index as "orderIndex"
+	</sql>
+
+    <sql id="departureHallJoins">
+    </sql>
+
+    <select id="get" resultType="DepartureHall">
+        SELECT
+        <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a
+        <include refid="departureHallJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DepartureHall">
+        SELECT
+        <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a
+        <include refid="departureHallJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="DepartureHall">
+        SELECT
+        <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a
+        <include refid="departureHallJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.order_index asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO rms_departure_hall(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			departure_hall_num,
+			departure_hall_status,
+			departure_hall_nature,
+			aircraft_terminal_code,
+			order_index
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{departureHallNum},
+			#{departureHallStatus},
+			#{departureHallNature},
+			#{aircraftTerminalCode},
+			#{orderIndex}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE rms_departure_hall SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			departure_hall_num = #{departureHallNum},
+			departure_hall_status = #{departureHallStatus},
+			departure_hall_nature = #{departureHallNature},
+			aircraft_terminal_code = #{aircraftTerminalCode},
+			order_index = #{orderIndex}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE rms_departure_hall SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+    <select id="findByDepartureHallNum" parameterType="java.util.List" resultType="DepartureHall">
+        SELECT
+        <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a WHERE departure_hall_num IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND del_flag = 0
+    </select>
+
+    <select id="getByCode" resultType="DepartureHall">
+        SELECT
+        <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a
+        <include refid="departureHallJoins"/>
+        WHERE a.departure_hall_num = #{departureHallCode} AND DEL_FLAG = 0
+    </select>
+
+    <select id="findAvailableDepartureHallByNature" resultType="DepartureHall">
+        SELECT <include refid="departureHallColumns"/>
+        FROM rms_departure_hall a WHERE a.departure_hall_nature = #{nature} AND a.DEL_FLAG = '0'
+    </select>
+
+
+</mapper>

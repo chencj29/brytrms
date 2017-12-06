@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ams.dao.FlightDynamicHistoryDao">
+	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/>-->
+	<sql id="flightDynamicHistoryColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_plan_id AS "flightPlan.id",
+		a.plan_date AS "planDate",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.flight_num AS "flightNum",
+		a.aircraft_num AS "aircraftNum",
+		a.flight_company_id AS "flightCompanyInfo.id",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.place_num AS "placeNum",
+		a.share_flight_num AS "shareFlightNum",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.inout_status_code AS "inoutStatusCode",
+		a.inout_status_name AS "inoutStatusName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_three AS "departureAirportThree",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_id AS "passAirport1.id",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_id AS "passAirport2.id",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_three AS "arrivalAirportThree",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.etd AS "etd",
+		a.eta AS "eta",
+		a.atd AS "atd",
+		a.ata AS "ata",
+		a.travel_time AS "travelTime",
+		a.carousel_num AS "carouselNum",
+		a.vip AS "vip",
+		a.delay_resons_code AS "delayResonsCode",
+		a.delay_resons_name AS "delayResonsName",
+		a.delay_resons_remark AS "delayResonsRemark",
+		a.gate_code AS "gateCode",
+		a.gate_name AS "gateName",
+		a.boarding_start_time AS "boardingStartTime",
+		a.boarding_end_time AS "boardingEndTime",
+		a.checkin_island_code AS "checkinIslandCode",
+		a.checkin_island_name AS "checkinIslandName",
+		a.checkin_counter_code AS "checkinCounterCode",
+		a.checkin_counter_name AS "checkinCounterName",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.delay_time_pend AS "delayTimePend",
+		a.status AS  "status",
+		a.status_name AS  "statusName",
+		a.alternate_remarks AS "alterNateRemarks",
+		a.flight_properties_id AS "flightProperties.id",
+	    a.flight_attr_code AS "flightAttrCode",
+	    a.flight_attr_name AS "flightAttrName",
+	    a.PLAN_DAY_OF_WEEK AS "planDayOfWeek",
+
+	    a.delay_status as "delayStatus",
+     	a.cancel_flight_status as "cancelFlightStatus",
+     	a.ext1 as "ext1",
+     	a.ext2 as "ext2",
+     	a.ext3 as "ext3",
+     	a.ext4 as "ext4",
+     	a.ext5 as "ext5",
+     	a.ext6 as "ext6",
+     	a.ext7 as "ext7",
+     	a.ext8 as "ext8",
+     	a.ext9 as "ext9",
+     	a.ext10 as "ext10",
+     	a.ext11 AS "ext11",
+		a.ext12 AS "ext12",
+		a.ext13 AS "ext13",
+		a.ext14 AS "ext14",
+		a.ext15 AS "ext15",
+		a.ext16 AS "ext16",
+		a.ext17 AS "ext17",
+		a.ext18 AS "ext18",
+		a.ext19 AS "ext19",
+		a.ext20 AS "ext20",
+		a.ext21 AS "ext21",
+		a.ext22 AS "ext22",
+		a.ext23 AS "ext23",
+		a.ext24 AS "ext24",
+		a.ext25 AS "ext25"
+	</sql>
+
+	<sql id="flightDynamicHistoryJoins">
+	</sql>
+
+	<sql id="flightDynamicColumnsWithoutId">
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.flight_plan_id AS "flightPlan.id",
+		a.plan_date AS "planDate",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.flight_num AS "flightNum",
+		a.aircraft_num AS "aircraftNum",
+		a.flight_company_id AS "flightCompanyInfo.id",
+		a.flight_company_code AS "flightCompanyCode",
+		a.flight_company_name AS "flightCompanyName",
+		a.aircraft_type_code AS "aircraftTypeCode",
+		a.aircraft_type_name AS "aircraftTypeName",
+		a.place_num AS "placeNum",
+		a.share_flight_num AS "shareFlightNum",
+		a.flight_nature_code AS "flightNatureCode",
+		a.flight_nature_name AS "flightNatureName",
+		a.inout_type_code AS "inoutTypeCode",
+		a.inout_type_name AS "inoutTypeName",
+		a.inout_status_code AS "inoutStatusCode",
+		a.inout_status_name AS "inoutStatusName",
+		a.departure_airport_code AS "departureAirportCode",
+		a.departure_airport_three AS "departureAirportThree",
+		a.departure_airport_name AS "departureAirportName",
+		a.pass_airport_1_id AS "passAirport1.id",
+		a.pass_airport_1_code AS "passAirport1Code",
+		a.pass_airport_1_name AS "passAirport1Name",
+		a.pass_airport_2_id AS "passAirport2.id",
+		a.pass_airport_2_code AS "passAirport2Code",
+		a.pass_airport_2_name AS "passAirport2Name",
+		a.arrival_airport_code AS "arrivalAirportCode",
+		a.arrival_airport_three AS "arrivalAirportThree",
+		a.arrival_airport_name AS "arrivalAirportName",
+		a.departure_plan_time AS "departurePlanTime",
+		a.arrival_plan_time AS "arrivalPlanTime",
+		a.etd AS "etd",
+		a.eta AS "eta",
+		a.atd AS "atd",
+		a.ata AS "ata",
+		a.travel_time AS "travelTime",
+		a.carousel_num AS "carouselNum",
+		a.vip AS "vip",
+		a.delay_resons_code AS "delayResonsCode",
+		a.delay_resons_name AS "delayResonsName",
+		a.delay_resons_remark AS "delayResonsRemark",
+		a.gate_code AS "gateCode",
+		a.gate_name AS "gateName",
+		a.boarding_start_time AS "boardingStartTime",
+		a.boarding_end_time AS "boardingEndTime",
+		a.checkin_island_code AS "checkinIslandCode",
+		a.checkin_island_name AS "checkinIslandName",
+		a.checkin_counter_code AS "checkinCounterCode",
+		a.checkin_counter_name AS "checkinCounterName",
+		a.checkin_start_time AS "checkinStartTime",
+		a.checkin_end_time AS "checkinEndTime",
+		a.delay_time_pend AS "delayTimePend",
+		a.status AS  "status",
+		a.status_name AS  "statusName",
+		a.alternate_remarks AS "alterNateRemarks",
+		a.flight_properties_id AS "flightProperties.id",
+		a.flight_attr_code AS "flightAttrCode",
+		a.flight_attr_name AS "flightAttrName",
+		a.PLAN_DAY_OF_WEEK AS "planDayOfWeek",
+		a.delay_resons_area_code AS "delayResonsAreaCode",
+		a.delay_resons_area_name AS "delayResonsAreaName",
+		a.alternate_area_code AS "alterNateAreaCode",
+		a.alternate_area_name AS "alterNateAreaName",
+		a.cancel_flight_resons AS "cancelFlightResons",
+		a.is_extra_flight AS "isExtraFlight",
+		a.EXTRA_FLIGHT_TIME_PEND AS "extraFlightTimePend",
+		a.URGE_BOARD_TIME AS "urgeBoardTime",
+		a.PLAN_BOARDING_STARTTIME AS "planBoardingStartTime",
+		a.plan_boarding_endtime AS "planBoardingEndTime",
+		a.guest_time AS "guestTime",
+
+		a.delay_status as "delayStatus",
+		a.cancel_flight_status as "cancelFlightStatus",
+		a.ext1 as "ext1",
+		a.ext2 as "ext2",
+		a.ext3 as "ext3",
+		a.ext4 as "ext4",
+		a.ext5 as "ext5",
+		a.ext6 as "ext6",
+		a.ext7 as "ext7",
+		a.ext8 as "ext8",
+		a.ext9 as "ext9",
+		a.ext10 as "ext10",
+		a.ext11 AS "ext11",
+		a.ext12 AS "ext12",
+		a.ext13 AS "ext13",
+		a.ext14 AS "ext14",
+		a.ext15 AS "ext15",
+		a.ext16 AS "ext16",
+		a.ext17 AS "ext17",
+		a.ext18 AS "ext18",
+		a.ext19 AS "ext19",
+		a.ext20 AS "ext20",
+		a.ext21 AS "ext21",
+		a.ext22 AS "ext22",
+		a.ext23 AS "ext23",
+		a.ext24 AS "ext24",
+		a.ext25 AS "ext25"
+	</sql>
+
+	<select id="get" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic a
+		<include refid="flightDynamicHistoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getHis" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic_history a
+		<include refid="flightDynamicHistoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic_history a
+		<include refid="flightDynamicHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="inoutTypeCode != null and inoutTypeCode != ''">
+				AND a.inout_type_code = #{inoutTypeCode}
+			</if>
+			<if test="planDate != null and planDate != ''">
+				AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+			</if>
+			<if test="agentCode != null and agentCode != ''">
+				AND UPPER(a.agent_code) like UPPER('%'||#{agentCode}||'%')
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND UPPER(a.agent_name) like UPPER('%'||#{agentName}||'%')
+			</if>
+			<if test="aircraftNum != null and aircraftNum != ''">
+				AND UPPER(a.aircraft_num) like UPPER('%'||#{aircraftNum}||'%')
+			</if>
+			<if test="placeNum != null and placeNum != ''">
+				AND UPPER(a.place_num) like UPPER('%'||#{placeNum}||'%')
+			</if>
+			<if test="flightNum != null and flightNum != ''">
+				AND UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%')
+			</if>
+			<if test="statusName != null and statusName != ''">
+				AND UPPER(a.status_name) like UPPER('%'||#{statusName}||'%')
+			</if>
+			<if test="flightNatureName != null and flightNatureName != ''">
+				AND UPPER(a.flight_Nature_Name) like UPPER('%'||#{flightNatureName}||'%')
+			</if>
+			<if test="inoutTypeName != null and inoutTypeName != ''">
+				AND UPPER(a.inout_Type_Name) like UPPER('%'||#{inoutTypeName}||'%')
+			</if>
+			<if test="departureAirportName != null and departureAirportName != ''">
+				AND UPPER(a.departure_Airport_Name) like UPPER('%'||#{departureAirportName}||'%')
+			</if>
+			<if test="passAirport1Name != null and passAirport1Name != ''">
+				AND UPPER(a.pass_airport_1_name) like UPPER('%'||#{passAirport1Name}||'%')
+			</if>
+			<if test="passAirport2Name != null and passAirport2Name != ''">
+				AND UPPER(a.pass_airport_2_name) like UPPER('%'||#{passAirport2Name}||'%')
+			</if>
+			<if test="departurePlanTime != null and departurePlanTime != ''">
+				AND TO_CHAR(a.departure_Plan_Time,'HHMIss') like '%'||TO_CHAR(#{departurePlanTime},'HHMIss')||'%'
+			</if>
+			<if test="arrivalPlanTime != null and arrivalPlanTime != ''">
+				AND TO_CHAR(a.arrival_Plan_Time,'HHMIss') like '%'||TO_CHAR(#{arrivalPlanTime},'HHMIss')||'%'
+			</if>
+			<if test="atd != null and atd != ''">
+				AND a.atd like '%'||#{atd}||'%'
+			</if>
+			<if test="ata != null and ata != ''">
+				AND a.ata like '%'||#{ata}||'%'
+			</if>
+			<if test="vip != null and vip != ''">
+				AND a.ata like '%'||#{ata}||'%'
+			</if>
+			<if test="delayResonsName != null and delayResonsName != ''">
+				AND UPPER(a.delay_Resons_Name) like UPPER('%'||#{delayResonsName}||'%')
+			</if>
+
+			<if test="delayStatus != null and delayStatus != ''">
+				AND UPPER(a.delay_status) like UPPER('%'||#{delayStatus}||'%')
+			</if>
+			<if test="cancelFlightStatus != null and cancelFlightStatus != ''">
+				AND UPPER(a.cancel_flight_status) like UPPER('%'||#{cancelFlightStatus}||'%')
+			</if>
+			<if test="ext1 != null and ext1 != ''">
+				AND UPPER(a.ext1) like UPPER('%'||#{ext1}||'%')
+			</if>
+			<if test="ext2 != null and ext2 != ''">
+				AND UPPER(a.ext2) like UPPER('%'||#{ext2}||'%')
+			</if>
+			<if test="ext3 != null and ext3 != ''">
+				AND UPPER(a.ext3) like UPPER('%'||#{ext3}||'%')
+			</if>
+			<if test="ext4 != null and ext4 != ''">
+				AND UPPER(a.ext4) like UPPER('%'||#{ext4}||'%')
+			</if>
+			<if test="ext5 != null and ext5 != ''">
+				AND UPPER(a.ext5) like UPPER('%'||#{ext5}||'%')
+			</if>
+			<if test="ext6 != null and ext6 != ''">
+				AND UPPER(a.ext6) like UPPER('%'||#{ext6}||'%')
+			</if>
+			<if test="ext7 != null and ext7 != ''">
+				AND UPPER(a.ext7) like UPPER('%'||#{ext7}||'%')
+			</if>
+			<if test="ext8 != null and ext8 != ''">
+				AND UPPER(a.ext8) like UPPER('%'||#{ext8}||'%')
+			</if>
+			<if test="ext9 != null and ext9 != ''">
+				AND UPPER(a.ext9) like UPPER('%'||#{ext9}||'%')
+			</if>
+			<if test="ext10 != null and ext10 != ''">
+				AND UPPER(a.ext10) like UPPER('%'||#{ext10}||'%')
+			</if>
+			<if test="ext11 != null and ext11 != ''">
+				AND UPPER(a.ext11) like UPPER('%'||#{ext11}||'%')
+			</if>
+			<if test="ext12 != null and ext12 != ''">
+				AND UPPER(a.ext12) like UPPER('%'||#{ext12}||'%')
+			</if>
+			<if test="ext13 != null and ext13 != ''">
+				AND UPPER(a.ext13) like UPPER('%'||#{ext13}||'%')
+			</if>
+			<if test="ext14 != null and ext14 != ''">
+				AND UPPER(a.ext14) like UPPER('%'||#{ext14}||'%')
+			</if>
+			<if test="ext15 != null and ext15 != ''">
+				AND UPPER(a.ext15) like UPPER('%'||#{ext15}||'%')
+			</if>
+			<if test="ext16 != null and ext16 != ''">
+				AND UPPER(a.ext16) like UPPER('%'||#{ext16}||'%')
+			</if>
+			<if test="ext17 != null and ext17 != ''">
+				AND UPPER(a.ext17) like UPPER('%'||#{ext17}||'%')
+			</if>
+			<if test="ext18 != null and ext18 != ''">
+				AND UPPER(a.ext18) like UPPER('%'||#{ext18}||'%')
+			</if>
+			<if test="ext19 != null and ext19 != ''">
+				AND UPPER(a.ext19) like UPPER('%'||#{ext19}||'%')
+			</if>
+			<if test="ext20 != null and ext20 != ''">
+				AND UPPER(a.ext20) like UPPER('%'||#{ext20}||'%')
+			</if>
+			<if test="ext21 != null and ext21 != ''">
+				AND UPPER(a.ext21) like UPPER('%'||#{ext21}||'%')
+			</if>
+			<if test="ext22 != null and ext22 != ''">
+				AND UPPER(a.ext22) like UPPER('%'||#{ext22}||'%')
+			</if>
+			<if test="ext23 != null and ext23 != ''">
+				AND UPPER(a.ext23) like UPPER('%'||#{ext23}||'%')
+			</if>
+			<if test="ext24 != null and ext24 != ''">
+				AND UPPER(a.ext24) like UPPER('%'||#{ext24}||'%')
+			</if>
+			<if test="ext25 != null and ext25 != ''">
+				AND UPPER(a.ext25) like UPPER('%'||#{ext25}||'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic_history a
+		<include refid="flightDynamicHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ams_flight_dynamic_history(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			flight_plan_id,
+			plan_date,
+			agent_code,
+			agent_name,
+			flight_num,
+			aircraft_num,
+			flight_company_id,
+			flight_company_code,
+			flight_company_name,
+			aircraft_type_code,
+			aircraft_type_name,
+			place_num,
+			share_flight_num,
+			flight_nature_code,
+			flight_nature_name,
+			inout_type_code,
+			inout_type_name,
+			inout_status_code,
+			inout_status_name,
+			departure_airport_code,
+			departure_airport_three,
+			departure_airport_name,
+			pass_airport_1_id,
+			pass_airport_1_code,
+			pass_airport_1_name,
+			pass_airport_2_id,
+			pass_airport_2_code,
+			pass_airport_2_name,
+			arrival_airport_code,
+			arrival_airport_three,
+			arrival_airport_name,
+			departure_plan_time,
+			arrival_plan_time,
+			etd,
+			eta,
+			atd,
+			ata,
+			travel_time,
+			carousel_num,
+			vip,
+			delay_resons_code,
+			delay_resons_name,
+			delay_resons_remark,
+			gate_code,
+			gate_name,
+			boarding_start_time,
+			boarding_end_time,
+			checkin_island_code,
+			checkin_island_name,
+			checkin_counter_code,
+			checkin_counter_name,
+			checkin_start_time,
+			checkin_end_time,
+			status,
+			status_name,
+			flight_properties_id,
+			flight_attr_code,
+			flight_attr_name,
+			PLAN_DAY_OF_WEEK,
+
+			delay_status,
+     		cancel_flight_status,
+            ext1,
+			ext2,
+			ext3,
+			ext4,
+			ext5,
+			ext6,
+			ext7,
+			ext8,
+			ext9,
+			ext10,
+			ext11,
+			ext12,
+			ext13,
+			ext14,
+			ext15,
+			ext16,
+			ext17,
+			ext18,
+			ext19,
+			ext20,
+			ext21,
+			ext22,
+			ext23,
+			ext24,
+			ext25
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{flightPlan.id},
+			#{planDate},
+			#{agentCode},
+			#{agentName},
+			#{flightNum},
+			#{aircraftNum},
+			#{flightCompanyInfo.id},
+			#{flightCompanyCode},
+			#{flightCompanyName},
+			#{aircraftTypeCode},
+			#{aircraftTypeName},
+			#{placeNum},
+			#{shareFlightNum},
+			#{flightNatureCode},
+			#{flightNatureName},
+			#{inoutTypeCode},
+			#{inoutTypeName},
+			#{inoutStatusCode},
+			#{inoutStatusName},
+			#{departureAirportCode},
+			#{departureAirportThree},
+			#{departureAirportName},
+			#{passAirport1.id},
+			#{passAirport1Code},
+			#{passAirport1Name},
+			#{passAirport2.id},
+			#{passAirport2Code},
+			#{passAirport2Name},
+			#{arrivalAirportCode},
+			#{arrivalAirportThree},
+			#{arrivalAirportName},
+			#{departurePlanTime},
+			#{arrivalPlanTime},
+			#{etd},
+			#{eta},
+			#{atd},
+			#{ata},
+			#{travelTime},
+			#{carouselNum},
+			#{vip},
+			#{delayResonsCode},
+			#{delayResonsName},
+			#{delayResonsRemark},
+			#{gateCode},
+			#{gateName},
+			#{boardingStartTime},
+			#{boardingEndTime},
+			#{checkinIslandCode},
+			#{checkinIslandName},
+			#{checkinCounterCode},
+			#{checkinCounterName},
+			#{checkinStartTime},
+			#{checkinEndTime},
+			#{status},
+			#{statusName},
+			#{flightProperties.id},
+			#{flightAttrCode},
+			#{flightAttrName},
+			#{planDayOfWeek},
+
+			#{delayStatus},
+     		#{cancelFlightStatus},
+           	#{ext1},
+			#{ext2},
+			#{ext3},
+			#{ext4},
+			#{ext5},
+			#{ext6},
+			#{ext7},
+			#{ext8},
+			#{ext9},
+			#{ext10},
+			#{ext11},
+			#{ext12},
+			#{ext13},
+			#{ext14},
+			#{ext15},
+			#{ext16},
+			#{ext17},
+			#{ext18},
+			#{ext19},
+			#{ext20},
+			#{ext21},
+			#{ext22},
+			#{ext23},
+			#{ext24},
+			#{ext25}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ams_flight_dynamic_history SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			flight_plan_id = #{flightPlan.id},
+			plan_date = #{planDate},
+			agent_code = #{agentCode},
+			agent_name = #{agentName},
+			flight_num = #{flightNum},
+			aircraft_num = #{aircraftNum},
+			flight_company_id = #{flightCompanyInfo.id},
+			flight_company_code = #{flightCompanyCode},
+			flight_company_name = #{flightCompanyName},
+			aircraft_type_code = #{aircraftTypeCode},
+			aircraft_type_name = #{aircraftTypeName},
+			place_num = #{placeNum},
+			share_flight_num = #{shareFlightNum},
+			flight_nature_code = #{flightNatureCode},
+			flight_nature_name = #{flightNatureName},
+			inout_type_code = #{inoutTypeCode},
+			inout_type_name = #{inoutTypeName},
+			inout_status_code = #{inoutStatusCode},
+			inout_status_name = #{inoutStatusName},
+			departure_airport_code = #{departureAirportCode},
+			departure_airport_three = #{departureAirportThree},
+			departure_airport_name = #{departureAirportName},
+			pass_airport_1_id = #{passAirport1.id},
+			pass_airport_1_code = #{passAirport1Code},
+			pass_airport_1_name = #{passAirport1Name},
+			pass_airport_2_id = #{passAirport2.id},
+			pass_airport_2_code = #{passAirport2Code},
+			pass_airport_2_name = #{passAirport2Name},
+			arrival_airport_code = #{arrivalAirportCode},
+			arrival_airport_three = #{arrivalAirportThree},
+			arrival_airport_name = #{arrivalAirportName},
+			departure_plan_time = #{departurePlanTime},
+			arrival_plan_time = #{arrivalPlanTime},
+			etd = #{etd},
+			eta = #{eta},
+			atd = #{atd},
+			ata = #{ata},
+			travel_time = #{travelTime},
+			carousel_num = #{carouselNum},
+			vip = #{vip},
+			delay_resons_code = #{delayResonsCode},
+			delay_resons_name = #{delayResonsName},
+			delay_resons_remark = #{delayResonsRemark},
+			gate_code = #{gateCode},
+			gate_name = #{gateName},
+			boarding_start_time = #{boardingStartTime},
+			boarding_end_time = #{boardingEndTime},
+			checkin_island_code = #{checkinIslandCode},
+			checkin_island_name = #{checkinIslandName},
+			checkin_counter_code = #{checkinCounterCode},
+			checkin_counter_name = #{checkinCounterName},
+			checkin_start_time = #{checkinStartTime},
+			checkin_end_time = #{checkinEndTime},
+			status = #{status},
+			status_name = #{statusName},
+			alternate_remarks = #{alterNateRemarks},
+			flight_properties_id = #{flightProperties.id},
+			flight_attr_code = #{flightAttrCode},
+			flight_attr_name = #{flightAttrName},
+			PLAN_DAY_OF_WEEK = #{planDayOfWeek},
+
+			delay_status = #{delayStatus},
+			cancel_flight_status = #{cancelFlightStatus},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			ext3 = #{ext3},
+			ext4 = #{ext4},
+			ext5 = #{ext5},
+			ext6 = #{ext6},
+			ext7 = #{ext7},
+			ext8 = #{ext8},
+			ext9 = #{ext9},
+			ext10 = #{ext10},
+			ext11 = #{ext11},
+			ext12 = #{ext12},
+			ext13 = #{ext13},
+			ext14 = #{ext14},
+			ext15 = #{ext15},
+			ext16 = #{ext16},
+			ext17 = #{ext17},
+			ext18 = #{ext18},
+			ext19 = #{ext19},
+			ext20 = #{ext20},
+			ext21 = #{ext21},
+			ext22 = #{ext22},
+			ext23 = #{ext23},
+			ext24 = #{ext24},
+			ext25 = #{ext25}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE ams_flight_dynamic_history SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delay">
+		UPDATE ams_flight_dynamic_history SET
+			delay_resons_remark = #{delayResonsRemark},
+			delay_resons_code = #{delayResonsCode},
+			delay_resons_name = #{delayResonsName},
+			delay_time_pend = #{delayTimePend},
+			ARRIVAL_PLAN_TIME = #{arrivalPlanTime},
+			status = #{status},
+			status_name = #{statusName},
+			alternate_remarks = #{alterNateRemarks}
+			WHERE id = #{id}
+	</update>
+
+	<update id="cancel">
+		update ams_flight_dynamic_history set status=#{status},status_name = #{statusName}  where id=#{id}
+	</update>
+
+	<update id="alternate">
+		update ams_flight_dynamic_history set status=#{status},status_name = #{statusName},alternate_remarks = #{alterNateRemarks}  where id=#{id}
+	</update>
+
+	<update id="takeoff">
+		update ams_flight_dynamic_history set status=#{status},status_name = #{statusName},atd = #{atd}  where id=#{id}
+	</update>
+
+
+	<select id="getPairFlightList" resultType="FlightPairWrapper">
+		SELECT f.PLAN_DATE AS planDate,
+			f.AIRCRAFT_NUM AS aircraftNum,
+			f.AIRCRAFT_TYPE_CODE AS aircraftTypeCode,
+			WM_CONCAT(f.PLACE_NUM) AS placeNum,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.ID,NULL)) AS idj,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J','进港',NULL)) AS inOutTypeName,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.FLIGHT_NUM,NULL)) AS flightNum,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.FLIGHT_NATURE_NAME,NULL)) AS flightNatureName,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.ARRIVAL_PLAN_TIME,NULL)) AS arrivalPlanTime,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.ETA,NULL)) AS eta,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'J',f.ATA,NULL)) AS ata,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.ID,NULL)) AS idc,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C','出港',NULL)) AS inOutTypeName2,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.FLIGHT_NUM,NULL)) AS flightNum2,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.FLIGHT_NATURE_NAME,NULL)) AS flightNatureName2,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.ARRIVAL_PLAN_TIME,NULL)) AS arrivalPlanTime2,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.ETD,NULL)) AS etd,
+			MAX(DECODE(f.INOUT_TYPE_CODE,'C',f.ATD,NULL)) AS atd
+		FROM ams_flight_dynamic_history f
+		GROUP BY f.PLAN_DATE, f.AIRCRAFT_NUM ,f.AIRCRAFT_TYPE_CODE
+	</select>
+
+	<select id="findListAgo" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic_history a
+		<include refid="flightDynamicHistoryJoins"/>
+		<where>
+			<![CDATA[
+				to_char(a.plan_date,'yyyy-mm-dd') <= to_char(#{planDate},'yyyy-mm-dd')
+			]]>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="carouselList" resultType="CarouselOccupyingInfoWrapper">
+		SELECT
+		<include refid="flightDynamicColumnsWithoutId"/>,
+		a.plan_date as "planDate",a.place_num as placeNum, a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.arrival_plan_time as arrivalPlanTime, a.eta as eta, a.ata as ata,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_carousel_num as expectedCarouselNum,
+		i.flight_dynamic_nature as "flightDynamicNature", i.inte_Carousel_Code as "inteCarouselCode", i.intl_Carousel_Code as "intlCarouselCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM ams_flight_dynamic_history a left join rms_carousel_oci_hi i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'J'
+		<!-- 数据权限 new -->
+		${sqlMap.dsfn}
+		<if test="planDate != null and planDate != ''">
+			AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+		</if>
+		<if test="flightNum != null and flightNum != ''">
+			AND (UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%'))
+		</if>
+		ORDER BY a.PLAN_DATE , a.ata , a.eta , a.arrival_plan_time
+	</select>
+
+	<select id="checkinCounterList" parameterType="FlightDynamic" resultType="CheckingCounterOccupyingInfoWrapper">
+		SELECT
+		<include refid="flightDynamicColumnsWithoutId"/>,
+		a.plan_date "planDate", a.flight_Company_Code as flightCompanyCode, a.aircraft_type_code as aircraftTypeCode, a.departure_Plan_Time as departurePlanTime, a.etd as etd, a.atd as atd,
+		a.id as flightDynamicId, i.id as id, a.flight_num as flightDynamicCode, a.aircraft_num as aircraftNum , i.expected_checking_counter_num as expectedCheckingCounterNum,
+		i.flight_dynamic_nature as "flightDynamicNature", i.inte_checking_counter_code as "inteCheckingCounterCode", i.intl_checking_counter_code as "intlCheckingCounterCode",
+		i.expected_Start_Time as expectedStartTime, i.expected_Over_time as "expectedOverTime", i.inte_Actual_Start_Time as "inteActualStartTime",
+		i.inte_Actual_Over_Time as "inteActualOverTime", i.intl_Actual_Start_Time as "intlActualStartTime", i.intl_Actual_over_Time as "intlActualOverTime"
+		FROM ams_flight_dynamic_history a left join RMS_CHECKING_COUNTER_OCI_HI i on i.flight_dynamic_id = a.id
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} and a.inout_type_code = 'C'
+		<!-- 数据权限 new -->
+		${sqlMap.dsfn}
+		<if test="planDate != null and planDate != ''">
+			AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+		</if>
+		<if test="flightNum != null and flightNum != ''">
+			AND (UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%'))
+		</if>
+		ORDER BY a.plan_date,a.atd,a.etd,a.departure_plan_time
+	</select>
+
+	<select id="findListByFlightOut" resultType="FlightDynamic">
+		SELECT
+		<include refid="flightDynamicHistoryColumns"/>
+		FROM ams_flight_dynamic_history a
+		<include refid="flightDynamicHistoryJoins"/>
+		<where>
+			${sqlMap.dsfn}
+			<if test="inoutTypeCode != null and inoutTypeCode != ''">
+				AND a.inout_type_code = #{inoutTypeCode}
+			</if>
+			<if test="planDate != null and planDate != ''">
+				AND TO_CHAR(a.plan_date,'YYYYMMDD') LIKE '%'||TO_CHAR(#{planDate},'YYYYMMDD')||'%'
+			</if>
+			<if test="flightCompanyCode != null and flightCompanyCode != ''">
+				AND a.flight_company_code = #{flightCompanyCode}
+			</if>
+			<if test="flightNum != null and flightNum != ''">
+				AND UPPER(a.flight_num) like UPPER('%'||#{flightNum}||'%')
+			</if>
+			<if test="flightNatureCode != null and flightNatureCode != ''">
+				AND a.flight_Nature_code = #{flightNatureCode}
+			</if>
+			<if test="flightAttrCode != null and flightAttrCode != ''">
+				AND a.flight_attr_code = #{flightAttrCode}
+			</if>
+			<if test="addr != null and addr != ''">
+				AND (a.departure_airport_code = #{addr} OR a.pass_airport_1_code = #{addr} OR a.pass_airport_2_code = #{addr} OR a.arrival_airport_code = #{addr})
+			</if>
+			<if test="planDate_begin != null and planDate_begin != ''">
+				<![CDATA[AND a.plan_date >= to_date(#{planDate_begin} ||' 00:00:00','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+			<if test="planDate_end != null and planDate_end != ''">
+				<![CDATA[AND a.plan_date <= to_date(#{planDate_end} ||' 23:59:59','yyyy-mm-dd hh24:mi:ss')]]>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
